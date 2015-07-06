@@ -1,0 +1,88 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+
+  <!-- jquery stuff -->
+  <title>Easy Interface - No Outline</title>
+  <link rel="stylesheet" href="./ext/jquery-ui/css/redmond/jquery-ui.css" />
+  <script src="./ext/jquery-ui/js/jquery.js"></script>
+  <script src="./ext/jquery-ui/js/jquery-ui.js"></script>
+
+
+  <!-- codemirror stuff -->
+  <script src="./lib/codemirror/lib/codemirror.js"></script>
+  <!-- <script src="./lib/codemirror/mode/javascript/javascript.js"></script> -->
+  <link rel="stylesheet" href="./lib/codemirror/lib/codemirror.css">
+  <link rel="stylesheet" href="./lib/codemirror/doc/docs.css">
+
+  <!-- GitHub Api stuff -->
+  <script src="./lib/githubapi/github.js"></script>
+  <script src="./lib/githubapi/lib/underscore-min.js"></script>
+
+  <!-- jsTree stuff -->
+ <script type="text/javascript" src="./lib/jstree/jquery.jstree.js"></script>
+  <link type="text/css" rel="stylesheet"
+ href="./lib/jstree/_docs/syntax/!style.css"/>
+  <script type="text/javascript" src="./lib/jstree/_docs/syntax/!script.js"></script>
+  <script type="text/javascript" src="./lib/jstree/_lib/jquery.hotkeys.js"></script>
+
+  <!-- jquery.sng -->
+  <script type="text/javascript" src="./lib/jquery.svg/jquery.svg.js"></script>
+  <link type="text/css" rel="stylesheet" src="./lib/jquery.svg/jquery.svg.css" />
+
+  <!-- the codearea stuff -->
+  <script src="./js/constants.js"></script>
+  <script src="./js/set.js"></script>
+  <script src="./js/easyinterface.js"></script>
+  <script src="./js/codearea.js"></script>
+  <script src="./js/filemanager.js"></script>
+  <script src="./js/console.js"></script>
+  <script src="./js/checkboxwidget.js"></script>
+  <script src="./js/combowidget.js"></script>
+  <script src="./js/textareawidget.js"></script>
+  <script src="./js/parameters.js"></script>
+  <script src="./js/helps.js"></script>
+  <script src="./js/tools.js"></script>
+  <script src="./js/toolselectorwidget.js"></script>
+  <script src="./js/outline.js"></script>
+  <script src="./js/cmdengine.js"></script>
+  <script src="./js/outputmanager.js"></script>
+
+  <script src="./js/consolecommand.js"></script>
+  <script src="./js/markerwidget.js"></script>
+  <script src="./js/inlinedmarkerwidget.js"></script>
+  <script src="./js/linewidgetcommand.js"></script>
+  <script src="./js/addmarkercommand.js"></script>
+  <script src="./js/highlightlinewidget.js"></script>
+  <script src="./js/highlightlinecommand.js"></script>
+  <script src="./js/changecsscommand.js"></script>
+  <script src="./js/writefilecommand.js"></script>
+  <script src="./js/dialogboxcommand.js"></script>
+  <script src="./js/onclickaction.js"></script>
+
+  <script src="./js/codelineaction.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="./css/ei.noOutline.css"/>
+
+<script>
+  $( function() {
+      var x = new EasyInterface({ 
+          holder: $("#ei_1"),
+          theme: "./html/eitheme_NO.resizable.html",
+          cfgFile: "/ei/src/clients/web/eiclient.cfg",
+          apps: [ { server: "http://localhost/ei/server/eiserver.php", apps: "_all"/*/["cost"]/**/ } ] ,
+	  examples: [ { server: "http://localhost/ei/server/eiserver.php", examples: "_all"/*/["cost"]/**/ } ] ,
+      });
+  });
+</script>
+</head>
+<body>
+<textarea class="sms" hidden rows="6" cols= "95"></textarea>
+<div class="easyinterface ui-widget ui-corner-all" id="ei_1"></div>
+
+</body>
+</html>
+
+

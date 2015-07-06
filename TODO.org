@@ -1,0 +1,183 @@
+#+TODO: TODO NEXT DOING | FEEDBACK DONE
+
+* Documentation
+** TODO Files structure
+** DONE Finish the defintion of valid parameters
+  Finish the documentation adding:
+  [X] structure to value
+  [X] defaults
+  [X] widgetconfig
+  [X] merge textarea and textfield
+  [X] Security checks
+** TODO Add to manual.tex -> Document the valid values for REQUESTS
+** TODO Configuration flags for the eiserver
+*** DONE Security checks
+  Define a checkparams flag, which allows verifying if the values of
+  the parameters in the request are valid
+*** DONE Flag to allow strong text fields/areas
+  In files instead of passing them as parameters  
+*** DONE Flag for private/public 
+  Users should login before they can use the tool. Recall to pass the
+  user_id in the execute
+*** TODO Flag for session_id
+** DONE document writefilecommand
+*** DONE attr name => path completo
+*** DONE Level quitarlo
+** DONE remove cleancommand
+** DONE markercommand 
+*** DONE addmarkercommand => comando
+*** DONE codelineaction => action
+** DONE rename otheraction to onclick
+*** DONE rename obj attr to selector
+*** DONE remove ON attr
+*** DONE onclickaction multiple selectors
+** DONE changecss
+*** DONE añadirlo
+*** DONE definirlo
+*** DONE changecss command to multiple selectors
+** DONE AUTOCLEAN
+*** DONE cada action al hacer click en otro se apaga, repetir un action se apaga
+*** DONE attr autoclean para borrarse a si mismo
+** DONE line
+** DONE remove commandId attr
+** DONE File destination in command now is required
+** TODO apps configuration migth indicate if want outline or not
+* Implementation
+** DONE OLD THINGS
+*** DONE Treatment of file structure
+  [X]problem with spaces? check on php that file only have normal chars or exception
+  [X]directory as an argument? add _ei_parameters and _ei_root
+*** DONE Valid parameters
+*** DONE values for REQUESTS
+*** DONE check changecss works
+*** DONE Add a theme without outline
+*** DONE Installations scripts
+**** DONE First version
+**** DONE add examples
+*** DONE Remote file 
+**** DONE github 
+**** DONE computer
+**** DONE url
+Problem with server files (e.g. request "EIExamples.php")
+*** DONE highlightcommand and markercommand destination file
+**** DONE codeline 
+**** DONE default value
+**** DONE Works into a line
+*** DONE BUG: label Repeat
+When we load example sets of many servers. If name of folder
+is repeat... al files of the folder add on root and doesnt wait to the
+folder.
+**** DONE Solution, dont ask nameadd "_#" where # is a number
+*** DONE Allow Many server paths
+*** DONE writefile command (SE PUEDE APLAZAR)
+*** DONE the outline app should be specified as a parameter, not hard coded.
+*** DONE the format attribute in content does not work well in alertmsg
+ also it does not display html well in print console
+*** DONE when the output of an app in not well-formed XML the inteface get stuck, never close the window "Applying .."
+*** DONE when the outline is not well-formed, the refresh remains stuck
+*** DONE alertmsg should allow a title for the window
+**** DONE Change documentation
+*** DONE do we have inline marker?
+ We should use lineWidget
+ We have highlight part of line
+ i.e., the one that adds the marker inside the code?
+*** DONE we should be able to assign titles to consoles
+**** DONE Change documentation
+    How? attr title? what happend if two commands write in console 1
+    and put different names.. at the moment the first name appear.
+**** DONE Implement
+*** DONE maybe we should close all consoles when re-analyzing
+   or at least to have an option for that
+**** DONE I add a button to close all consoles
+*** DONE if I colse a console, and re-analyze again then it does not reopen
+*** DONE _ei_outline  does not work in command templates, nothing is passed
+*** DONE the build does not include the examples
+*** DONE why the 'id' attribute in the categories is needed? 
+**** DONE it does not work well when the id is not unique, maybe better remove it.
+   The category tag should include a value attribute, which is the one returned to the app
+*** DONE fix layout and 3 scrolls in editor, and similar in console
+** TODO In Future
+*** TODO Configuration flags for the eiserver
+**** DONE Security checks
+  Define a checkparams flag, which allows verifying if the values of
+  the parameters in the request are valid
+**** TODO Flag to allow strong text fields/areas
+    Im not sure how implement it.
+**** TODO Flag for private/public 
+  Users should login before they can use the tool. Recall to pass the
+  user_id in the execute
+**** TODO Flag for session_id
+*** Check Application level cariables in PHP
+  To cache some computations that we do the same for all requests we
+  need some kind of global variables
+
+*** TODO Sin outline, cada app pide si quiere o no outline
+**** Give this parameter in server
+**** create interface to show outline when is required
+**** change execution to ignore outline when is not needed
+*** TODO Streaming
+Web Service, call it to get new commands or actions.
+*** TODO Menu apply in filemanager
+*** TODO Outline with type of files
+    Todo a "pelo"...
+    .extension
+
+*** TODO Change name clear and apply button
+** TODO selectors do not work with svg in jquery, we should find a workaround. SVG stuff should be redesigned
+   changecss, onclick and all the commands that works with
+   selectors. only work with the existing elements. It means: If we add a
+   svg and add onclick at same time, we cannt asume that svg is printed
+   first. (all are async).
+** DONE apps: [{server:"",apps:_all or [...]}]
+** DONE examples: [{server:"",examples:_all or [...]}]
+** DONE selectbox with closed consoles
+** DONE Help button with accordion
+** DONE Re-Add buttons in console to add and close
+** FEEDBACK BUG: content inlinemarker
+** TODO addmarkercommand should accumulate text (SAMIR)
+** FEEDBACK make that content environment support the attribute outclass
+   Css para warning, help, info, error y sus iconos
+** DONE resizing the browser should resize easyinterface (vertical)
+** TODO actions should accumulate associated eicommands (SAMIR)
+** FEEDBACK verify that all parameters work fine, as explained in the manual
+** DONE define the syntax of example (add desc to document)
+
+        <exset id="..."> </exset>
+        <folder name=".."> </folder>
+        <file name=".." url=".." />
+        <github .... />
+
+** DONE fix layout of remote files
+** DONE pass the clientid from the web-interface
+** FEEDBACK modify index.html in sever so it checks that the server seems to work correctly. This might require adding something to the server language to test that it work, etc.
+** DONE looks like the client requires <parameters> environment to be in the app description, this should be optional
+   The problem is: server returns a not wellformed xml, because add
+   <?xml version="1.0" ?>
+   js cann't parse it. 
+   the version Tag is generate by simpleXMLelement, when is printted
+   with "asXML".
+   one solution is: explode("\n", $xml->asXML(), 2)[1];
+   but its very ugly, 
+   other more ugly: substr($xml, strpos($xml, '?'.'>') + 2);
+   other: rewrite php using other XML writer
+   and the last one: is require write <parameters></parameters>.. but
+   this dont solve the problem.
+*** SOLUTION:
+    en eiserver.php remove all <?xml ... ?> with RegExpr
+** FEEDBACK the flag parameter accepts yes/no instead of true and false
+** DONE in the selectone parameter, if the desc is not provided use value to show the different values. The same for select many i guess.
+** DONE Test-i execute each command
+** DONE Remove proxy possibility
+** DONE merge lib and ext folders in web client
+** FEEDBACK Apply/Refresh does not work on a single file, looks like the directory names are not built correctly (not sure)
+** DONE BUG: oncodelineclickaction?? is codelineaction??
+* Research
+** graphviz (lenguaje dot para grafos)
+* Moving to github
+** DONE Delete all what we have in github
+** DONE Copy everything except the eclipse client
+** DONE Make sure all libraries have the license files
+** DONE Don't copy tools
+** DONE Remove libraries
+** DONE Reorganize bin and config directories
+

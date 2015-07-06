@@ -1,0 +1,103 @@
+window.OnClickAction = (function() {
+    "use strict";
+
+    OnClickAction.parse = function(a, ei_info) { 
+
+	var tag = a[0].tagName;
+	if ( tag != _ei.outlang.syntax.onclick ) return null;
+	
+	var dest = a.attr(_ei.outlang.syntax.dest) || ei_info.dest;
+	var outclass = a.attr(_ei.outlang.syntax.outclass) || ei_info.outclass;
+	var autoclean  = a.attr( _ei.outlang.syntax.actionautoclean ) || ei_info.autoclean;
+	var elements = a.find("> " + _ei.outlang.syntax.elements );
+	var eicommands = a.find("> "+_ei.outlang.syntax.eicommands );
+
+	return new OnClickAction({
+	    eicommands: eicommands,
+	    elements: elements,
+	    outputmanager: ei_info.outputmanager,
+	    outclass: outclass,
+	    autoclean: autoclean,
+	    dest: dest
+       });
+    };
+
+    function OnClickAction(options) {	
+
+	var self = this;
+
+	this.codearea = options.codearea;
+	this.lines = options.lines;
+	this.dest = options.dest;
+	this.outputmanager = options.outputmanager;
+	this.autoclean = options.autoclean;
+
+	this.commands = new Set();
+	this.selectors = new Array();
+
+	options.eicommands.each( function() {
+	    var dest =  $(this).attr( _ei.outlang.syntax.dest ) || options.dest;
+	    var outclass =  $(this).attr( _ei.outlang.syntax.outclass ) || options.outclass;
+	    $(this).children().each( function() {
+		options.outputmanager.parseCommand( $(this), self.commands, {
+		    dest : dest,
+		    outclass: options.outclass,
+		    outputmanager : options.outputmanager,
+		    filemanager: options.filemanager,
+		    codearea : options.codearea,
+		    console  : options.console,
+		    defaultConsoleId: options.defaultConsoleId
+		});
+	    });
+	});
+	
+	options.elements.find("> " + _ei.outlang.syntax.selector).each( function () {
+	    self.selectors[ self.selectors.length ] = $(this).attr( _ei.outlang.syntax.selectorvalue );
+	});
+
+    };
+
+    OnClickAction.prototype = {
+	constructor: OnClickAction,
+
+	activate:
+	function() {
+	    var self = this;
+	    for(var i=0; i<this.selectors.length; i++) {
+		$(this.selectors[i]).each( function() {
+		    $(this).on( "click", function() { 
+			self.outputmanager.performAction(self); 
+		    })});
+	    }
+	},
+
+	//
+	deActivate:
+	function() {
+	    var self = this;
+	    for(var i=0; i<this.selectors.length; i++) {
+		$(this.selectors[i]).each( function() {
+		    $(this).off("click");
+		});
+	    }
+	},
+
+	//
+	doAction:
+	function() {
+	    if ( this.commands )
+		this.commands.asyncIterate( function(c) { c.do(); });
+	},
+
+	//
+	undoAction:
+	function() {
+	    if ( this.commands )
+		this.commands.asyncIterate( function(c) { c.undo(); });
+	}
+
+    }
+
+    return OnClickAction;
+
+})();

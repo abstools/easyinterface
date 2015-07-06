@@ -1,0 +1,771 @@
+{% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
+}
+\chapter{Easy Interface Server}
+
+This chapter describes the server side of the \ei platform. In
+particular how to install it on an HTTP server and set some
+parameters, how to make applications (\apps) available, and how to
+make examples available.
+
+
+\section{Installing the Server}
+ 
+All you need to make the directory \lstinline{server} accessible
+through the HTTP server, and moreover PHP access must be guaranteed
+to this directory.
+
+\fxwarning{Revise this section, and explain the installation script once it
+  is ready}
+
+
+\section{Configuring the Applications Server}
+\label{server:sec:config}
+
+The applications server requires a configuration file that defines
+some setting parameters, available applications, and available
+examples.
+%
+By default, it uses \filename{config/eiserver.cfg}, however, this can
+be changed by editing the \filename{server/EIConfig.php}.
+%
+The content of this file should adhere to the
+$\xmlstructrefwb{eiserver}$ XML structure as described in
+Section~\ref{sec:server:xmfref}
+
+\section{Configuration XML Reference}
+\label{sec:server:xmfref}
+
+%% EISERVER
+\bigskip
+\xmlstruct
+{eiserver}
+{
+%
+  This XML tag should be the root of the configurations file (see
+  Section~\ref{server:sec:config}).
+%
+  The \xmlstructref{settings} section is used for setting some global
+  parameters; the \xmlstructref{apps} section defines which \apps are
+  available on the server; and \xmlstructref{examples} defines which
+  example groups are available on the server.
+%
+}
+{
+%
+  The server configuration file (see Section~\ref{server:sec:config})
+%
+}
+
+
+%% SETTINGS
+\bigskip
+\xmlstruct
+{settings}
+{
+%
+  To be done, so far we do not have any global parameter
+%
+}
+{\xmlstructrefwb{eiserver}}
+
+%% EXAMPLES
+\bigskip
+\xmlstruct
+{examples}
+{
+%
+ Example groups available on the server
+%
+}
+{\xmlstructrefwb{eiserver}}
+
+%% EXAMPLES
+\bigskip
+\xmlstruct
+{exset}
+{
+%
+  The \xmlstructattr{id}
+  \\
+  Contains diferents types of elements
+%
+}
+{\xmlstructrefwb{examples}}
+
+%% EXAMPLE element
+\bigskip
+\xmlstruct
+{exelements}
+{
+%
+  Diferent types of element
+%
+}
+{\xmlstructrefwb{exset}, \xmlstructrefwb{folder}}
+%% Folder
+\bigskip
+\xmlstruct
+{folder}
+{
+%
+  Default values:\\
+  name -> internal
+
+%
+}
+{\xmlstructrefwb{exelements}}
+
+%% File
+\bigskip
+\xmlstruct
+{file}
+{
+%
+  Default values:\\
+  name -> internal
+
+%
+}
+{\xmlstructrefwb{exelements}}
+
+%% GitHub
+\bigskip
+\xmlstruct
+{github}
+{
+%
+  Default values:\\
+  branch -> ``master''\\
+  path -> ``/ '' \\
+  internal -> ``owner + @ + repo''\\
+  name -> internal
+  
+%
+}
+{\xmlstructrefwb{exelements}}
+
+%% APPS
+\bigskip
+\xmlstruct
+{apps}
+{
+%
+  Defines a list of \apps (to be available on the \ei server). Each
+  \app is defined by an $\xmlstructrefwb{APP}$ XML structure.
+%
+}
+{\xmlstructrefwb{eiserver}}
+
+%% APP
+\bigskip
+\xmlstruct
+{app}
+{
+%
+  Defines an app, where the different parts are as follows:
+%
+  \begin{itemize}
+
+  \item \xmlstructattr{id} is an identifier used when referring to the
+    \app, it should be unique among the \apps available on the same
+    server.
+
+  \item \xmlstructattr{visible} indicates if the \app should be listed
+    when the list of available \apps is requested, by default it is
+    \xmlstructvalue{true}. Note that even if an app is not
+    \emph{publicly} visible, it can be used like any other \app (you
+    just need to know its identifier).
+
+  \item \xmlstructref{appinfo} provides some general information about
+    the \app, like title, logo, description, etc.
+
+  \item \xmlstructref{apphelp} is a (formatted) text that provides
+    enough information on how the \app can be used, etc. It will be
+    mainly used in the help sections of the different clients.
+
+  \item \xmlstructref{execinfo} defines how the tool can be executed
+    (e.g., command-line, server). This information is used by the
+    \apps server to forward execution requests to corresponding \apps.
+
+  \item \xmlstructref{parameters} defines the parameters accepted by
+    the \app. This parameters are usually passed to client, who will
+    allow users to select the appropriate values, and when and
+    execution request is sent to the \apps server, these options are
+    passed to the corresponding \app.
+
+  \item \xmlstructref{permission} defines some usage permissions for
+    the \app, e.g., who have permission to execute this app. By
+    default any one can execute.
+
+  \end{itemize}
+%
+}
+{\xmlstructrefwb{apps}}
+
+
+%% APPINFO
+\bigskip
+\xmlstruct
+{appinfo}
+{
+%
+  Provides general information on an app:
+
+  \begin{itemize}
+  \item \xmlstructref{acronym} is an acronym for the app,
+    e.g., COSTA;
+  \item \xmlstructref{title} is a title for the app ;
+  \item \xmlstructref{logo} is an image to be used as the
+    app's logo; and
+  \item \xmlstructref{desc} is a (general) description of the tool.
+  \end{itemize}
+%
+}
+{\xmlstructrefwb{app}}
+
+
+%% ACRONYM
+\bigskip
+\xmlstruct
+{acronym}
+{
+%
+  Plain text to be used as an acronym, e.g., COSTA.
+%
+}
+{\xmlstructrefwb{appinfo}}
+
+
+%% TITLE
+\bigskip
+\xmlstruct
+{title}
+{
+%
+  Plain text deciding a title. Typically more informative than an acronym (see 
+  $\xmlstructref{acronym}$.
+%
+}
+{\xmlstructrefwb{appinfo}}
+
+
+%% LOGO
+\bigskip
+\xmlstruct
+{logo}
+{
+%
+  A link to an image --- in some standard format such
+  \xmlstructvalue{png}, \xmlstructvalue{jpg} or \xmlstructvalue{gif}
+  --- to be used by clients as a logo (for an \app). The size of the
+  image typically has equal height and width (but this is not a
+  requirement).
+%
+}
+{\xmlstructrefwb{appinfo}}
+
+
+%% DESC
+\bigskip
+\xmlstruct
+{desc}
+{
+%
+  This is a description of some entities, e.g., of an \app, a
+  parameter, a parameter option, etc. It consists of two parts, the
+  first one is a short description, and the second is a detailed
+  description. In both cases it should be plain text. Clients will
+  select one of them depending on the intended use. The description is
+  typically high-level.
+%
+}
+{\xmlstructrefwb{appinfo}, \xmlstructrefwb{selectone}, \xmlstructrefwb{selectmany}}
+
+
+%% APPHELP
+\bigskip
+\xmlstruct
+{apphelp}
+{
+%
+  A (formatted) text that provides enough information on how an \app
+  can be used, etc. It can be provided in several formats, e.g., html
+  or plain text, by using several \xmlstructref{content} tags. Client
+  are supposed to pick the appropriate format. It is recommended to
+  always include a content in plain text since it can be view in any
+  client.
+%
+}
+{\xmlstructrefwb{app}}
+
+
+%% CONTENT
+\bigskip
+\xmlstruct
+{content}
+{
+%
+  A text given in a specific \xmlstructattr{format}, e.g.,
+  \xmlstructvalue{"text"}, \xmlstructvalue{"html"}, etc. If the
+  attribute \xmlstructattr{format} is not provided, then it is assumed
+  to be \xmlstructvalue{"text"} format (plain text).
+%
+}
+{\xmlstructrefwb{apphelp}, \xmlstructrefwb{eicommand}}
+
+%% EXECINFO
+\bigskip
+\xmlstruct{execinfo}
+{
+%
+  Provides information on how to execute an app. It can be
+  either a command-line app \xmlstructref{cmdlineapp}, or a
+  server based app \xmlstructref{serverapp}. 
+%
+}
+{\xmlstructrefwb{app}}
+
+%% CMDLINEAPP
+\noindent
+\xmlstruct{cmdlineapp}
+{
+%
+  Describes how to run a command-line \app, where
+  \xmlstructdef{command\_template} is a template describing a
+  command-line. It is best explained by an example. Consider the
+  following template example
+
+  \bigskip
+  ~~~
+  \fbox{\small\texttt{/path-to/app \xmlstructtemplate{_ei_files} -m \xmlstructtemplate{_ei_outline}  \xmlstructtemplate{_ei_parametes}}}
+  
+  \bigskip
+  \noindent
+  In this template, anything that starts with \xmlstructtemplate{_ei}
+  is a template parameter that will be replaced by some corresponding
+  information, and \texttt{/path-to/app} is the \app's executable.
+  % 
+  When the server receives a request for executing the corresponding
+  \app, the request includes several data that should passed to the
+  \app. For example, the following are typical data that should be
+  passed to an \app is:
+  %
+  \begin{enumerate}
+  \item files to be processed (e.g., program to be analysed);
+  \item entities selected from the program outline (e.g., methods); and
+  \item values for the different parameters.
+  \end{enumerate}
+  %
+  The server passes this data to the \app by replacing the template
+  parameters with corresponding data as follows:
+  % 
+  \begin{enumerate}
+  \item the files are stored locally (e.g., in \texttt{/tmp}), and
+    \xmlstructtemplate{_ei_files} is replaced by a list file names
+    (each with an absolute path, separated by a space);
+  \item \xmlstructtemplate{_ei_outline} is replaced by a list of
+    selected entities (e.g., method names) --- see TODO; and
+  \item \xmlstructtemplate{_ei_parametes} is replaced by the list of
+    parameters generated from those provided in the request (see TODO).
+  \end{enumerate}
+  % 
+  This result in, for example, the following instance of the template:
+
+  \bigskip
+  \hspace{0.7cm}
+  \fbox{\texttt{/path-to/app \xmlstructtemplate{a.java b.java} -m \xmlstructtemplate{a.main} \xmlstructtemplate{-v 1 -d 3 -a}}}
+
+  \bigskip 
+  \noindent
+  which is then executed and its output is redirected to the
+  client. The server does some security checks to guarantee that the
+  command-line is not executed in a bad way (see Section~\ref{})
+
+  \bigskip 
+  \noindent
+  The following is a list of template parameters:
+
+%%
+  \begin{itemize}
+  \item \xmlstructtemplate{_ei_files} which is replaced by a list of
+    file names (separated by space) in the local file system;
+\item \xmlstructtemplate{_ei_dirs} which is replaced by a list of
+  dirs in the local file system;
+\item \xmlstructtemplate{_ei_root} which is replaced by the local
+  temporary directory name, where all files have been saved;
+%%
+  \item \xmlstructtemplate{_ei_outline} which is replaced by a list of
+    selected entities (separated by space);
+%%
+  \item \xmlstructtemplate{_ei_parametes} which is replace by a
+    corresponding list of parameters --- see Section~\ref{} for
+    information on how this list is constructed;
+%%
+  \item \xmlstructtemplate{_ei_sessionid} which is replaced by a
+    session identifier, this makes it possible to track the information
+    of a user along several request (see Section~\ref{})
+%%
+  \item \xmlstructtemplate{_ei_clientid} which is replaced by a the
+    client identifier, i.e., web-interface, eclipse, etc, which makes
+    it possible to provide output depending on the client (not
+    recommended since it double the amount of work). See
+    Section~\ref{} for a list of clients.
+  \end{itemize}
+%%
+%%   % 
+}
+{\xmlstructrefwb{execinfo}}
+
+%% SERTVERAPP
+\bigskip
+\xmlstruct
+{serverapp}
+{
+%
+  Defines a server based application that is available at the address
+  specified by the attribute \xmlstructattr{url}. In this kind of apps
+  the \apps server passes the request, as it is, to the app --- See
+  Section~\ref{} for more information.
+%
+}
+{\xmlstructrefwb{execinfo}}
+
+%% PARAMETERS
+\bigskip 
+\xmlstruct
+{parameters} 
+{
+%
+  Defines a list of parameters that are accepted by a corresponding
+  tool. In the \xmlstructattr{prefix} attribute you can specify a
+  string that will be attached to each parameter name when passed to
+  the app (only in command-line mode, see
+  \xmlstructrefwb{cmdlineapp}).
+  % 
+  For example, if \xmlstructattr{prefix}=\xmlstructvalue{"{-}{-}"} and
+  we have a parameter called 'level' with value X, then '{-}{-}level
+  X' will be passed to the app. The default value of
+  \xmlstructattr{prefix} is \xmlstructvalue{"-"}. You can set
+  \xmlstructattr{prefix} to the empty string \xmlstructvalue{""} if
+  there is no need to attach anything to the option name, in such case
+  the parameter name will probably include this prefix as part of its
+  name.Also, you can indicate in the \xmlstructattr{check} attribute
+  if you want or not that the parameters be check with your
+  specification. The default value of \xmlstructattr{check} is
+  \xmlstructvalue{"true"}. \xmlstructattr{check} value is like the
+  \xmlstructattr{prefix} value, it is inherit on all parameters, but
+  you can change on each one this properties.
+%
+}
+{\xmlstructrefwb{appinfo}}
+
+%% PARAM
+\bigskip
+\xmlstruct{param}
+{
+%
+  Defines a parameter accepted by a corresponding app. There are
+  several types of paramaters supported
+%
+}
+{\xmlstructrefwb{parameters}}
+
+%% SELECTONE
+\bigskip
+\xmlstruct
+{selectone}
+{
+%
+  Defines a parameter that takes a \emph{single} value out of a given
+  list:
+
+  \begin{itemize}
+  \item \xmlstructattr{name} is the name of the parameter, it must be
+    unique among all parameters of an app;
+
+  \item \xmlstructref{desc} describes the meaning of the parameter;
+
+  \item \xmlstructref{paramvalue}+ is a list of possible values for
+    this parameter;
+
+  \item \xmlstructref{defaultvalue} specifies the default
+    value. If not specified then the first \xmlstructref{paramvalue}
+    is considered as the default one;
+
+  \item \xmlstructattr{widgetid} specifies the preferred layout when
+    used in a client with a graphical interface (e.g., combo-box,
+    radio button, etc.). See \xmlstructref{widgetid} for a list of
+    widgets for this kind of parameter.
+\item \xmlstructattr{prefix} and \xmlstructattr{check} can override the default value of these attributes, specified in \xmlstructref{parameters}, for this particular parameter.
+  \end{itemize}
+  %
+ } {\xmlstructrefwb{param}}
+
+%% SELECTMANY
+\bigskip
+\xmlstruct{selectmany}
+{
+%
+  Defines a parameter that takes \emph{several} values out of a given
+  list:
+
+  \begin{itemize}
+  \item \xmlstructattr{name} is the name of the parameter, it must be
+    unique among all parameters of an app;
+
+  \item \xmlstructref{desc} describes the meaning of the parameter;
+
+  \item \xmlstructref{paramvalue}+ is a list of possible values for
+    this parameter;
+
+  \item \xmlstructref{defaultvalue} specifies the default
+    value. If not specified then the first \xmlstructref{paramvalue}
+    is considered as the default one;
+
+  \item \xmlstructattr{widgetid} specifies the preferred layout when
+    used in a client with a graphical interface (e.g., combo-box,
+    radio button, etc.). See \xmlstructref{widgetid} for a list of
+    widgets for this kind of parameter.
+\item \xmlstructattr{prefix} and \xmlstructattr{check} can override the default value of these attributes, specified in \xmlstructref{parameters}, for this particular parameter.
+  \end{itemize}
+  % 
+ } {\xmlstructrefwb{param}}
+
+%% FLAG
+\bigskip
+\xmlstruct{flag}
+{In this case the default should specify just \emph{true} or
+  \emph{false}. This is ONLY to say if one parameter appears or not.
+  \begin{itemize}
+  \item \xmlstructattr{name} is the name of the parameter, it must be
+    unique among all parameters of an app;
+
+  \item \xmlstructref{desc} describes the meaning of the parameter;
+
+  \item \xmlstructref{defaultvalue} specifies the default
+    value. If not specified then the \emph{false} value is considered as the default one;
+
+  \item \xmlstructattr{widgetid} specifies the preferred layout when
+    used in a client with a graphical interface (e.g., combo-box,
+    radio button, etc.). See \xmlstructref{widgetid} for a list of
+    widgets for this kind of parameter.
+\item \xmlstructattr{prefix} and \xmlstructattr{check} can override the default value of these attributes, specified in \xmlstructref{parameters}, for this particular parameter.
+  \end{itemize}
+}
+{\xmlstructrefwb{param}}
+
+%% TEXTFIELD
+\bigskip
+\xmlstruct{textfield}
+{In this case the parameter is some text,this text will be passed to the app as a string or file depending on the flag \xmlstructattr{method}
+
+\begin{itemize}
+  \item \xmlstructattr{name} is the name of the parameter, it must be
+    unique among all parameters of an app;
+
+  \item \xmlstructref{desc} describes the meaning of the parameter;
+
+  \item \xmlstructref{defaultvalue} specifies the default
+    value.
+
+  \item \xmlstructattr{widgetid} specifies the preferred layout when
+    used in a client with a graphical interface (e.g., combo-box,
+    radio button, etc.). See \xmlstructref{widgetid} for a list of
+    widgets for this kind of parameter.
+\item \xmlstructattr{prefix} and \xmlstructattr{check} can override the default value of these attributes, specified in \xmlstructref{parameters}, for this particular parameter.
+  \end{itemize}
+}{\xmlstructrefwb{param}}
+
+%% HIDDEN
+\bigskip
+\xmlstruct{hidden}
+{In this case the parameter is not showed in the app but the value is
+  used like an other parameter.
+
+\begin{itemize}
+  \item \xmlstructattr{name} is the name of the parameter, it must be
+    unique among all parameters of an app;
+
+  \item \xmlstructattr{value} specifies the value.
+
+\item \xmlstructattr{prefix} can override the default value of this attribute, specified in \xmlstructref{parameters}, for this particular parameter.
+  \end{itemize}}
+{\xmlstructrefwb{param}}
+
+%% PERMISSION
+\bigskip
+\xmlstruct{permission}
+{This is a list of users that are allowed or excluded to execute an
+  app. \xmlstructattr{default} is the default value to all user that
+  doesnt appear on this list. If an user appear in both list, the list
+of excluded is the most important.}
+{\xmlstructrefwb{app}}
+
+%% ALLOWED
+\bigskip
+\xmlstruct{allowed}
+{This is a list of users thar are allowed to use an app.}
+{\xmlstructrefwb{permission}}
+
+%% EXCLUDE
+\bigskip
+\xmlstruct{excluded}
+{This is a list of users thar are excluded to use an app.}
+{\xmlstructrefwb{permission}}
+
+%% USER
+\bigskip
+\xmlstruct{user}
+{It have an \xmlstructattr{id} of an user.}
+{\xmlstructrefwb{allowed}, \xmlstructrefwb{excluded}}
+
+\noindent
+\xmlstructdef{option}
+
+
+\begin{lstlisting}
+<option value=$\xmlstructref{paramvalue}$>$\xmlstructref{desc}$</option>
+\end{lstlisting}
+
+\noindent
+\xmlstructdef{defaultvalue}
+
+\begin{lstlisting}
+<default value=$\xmlstructref{paramvalue}$ />
+\end{lstlisting}
+or
+\begin{lstlisting}
+<default>$\xmlstructref{paramvalue}$ </default>
+\end{lstlisting}
+
+\noindent
+\xmlstructdef{textformat}
+
+( \lst{"text"} | \lst{"html"} | \lst{"svg"})
+
+\noindent
+\xmlstructdef{paramvalue}
+
+To Be Define
+
+\noindent
+\xmlstructdef{paramname}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\noindent
+\xmlstructdef{int}
+
+An integer value
+
+\noindent
+\xmlstructdef{bool}
+
+( \lst{"true"} | \lst{"false"} )
+
+\noindent
+\xmlstructdef{appid}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\noindent
+\xmlstructdef{userid}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\noindent
+\xmlstructdef{widgetid}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\noindent
+\xmlstructdef{url}
+
+A url
+
+\noindent
+\xmlstructdef{paramprefix}
+
+Can be any string [a-z,A-Z,0-9,-,\_]+, usually it is \lst{"-"} or \lst{"--"}
+
+\noindent
+\xmlstructdef{text}
+
+Any text
+
+\bigskip
+\bigskip
+\section{Configuration JSON}
+
+At the moment we write an example with
+ all the things that you can write.
+
+\begin{lstlisting}
+ var jsonParams = {
+      "command": "execute",//command
+      "app_id": "costa",//app id
+      "parameters": {
+          "lsa":["true"],//flag parameter
+          "flag2":["false"], //flag parameter
+          "sone":["sla"], //selectone parameter
+          "smany":["slaa","tru"], //selectmany parameter
+          "_ei_files": [
+              {
+                  "name": "prueba",
+                  "type": "directory",
+                  "_ei_files" : [
+                      {
+                          "name":"pp.txt",
+                          "content": "I'm pp.txt file \\n"
+                      }//a file in a directory
+                  ]//array of files and directories
+              },// one directory
+              {
+                  "name":"f1.txt",
+                  "type": "file",
+                  "content": "I'm f1.txt file\\n"
+              },// a file
+              {
+                  "name":"f2.txt",
+                  "content": "I'm f2.txt file\\n"
+              }// a file
+          ]//array of files and directories
+      }//end parameters
+  };// end jsonParams
+
+   $\$$.post("eiserver.php",
+    {
+       eirequest: JSON.stringify(jsonParams)
+    },
+    function(data) { });
+\end{lstlisting}
+
+\chapter{Outline App}
+
+\section{Input}
+I don't know the Input
+
+\section{Output}
+The Outline App returns an XML with the outline tree.
+
+%% 
+\bigskip
+\xmlstruct
+{outline}
+{
+%
+  Defines a list of points to be analised.
+\begin{itemize}
+  \item \xmlstructattr{text} is the name to be show.
+   \item \xmlstructattr{value} is the internalname .
+\item \xmlstructattr{selectable} indicates if this node can be
+  selected.
+\item \xmlstructattr{icon} indicates an alternative path for the icon
+  of the node.
+
+\end{itemize}
+%
+}
+{\xmlstructrefwb{outline}}
+
+

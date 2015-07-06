@@ -1,0 +1,120 @@
+window.OnClickAction = (function() {
+    "use strict";
+
+    var actions = new Array();
+
+   OnClickAction.parse = function(a, ei_info) { 
+	var tag = a[0].tagName;
+	if ( tag != "onclick" ) return null;
+
+       var actionCommands = new Set();
+       var selectors = new Array();
+
+       a.find("> "+_ei.outlang.syntax.eicommands).each( function() {
+	   var dest =  $(this).attr("destination") || ei_info.default_destination;
+	   $(this).children().each( function() {
+	       ei_info.outputmanager.parseCommand( $(this), actionCommands,dest );
+	   });
+       });
+       
+       a.find("> elements > selector").each( function () {
+	   selectors[ selectors.length ] = $(this).attr("value");
+       });
+       
+       return new OnClickAction({
+	   commands: actionCommands,
+	   selectors: selectors,
+	   outputmanager:  ei_info.outputmanager,
+	   level: a.find('> level')
+       });
+       
+    }
+
+    function OnClickAction(options) {	
+	if ( !options.selectors) {
+	    actions = new Array();
+	} else {
+	this.outputmanager = null;
+	this.selectors = null;
+	this.commands = null;
+
+	this.initialize(options);
+	}
+
+    };
+
+    OnClickAction.prototype = {
+	constructor: OnClickAction,
+
+	//
+	initialize:
+	function(options) {
+	    this.selectors = options.selectors;
+	    this.outputmanager = options.outputmanager;
+	    this.commands = options.commands;
+	},
+
+	//
+	activate:
+	function() {
+	    var self = this;
+
+	    for(var i=0; i<this.selectors.length; i++) {
+
+		var s = this.selectors[i];
+
+		if ( !actions[s] ) {
+		    actions[s] = new Array();
+		    $(s).each( 
+			function(x) {
+			    return function() {
+
+				$(this).click ( function() { 
+				    self.handleAction( x );
+				})}}( self.selectors[i] ) );
+		}
+		actions[s][ actions[s].length ] = this;
+	    }
+	},
+
+	handleAction:
+	function(s) {
+	    this.outputmanager.performActions( actions[s] );
+	},
+
+	// //
+	// activate:
+	// function() {
+	//     var self = this;
+	//     for(var i=0; i<this.selectors.length; i++) {
+	// 	$(this.selectors[i]).each( function() {
+	// 	    $(this).click ( function() { 
+	// 		self.outputmanager.performAction(self); 
+	// 	    })});
+	//     }
+	// },
+
+	//
+	deActivate:
+	function() {
+	},
+
+	//
+	doAction:
+	function() {
+	    if ( this.commands )
+		this.commands.asyncIterate( function(c) { c.do(); });
+	},
+
+	//
+	undoAction:
+	function() {
+	    if ( this.commands )
+		this.commands.asyncIterate( function(c) { c.undo(); });
+	}
+
+    }
+
+    return OnClickAction;
+
+})();

@@ -1,0 +1,52 @@
+<html>
+<head>
+ <title>Testing the EI Server</title>
+ 
+<script src="../libraries/jquery-1.9.1.js"></script>
+<style>
+  #console-div{
+    border:2px solid #0000FF;
+    margin:10px;
+    width:80%;
+  }
+  .ok{
+    border:2px solid #00FF00 !important; 
+  }
+  .err{
+    border:2px solid #FF0000 !important;
+    background:#000;
+    color:white;
+  }
+</style>
+ <script>
+   var jsonParams={"command":"ping","h":-1};
+   jsonParams["h"]=0;
+   var eirequest = jsonParams;
+   $.post("./eiserver.php",
+   {
+     eirequest: eirequest
+   }).done(function(data) {
+     data = jQuery.parseXML(data);
+     console.log(data);
+     if($("ei_error",data).length >0){
+   console.log($(data,"ei_error"));
+       $("#console-div").text("ERROR\n"+$(data).find("ei_error").text());
+       $("#console-div").addClass("err");
+     }else{
+       $("#console-div").text($(data).text());
+       $("#console-div").addClass("ok");
+     }
+   }).error(function(data) {
+     data = jQuery.parseXML(data);
+     console.log(data);
+     $("#console-div").text("ERROR\n"+$(data).text());
+     $("#console-div").addClass("err");
+   });
+
+ </script>
+</head>
+<body style="background-color: white;">
+Easy intereface test</br>
+<textarea id="console-div" ></textarea>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<semantic>
+<eiserver>
+  [APPS]?
+  [EXAMPLES]?
+  [WIDGETS]?
+</eiserver>
+
+<apps>
+  [APP]*
+</apps>
+
+<app id=[APPID] visible=[BOOLVAL]? >
+  [APPINFO]
+  [APPHELP]?
+  [EXECINFO]
+  [PARAMETERS]?
+  [PERMISSION]?
+</app>
+
+<appinfo>
+  [ACRONYM]?
+  [TITLE]?
+  [LOGO]?
+  [DESC]?
+</appinfo>
+
+<acronym>[TEXT]</acronym>
+
+<title>[TEXT]</title>
+
+<logo src=[URL]/>
+
+<desc>
+  <short>[TEXT]</short>
+  <long>[TEXT]</long>
+</desc>
+
+<apphelp>
+  [CONTENT]+
+</apphelp>
+
+<content format=[TEXTFORMAT]>[TEXT]</content>
+
+<execinfo textinfile=[BOOLVAL]>
+  ( [CMDLINEAPP] | [SERVERAPP] )
+</execinfo>
+
+<serverapp url=[URL]/>
+
+<cmdlineapp> [COMMAND_TEMPLATE]</cmdlineapp>
+//[COMMAND_TEMPLATE] = /path-to/app _ei_files _ei_dirs _ei_root -m _ei_outline _ei_params
+
+<parameters prefix=[PARAM_PREFIX]? check=[BOOLVAL]?>
+  [PARAM]*
+</parameters>
+
+//[PARAM] = ( [SELECTONE] | [SELECTMANY] | [FLAG] | [TEXTFIELD] | [HIDDEN] )
+
+<selectone name=[PARAMNAME] prefix=[PARAMPREFIX]? check=[BOOLVAL]? widget=[WIDGETID]?>
+  [DESC]
+  [OPTION]+
+  [DEFAULT_VALUE]?
+</selectone>
+
+<selectmany name=[PARAMNAME] prefix=[PARAMPREFIX]? check=[BOOLVAL]? widget=[WIDGETID]?>
+  [DESC]
+  [OPTION]+
+  [DEFAULT_VALUE]*
+</selectmany>
+
+<flag name=[PARAMNAME] prefix=[PARAMPREFIX]? check=[BOOLVAL]? widget=[WIDGETID]?>
+  [DESC]
+  [DEFAULT_VALUE]?
+</flag>
+
+<textfield name=[PARAMNAME] prefix=[PARAMPREFIX]? check=[BOOLVAL]? validfile=[BOOLVAL]? widget=[WIDGETID]?>
+  [DESC]
+  [DEFAULT_VALUE]?
+</textfield>
+
+<hidden name=[PARAMNAME] value=[PARAMVALUE] prefix=[PARAM_PREFIX]? check=[BOOLVAL]? />
+
+// end [PARAM]
+<default value=[PARAM_VALUE]/>
+
+<permission default=[BOOLVAL]> //default is for each person that doesnt appear in any list
+[ALLOWED]?
+[EXCLUDED]? //this is stronger than allowed
+</permission> //allowed and excluded are "inmutables" when default change
+
+<allowed>
+[USER]*
+</allowed>
+<excluded>
+[USER]*
+</excluded>
+
+<user id=[USERID]/>
+
+<widgets>
+[WIDGET]*
+</widgets>
+
+<widget id=[WIDGETID]>
+  [WIDGETINFO]
+  [ABLETYPEPARAMS]*
+</widget>
+
+<able>
+  [ABLETYPEPARAM]*
+</able>
+<able_type_param value=[TYPE_PARAM] />
+
+<widgetinfo>
+  [DESC]
+</widgetinfo>
+
+//[TYPEPARAM] = ( selectone | selectmany | appear | textfield | all)
+//[BOOLVAL] = (( true | false ) | ( yes | no ) | ( 0 | 1 ))
+//[WORDID] € {x| Exists [WORD] called y and y.id = x}
+//f.e.:[WIDGETID] € {x| Exists [WIDGET] called y and y.id = x}
+//[PARAM_NAME] = String
+//[PARAM_PREFIX] = String
+//[PARAM_VALUE] = type of param
+//[URL] = PATH or server url
+//[TEXT] = String
+
+</semantic>
