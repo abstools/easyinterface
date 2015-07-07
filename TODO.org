@@ -107,7 +107,7 @@ folder.
   Users should login before they can use the tool. Recall to pass the
   user_id in the execute
 **** TODO Flag for session_id
-*** Check Application level cariables in PHP
+*** Check if PHP has application level variables like ASP for example:
   To cache some computations that we do the same for all requests we
   need some kind of global variables
 
@@ -115,19 +115,12 @@ folder.
 **** Give this parameter in server
 **** create interface to show outline when is required
 **** change execution to ignore outline when is not needed
-*** TODO Streaming
-Web Service, call it to get new commands or actions.
 *** TODO Menu apply in filemanager
 *** TODO Outline with type of files
     Todo a "pelo"...
     .extension
 
 *** TODO Change name clear and apply button
-** TODO selectors do not work with svg in jquery, we should find a workaround. SVG stuff should be redesigned
-   changecss, onclick and all the commands that works with
-   selectors. only work with the existing elements. It means: If we add a
-   svg and add onclick at same time, we cannt asume that svg is printed
-   first. (all are async).
 ** DONE apps: [{server:"",apps:_all or [...]}]
 ** DONE examples: [{server:"",examples:_all or [...]}]
 ** DONE selectbox with closed consoles
@@ -171,6 +164,16 @@ Web Service, call it to get new commands or actions.
 ** DONE merge lib and ext folders in web client
 ** FEEDBACK Apply/Refresh does not work on a single file, looks like the directory names are not built correctly (not sure)
 ** DONE BUG: oncodelineclickaction?? is codelineaction??
+** TODO SVG Streaming
+Web Service, call it to get new commands or actions.
+** TODO Time line command
+** TODO Example of SVG animation
+** TODO selectors do not work with svg in jquery, we should find a workaround. SVG stuff should be redesigned
+   changecss, onclick and all the commands that works with
+   selectors. only work with the existing elements. It means: If we add a
+   svg and add onclick at same time, we cannt asume that svg is printed
+   first. (all are async).
+** TODO Shell client
 * Research
 ** graphviz (lenguaje dot para grafos)
 * Moving to github
