@@ -96,6 +96,49 @@ folder.
 **** DONE it does not work well when the id is not unique, maybe better remove it.
    The category tag should include a value attribute, which is the one returned to the app
 *** DONE fix layout and 3 scrolls in editor, and similar in console
+*** DONE apps: [{server:"",apps:_all or [...]}]
+*** DONE examples: [{server:"",examples:_all or [...]}]
+*** DONE selectbox with closed consoles
+*** DONE Help button with accordion
+*** DONE Re-Add buttons in console to add and close
+*** DONE BUG: content inlinemarker
+
+*** DONE make that content environment support the attribute outclass
+   Css para warning, help, info, error y sus iconos
+*** DONE resizing the browser should resize easyinterface (vertical)
+
+*** DONE verify that all parameters work fine, as explained in the manual
+*** DONE define the syntax of example (add desc to document)
+
+        <exset id="..."> </exset>
+        <folder name=".."> </folder>
+        <file name=".." url=".." />
+        <github .... />
+
+*** DONE fix layout of remote files
+*** DONE pass the clientid from the web-interface
+*** DONE modify index.html in sever so it checks that the server seems to work correctly. This might require adding something to the server language to test that it work, etc.
+*** DONE looks like the client requires <parameters> environment to be in the app description, this should be optional
+   The problem is: server returns a not wellformed xml, because add
+   <?xml version="1.0" ?>
+   js cann't parse it. 
+   the version Tag is generate by simpleXMLelement, when is printted
+   with "asXML".
+   one solution is: explode("\n", $xml->asXML(), 2)[1];
+   but its very ugly, 
+   other more ugly: substr($xml, strpos($xml, '?'.'>') + 2);
+   other: rewrite php using other XML writer
+   and the last one: is require write <parameters></parameters>.. but
+   this dont solve the problem.
+*** SOLUTION:
+    en eiserver.php remove all <?xml ... ?> with RegExpr
+*** DONE the flag parameter accepts yes/no instead of true and false
+*** DONE in the selectone parameter, if the desc is not provided use value to show the different values. The same for select many i guess.
+*** DONE Test-i execute each command
+*** DONE Remove proxy possibility
+*** DONE merge lib and ext folders in web client
+*** DONE Apply/Refresh does not work on a single file, looks like the directory names are not built correctly (not sure)
+*** DONE BUG: oncodelineclickaction?? is codelineaction??
 ** TODO In Future
 *** TODO Configuration flags for the eiserver
 **** DONE Security checks
@@ -121,49 +164,8 @@ folder.
     .extension
 
 *** TODO Change name clear and apply button
-** DONE apps: [{server:"",apps:_all or [...]}]
-** DONE examples: [{server:"",examples:_all or [...]}]
-** DONE selectbox with closed consoles
-** DONE Help button with accordion
-** DONE Re-Add buttons in console to add and close
-** FEEDBACK BUG: content inlinemarker
-** TODO addmarkercommand should accumulate text (SAMIR)
-** FEEDBACK make that content environment support the attribute outclass
-   Css para warning, help, info, error y sus iconos
-** DONE resizing the browser should resize easyinterface (vertical)
 ** TODO actions should accumulate associated eicommands (SAMIR)
-** FEEDBACK verify that all parameters work fine, as explained in the manual
-** DONE define the syntax of example (add desc to document)
-
-        <exset id="..."> </exset>
-        <folder name=".."> </folder>
-        <file name=".." url=".." />
-        <github .... />
-
-** DONE fix layout of remote files
-** DONE pass the clientid from the web-interface
-** FEEDBACK modify index.html in sever so it checks that the server seems to work correctly. This might require adding something to the server language to test that it work, etc.
-** DONE looks like the client requires <parameters> environment to be in the app description, this should be optional
-   The problem is: server returns a not wellformed xml, because add
-   <?xml version="1.0" ?>
-   js cann't parse it. 
-   the version Tag is generate by simpleXMLelement, when is printted
-   with "asXML".
-   one solution is: explode("\n", $xml->asXML(), 2)[1];
-   but its very ugly, 
-   other more ugly: substr($xml, strpos($xml, '?'.'>') + 2);
-   other: rewrite php using other XML writer
-   and the last one: is require write <parameters></parameters>.. but
-   this dont solve the problem.
-*** SOLUTION:
-    en eiserver.php remove all <?xml ... ?> with RegExpr
-** FEEDBACK the flag parameter accepts yes/no instead of true and false
-** DONE in the selectone parameter, if the desc is not provided use value to show the different values. The same for select many i guess.
-** DONE Test-i execute each command
-** DONE Remove proxy possibility
-** DONE merge lib and ext folders in web client
-** FEEDBACK Apply/Refresh does not work on a single file, looks like the directory names are not built correctly (not sure)
-** DONE BUG: oncodelineclickaction?? is codelineaction??
+** TODO addmarkercommand should accumulate text (SAMIR)
 ** TODO SVG Streaming
 Web Service, call it to get new commands or actions.
 ** TODO Time line command
