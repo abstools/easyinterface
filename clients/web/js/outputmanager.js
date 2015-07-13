@@ -111,13 +111,11 @@ window.OutputManager = (function() {
 	    	});
 	    });
 	    
-	    // TODO: check this, **ACTIONS MUST BE EXECUTED AFTER COMMANDS**
-	    this.commands.iterate( 
-		function(c) { c.do(); });
-//		function() {
-		    this.actions.iterate( function(a) { a.activate();});
-
-//		});
+	    this.commands.asyncIterate( 
+		function(c) { c.do(); },
+		function() {
+		    self.actions.asyncIterate( function(a) { a.activate();});
+		});
 	},
 
 
