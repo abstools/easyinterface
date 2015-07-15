@@ -176,6 +176,7 @@ Web Service, call it to get new commands or actions.
    svg and add onclick at same time, we cannt asume that svg is printed
    first. (all are async).
 ** TODO Shell client
+** TODO Doesnt work correctly in Safari Browser
 * Research
 ** graphviz (lenguaje dot para grafos)
 * Moving to github
