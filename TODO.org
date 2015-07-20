@@ -177,6 +177,7 @@ Web Service, call it to get new commands or actions.
    first. (all are async).
 ** TODO Shell client
 ** TODO Doesnt work correctly in Safari Browser
+** TODO Refresh outline for 1 file only still does not work
 * Research
 ** graphviz (lenguaje dot para grafos)
 * Moving to github
