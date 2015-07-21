@@ -6,7 +6,7 @@ interface MainTest {
 } 
 class MainImpl implements MainTest {      
 	Unit main (Int n, Int m) {      
-		ServerInterface y = new cog Server(null);   
+		ServerInterface y = new Server(null);   
 		y!start(n,m);
 	}
 }
@@ -31,14 +31,14 @@ class Server (DAOInterface dao) implements ServerInterface {
     Fut<Bool> b = this!initDAO ();
     await b?;
     while(n > 0) {
-      HandlerInterface h = new cog Handler(this.dao);
+      HandlerInterface h = new Handler(this.dao);
       h!run2(m); 
       n = n - 1;
   	}  
   } 
 
   Bool initDAO () {
-    this.dao = new cog DAO (null);
+    this.dao = new DAO (null);
     Fut<Bool> b = this.dao!initDB();
     await b?;
     return True; 

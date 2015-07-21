@@ -64,8 +64,8 @@ window.EasyInterface = (function() {
 	this.initGeneralSetting();
 	this.initConsoleWidget();
 	this.initToolSelectorWidget();
-	this.initOutlineWidget();
 	this.initOutputManager();
+	this.initOutlineWidget();
 	this.initTools();
 	this.filemanager.setProperties(this.outline,this.tools);
 	// connect the buttons to the corresponding operations
@@ -303,7 +303,8 @@ window.EasyInterface = (function() {
 		    "holder": this.outlineHolder, 
 		    "filemanager": this.filemanager,
 		    "cmdengine": this.cmdengine,
-		    "console": this.console
+		    "console": this.console,
+		    "outputmanager" : this.outputmanager
 		});
 	},
 

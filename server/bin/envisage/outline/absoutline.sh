@@ -1,6 +1,6 @@
 #! /bin/bash
 
-. `dirname $0`/parseparams.sh
+. ./bin/parseparams.sh  # this file is located in server/bin
 
 absfrontend=/home/genaim/Systems/abstools/frontend/dist/absfrontend.jar
 

@@ -961,7 +961,6 @@ window.FileManager = (function() {
       };
       var files = new Array();
       recursive(fileIds,files);
-      console.log(files);
       return files;
     },
 

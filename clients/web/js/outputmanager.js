@@ -43,13 +43,47 @@ window.OutputManager = (function() {
 	},
 
 	//
+	reportError:
+	function( error_msg ) {
+	    this.console.createWin('error',"Error");
+	    var err = $("<pre>"+error_msg+"</pre>");
+	    this.console.addContentToWin('error',err);
+	    $("<div title='Error'>Error Occured. See Error Console</div>").dialog({
+		modal: true,
+		buttons: {
+		    Ok: function() {
+			$( this ).dialog( "close" );
+		    }
+		}
+	    });
+	},
+
+	//
 	output:
 	function( output ) {
 
+	    // first we clear all current annotations, if needed.
 	    this.clearAllAnnotations();
 
+	    // we check if the returned output includes and <error>
+	    // environment, in such case we just call another method
+	    // to print the error and we ignore all other parts of the
+	    // output
+	    var error = $(output).find(_ei.outlang.syntax.eierror);
+
+	    if ( error.size() != 0 ) {
+		this.reportError( $(error).text() );
+		return;
+	    }
+
+	    // if we are here then there was no error
+	    //
 	    var ei_out = $(output).find(_ei.outlang.syntax.eiout);
-	    
+
+	    // if the output does not include any <eiout> tag, we
+	    // simply print the output text on the cosole. This is
+	    // done by generating a printconsole command
+	    //
 	    if ( ei_out.size() == 0 ) {
 		output = jQuery.parseXML( 
 		               "<"+_ei.outlang.syntax.eiout+" version='1'>"+
@@ -65,7 +99,6 @@ window.OutputManager = (function() {
 		ei_out = $(output).find(_ei.outlang.syntax.eiout);
 	    }
 	    
-
 	    this.version = $(ei_out).attr("version");
 	    this.lastOutput = ei_out;
 	    try {
@@ -201,6 +234,7 @@ window.OutputManager = (function() {
 	//
 	performActions:
 	function( as ) {
+
 	    if ( this.lastAction ) {
 		var tmp;
 		if ( this.lastAction instanceof Array ) 

@@ -35,6 +35,8 @@ window.OnClickAction = (function() {
 	this.commands = new Set();
 	this.selectors = new Array();
 
+	this.isActive = false;
+
 	options.eicommands.each( function() {
 	    var dest =  $(this).attr( _ei.outlang.syntax.dest ) || options.dest;
 	    var outclass =  $(this).attr( _ei.outlang.syntax.outclass ) || options.outclass;
@@ -52,7 +54,10 @@ window.OnClickAction = (function() {
 	});
 	
 	options.elements.find("> " + _ei.outlang.syntax.selector).each( function () {
-	    self.selectors[ self.selectors.length ] = $(this).attr( _ei.outlang.syntax.selectorvalue );
+	    self.selectors[ self.selectors.length ] = {
+		value: $(this).attr( _ei.outlang.syntax.selectorvalue ),
+		parent:  $(this).attr("parent")
+	    }
 	});
 
     };
@@ -63,36 +68,44 @@ window.OnClickAction = (function() {
 	activate:
 	function() {
 	    var self = this;
+
+	    this.isActive = true;
+
 	    for(var i=0; i<this.selectors.length; i++) {
-		$(this.selectors[i]).each( function() {
-		    $(this).on( "click", function() { 
-			self.outputmanager.performAction(self); 
-		    })});
+		$(this.selectors[i].value).each( function() {
+		    var elem = self.selectors[i].parent != undefined ? $(this).parent() : $(this);
+		    
+		    if ( elem.prop("onclickcallbacks") == undefined ) {
+		    	elem.prop("onclickcallbacks", new Array());
+			$(elem).on( "click", function() { 
+			    self.outputmanager.performActions( $(this).prop("onclickcallbacks") ); 
+			});
+		    }
+		    var callbacks = elem.prop("onclickcallbacks");
+		    callbacks[ callbacks.length ] = self;
+		});
 	    }
+
+	    
 	},
 
 	//
 	deActivate:
 	function() {
-	    var self = this;
-	    for(var i=0; i<this.selectors.length; i++) {
-		$(this.selectors[i]).each( function() {
-		    $(this).off("click");
-		});
-	    }
+	    this.isActive = false;
 	},
 
 	//
 	doAction:
 	function() {
-	    if ( this.commands )
+	    if ( this.isActive && this.commands )
 		this.commands.asyncIterate( function(c) { c.do(); });
 	},
 
 	//
 	undoAction:
 	function() {
-	    if ( this.commands )
+	    if ( this.isActive && this.commands )
 		this.commands.asyncIterate( function(c) { c.undo(); });
 	}
 

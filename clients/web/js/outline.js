@@ -7,14 +7,15 @@ window.Outline = (function() {
     function Outline(options) {	
 	
 	outlineId++;
-	this.outlineHolder = null;
-	this.filemanager = null;
-	this.cmdengine = null;
 	this.treeId = "OUTLINE-"+outlineId;
 	this.olObj = null
 	this.olId  = 10;
 	this.nodes = null;
-	this.initialize(options);
+	this.outputmanager = options.outputmanager;
+	this.outlineHolder = $(options.holder);
+	this.filemanager = options.filemanager;
+	this.cmdengine = options.cmdengine;
+	this.console = console;
 	this.initOutline();
 
     };
@@ -22,14 +23,6 @@ window.Outline = (function() {
     Outline.prototype = {
 	constructor: Outline,
 
-	//
-	initialize:
-	function(options) {
-	    this.outlineHolder = $(options.holder);
-	    this.filemanager = options.filemanager;
-	    this.cmdengine = options.cmdengine;
-	    this.console = console;
-	},
 
 	//
 	olId_to_olTag: 
@@ -217,29 +210,30 @@ window.Outline = (function() {
 	    dialogBox.find("#progressbar").progressbar({
 	    	value: false
 	    });
-	    console.log(files);
+
 	    this.cmdengine.exec({
-	      server: _ei.outline.server,
-	      appId: _ei.outline.app,
-	      files: files,
-	      result: {media: "stdin"}
-		},
-		function(out) {
-		    self.outlineHolder.empty();
-		    if ( $(out).find("> ei_response").find("> error").size() > 0) {
-			alert($(out).find("> ei_response").find("> error").text());
-			console.log(out);
-		    } else {
-			self.initOutline( function() { self.resetLayout( out ); } );
-		    }
+		server: _ei.outline.server,
+		appId: _ei.outline.app,
+		files: files,
+		result: {media: "stdin"}
+	    },
+	    function(out) {
+		self.outlineHolder.empty();
+		var error = $(out).find("> ei_response").find("> eierror");
+		if ( error.size() > 0) {
 		    dialogBox.dialog("close");
-		},
-		function(out) {
-		    self.outlineHolder.empty();
-		    self.initOutline();
+		    self.outputmanager.reportError( error.text() );
+		} else {
+		    self.initOutline( function() { self.resetLayout( out ); } );
 		    dialogBox.dialog("close");
-		    console.log("ERROR",out);
-		});
+		}
+	    },
+	    function(out) {
+		self.outlineHolder.empty();
+		self.initOutline();
+		dialogBox.dialog("close");
+		self.outputmanager.reportError( out );
+	    });
 	}
     }
 

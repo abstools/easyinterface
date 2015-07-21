@@ -15,9 +15,9 @@ try {
   $response =  preg_replace("/(<\?xml)(.)*\?>/" , '', $request->process());
   println( $response );
 } catch (Exception $e) {
-  print("<ei_error>");
+  print("<eierror>");
   print( $e->getMessage() );
-  println("</ei_error>");
+  println("</eierror>");
 }
 println("</ei_response>");
 

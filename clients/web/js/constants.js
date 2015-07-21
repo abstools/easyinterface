@@ -17,10 +17,11 @@ var _ei = {
 	  eicommands     : "eicommands",   // tag
 	  eiactions      : "eiactions",    // tag
 	  eiout          : "eiout",        // tag
+	  eierror        : "eierror",      // tag
 	  dest           : "dest",         // attr
 	  color          : "color",        // attr
-	  elements       : "elements",    // tag
-	  selector       : "selector",   // tag
+	  elements       : "elements",     // tag
+	  selector       : "selector",     // tag
 	  selectorvalue  : "value",
 
 	  //
