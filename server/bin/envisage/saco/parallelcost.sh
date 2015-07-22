@@ -1,6 +1,6 @@
 #!/bin/bash
 
-### A wrapper script for SACO's MHP analysis
+### A wrapper script for SACO's parallel cost analysis
 ###
 ###
 
@@ -9,10 +9,10 @@
 #
 . `dirname $0`/saco_settings.sh
 
-# Execute mh_shell, we add '-ei_version 2' to the parameters since now
+# Execute costabs, we add '-ei_version 2' to the parameters since now
 # saco's output uses the old easy interface language
 #
-${SACOHOME}/src/interfaces/mhp/shell/mhp_shell $@ -ei_version 2 -mode complete -highlight '/dev/null' &> /tmp/mhp.stderr
+${SACOHOME}/src/interfaces/shell/costabs $@ -field_abstraction zero_one -parallel_cost yes -ei_version 2 &> /tmp/costabs.stderr
 
 # If costabs exit with exit-code 0 we just print the output to the
 # stdout, otherwise we print an error message to the stdout as well.
@@ -21,8 +21,8 @@ if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
     echo "<eierror>"
-    echo "Error occurred while executing May-Happen-in-Parallel analysis:"
+    echo "Error occurred while executing the parallel cost:"
     echo ""
-    cat /tmp/mhp.stderr
+    cat /tmp/costabs.stderr
     echo "</eierror>"
 fi
