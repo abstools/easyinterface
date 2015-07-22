@@ -2,9 +2,7 @@
 
 . `dirname $0`/../envisage_settings.sh  # this file is located in server/bin/envisage
 
-absfrontend=${ABSTOOLSHOME}/frontend/dist/absfrontend.jar
-
-java -jar $absfrontend -outline $@ 2> /tmp/absoutline.stderr
+java -jar $ABSFRONTEND -outline $@ 2> /tmp/absoutline.stderr
 
 if [ $? == 1 ]; then
     echo "<eierror>"
