@@ -178,6 +178,7 @@ Web Service, call it to get new commands or actions.
 ** TODO Shell client
 ** TODO Doesnt work correctly in Safari Browser
 ** TODO Refresh outline for 1 file only still does not work
+** TODO Allow submenus in the applications menu
 * Research
 ** graphviz (lenguaje dot para grafos)
 * Moving to github

@@ -5,17 +5,17 @@
 
 In this chapter we explain how to get a local installation of the \ei
 framework, and how to integrate an application. We assume the (server)
-installation is done on a Linux machine, however, the instructions are
-clear enough to be applied to other operating systems.
+installation is done under \texttt{Linux}, however, the instructions
+are clear enough to be applied to other operating systems.
 
 \section{Downloading \ei}
 
-If you do not have a copy of \ei yet, then download it from
-\eidownloadurl and extract the \texttt{zip} file in a separated
-directory. In the rest of this chapter, when needed, we will use has
-been extracted in \texttt{/path-to/easyinterface} to refer to the
-absolute path of this directory. This directory includes the following
-sub-directories:
+First checkout a copy of \ei from the following github repository:
+\eigithub.
+%
+In the rest of this chapter, when needed, we will use
+\texttt{/path-to/easyinterface} to refer to the absolute path of
+\ei. This directory includes the following sub-directories:
 %
 \begin{enumerate} 
 %
@@ -49,8 +49,9 @@ which can be done by executing the following command:
 
 The \ei server is written in PHP, and thus requires an HTTP server to
 be installed. Installing such server, together with a corresponding
-PHP support, depends on the operating system you are using. For
-example, in \href{http://www.ubuntu.com}{Ubuntu} you can install
+PHP support, depends on the operating system you are using. 
+%
+In \href{http://www.ubuntu.com}{Ubuntu}, for example, you can install
 \href{http://httpd.apache.org/}{Apache2} by executing the following
 instructions:
 
@@ -67,6 +68,9 @@ instructions:
 Once installed, make sure that it works correctly by visiting
 \url{http://localhost/info.php} --- you should get a page with some
 information on the PHP module.
+%
+\texttt{OS X} typically has Apache installed, and you just need to
+activate it.\fixme{elaborate on OS X}
 
 \section{Setting up the \ei Server}
 
@@ -106,40 +110,43 @@ Once modified, you should restart the HTTP server:
 Finally test that the \ei server works correctly by visiting
 \url{http://localhost/ei/server} where you should get a message
 confirming that the server is up.
+%
+In \texttt{OS X} you have to add the above configuration line to
+\texttt{/etc/apache2/http.conf}. \fixme{elaborate on OS X}
 
 
 \section{Setting up the \ei Web-Client}
 
 By default the web-client is already configured to connect to the \ei
-server that is available at \url{http://localhost/ei/server}, and to
-retrieve all applications that are installed on that server. Thus, for
-now we just have to check that it works as expected before proceeding
-to the next section.
+server that is available at \url{http://localhost/ei/server}, and,
+moreover, to retrieve all applications that are installed on that
+server. Thus, for now we just have to check that it works as expected
+before proceeding to the next section.
 %
 First visit \url{http://localhost/clients/web} and check that you get
-a page as the one depicted in Figure~\ref{}.  Next click on the
-\applybutton button, you should get a message in the console area
+a page similar to the one depicted in Figure~\ref{}.  Next click on
+the \applybutton button, you should get a message in the console area
 congratulating you on your first use of \ei. Let us first briefly
 explain what actually happened when you clicked on \applybutton, as it
-will help you better understanding the next steps.
+will help you to understand the next steps.
 
 When you clicked on \applybutton, the web-client asked the server to
 execute an application that is associated with the program (bash
-script) \texttt{server/bin/test-1.sh}, the server did so and
+script) \texttt{server/bin/default/test-1.sh}, the server did so and
 redirected the standard output of \texttt{test-1.sh} to the client
-which in turn printed it on the console. Change the message in
-\texttt{test-1.sh} and check that you get a different output on the
-console.
+which in turn printed it on the console. You can change the message
+printed in \texttt{test-1.sh} and check that you get a different
+output on the console.
 
-Next to the \applybutton button you can see a Combo-Box that lists the
+Next to the \applybutton button you can see a ComboBox that lists the
 available applications, select any of them and click on \applybutton
 again. Each application demonstrates some aspects of the output
 language that we will see later (e.g., highlighting lines). Note that
 application ``Test i'' is associated with the bash script
-\texttt{server/bin/test-i.sh}. 
+\texttt{server/bin/default/test-i.sh}. 
 %
 In the next section you learn how to integrate your applications into
-this list by installing it on the \ei server.
+this list by installing them on the \ei server.
 
 \section{Add Your First Application to \ei}
 
@@ -163,8 +170,8 @@ applications that are installed on the server that is available at
 
 We start by creating a bash-script that represents the executable of
 our application (it could be any other executable). Create a file
-named \texttt{myapp.sh} in \texttt{server/bin} with the following
-content:
+named \texttt{myapp.sh} in \texttt{server/bin/default} with the
+following content:
 
 \medskip
 \begin{lstlisting}[style=script]
@@ -194,8 +201,8 @@ correctly before proceeding to the next step.
 
 Next we will configure the server to recognize our application.
 %
-Create a file \texttt{myapp.cfg} in \texttt{server/config} with the
-following content:
+Create a file \texttt{myapp.cfg} in the directory
+\texttt{server/config/default} with the following content:
 
 \medskip
 \begin{lstlisting}
@@ -242,22 +249,22 @@ for plain text).
 %
 The most important part is the \lst{execinfo} tag, which provides
 information on how to execute the application. The attribute
-\lst{method} declares that this application is to be execute using a
+\lst{method} declares that this application can be executed using a
 command-line as described in \lst{cmdlineapp}.
 %
 The text inside \lst{cmdlineapp} is interpreted as a command-line
-template, such that when the server is requested to execute the
+\emph{template}, such that when the server is requested to execute the
 corresponding application it will simply execute this command-line and
 redirect the output back to the client. Later you will understand why
 we call it \emph{template}.
 
 Next we add the above configuration file to the server. This is done
-by adding the following line to \texttt{server/config/apps.cfg}
+by adding the following line to \texttt{server/config/default/apps.cfg}
 (inside the \lst{apps} tag):
 
 \medskip
 \begin{lstlisting}
- <app id="myapp" src="myapp.cfg" />
+ <app id="myapp" src="default/myapp.cfg" />
 \end{lstlisting}
 
 \medskip
@@ -266,11 +273,17 @@ Here we tell the server that we want to install an application as
 defined in \texttt{myapp.cfg}, and we want to assign it the
 \emph{unique} identifier \lst{"myapp"}. This identifier will be mainly
 used by the server and the clients when they communicate, we are not
-going to use it anywhere else.
+going to use it anywhere else. 
 %
-Note that the main configuration file of the \ei server is
-\texttt{eiserver.cfg}, and that \texttt{apps.cfg} is imported into
-that file (open \texttt{server/config/eiserver.cfg} to see this).
+Note that in \texttt{default/apps.cfg} we used
+\lst{"default/myapp.cfg"} and not \lst{"myapp.cfg"}. This is because
+the server looks for configurations file starting in
+\texttt{server/config}.
+%
+Note also that the main configuration file of the \ei server is
+\texttt{server/config/eiserver.cfg}, and that
+\texttt{default/apps.cfg} is imported into that file (open
+\texttt{server/config/eiserver.cfg} to see this).
 
 Let us test our application. Go back to the web-client and reload the
 page, you should see a new application named \texttt{MFA} in the
@@ -315,7 +328,7 @@ following:
 
 \medskip
 \begin{lstlisting}
-<cmdlineapp>./bin/myapp.sh -f _ei_files</cmdlineapp>
+<cmdlineapp>./bin/default/myapp.sh -f _ei_files</cmdlineapp>
 \end{lstlisting}
 
 \medskip
@@ -339,7 +352,7 @@ replace the content of \texttt{myapp.sh} by the following:
 \begin{lstlisting}[style=script]
 #!/bin/bash
 
-. `dirname $0`/parseparams.sh
+. `dirname $0`/../parse_params.sh
 
 echo "I've received the following command-line parameters:"
 echo ""
@@ -398,10 +411,10 @@ application.
 
 By default the web-client is configured to work with \abs programs,
 and thus if you open such a program (from the filemanager) and then
-click on the \refreshoutline button, you will get a tree-view of with
-this program entities (if you use \refreshoutline from the context
-menu in the filemanager you will get a tree-view for program entities
-for all files in the sub-tree).
+click on the \refreshoutline button, you will get a tree-view of this
+program entities (if you use \refreshoutline from the context menu in
+the filemanager you will get a tree-view of program entities for all
+files in the sub-tree).
 %
 Note that to generate this tree-view the web-client actually executes a
 ``hidden'' application that is installed on the server, but this is
@@ -455,7 +468,7 @@ done
 \medskip
 \noindent
 This code simply print the entities in separated lines. Again, the
-external script \texttt{parseparams.sh} parses the command-line and
+external script \texttt{parse\_params.sh} parses the command-line and
 stores the list of entities in the variable \texttt{entities}.
 
 Go back to the web-client, select some files and entities and execute
@@ -496,7 +509,7 @@ to the following:
 \begin{lstlisting}[style=script]
 #!/bin/bash
 
-. `dirname $0`/parseparams.sh
+. `dirname $0`/../parse_params.sh
 
 echo "I've received the following command-line parameters:"
 echo ""
@@ -539,7 +552,7 @@ Compared to the previous script, you can notice that: we added lines
 \texttt{wc} at line 24; and in lines 27-35 we wrapped the loop that
 prints the outline entities with a condition.
 %
-Note that \texttt{parseparams.sh} sets the variable
+Note that \texttt{parse\_params.sh} sets the variable
 \texttt{whattocount} to the value of ``\texttt{-c}'', and sets
 \texttt{showoutline} to 1 if ``\texttt{-s}'' is provided in the
 command-line and to 0 otherwise. Before proceeding to the next step,
@@ -608,7 +621,7 @@ are valid values, etc.
 %
 The tag \lst{selectone} defines a parameter with \lst{name} ``c'' that
 can take one value from a set of possible ones. For example, the
-web-client will view it as a Combox-Box.
+web-client will view it as a ComboBox.
 %
 The \lst{desc} environment contains a text describing this parameter
 and is used by the client when viewing this parameter graphically.
@@ -617,7 +630,7 @@ The \lst{option} tags define the valid values for this option, from
 which one can be selected, and the \lst{default} tags defines the
 default value.  The \lst{desc} environment of each \lst{option}
 contains a text describing this option, e.g., the \lst{short}
-description is used for the text in the corresponding Combo-Box.
+description is used for the text in the corresponding ComboBox.
 %
 The tag \lst{flag} defines a parameter with name ``s''. This parameter
 has no value, it is either provided in the command-line or not, and
@@ -735,7 +748,7 @@ content to the following:
 \begin{lstlisting}[style=script]
 #!/bin/bash
 
-. `dirname $0`/parseparams.sh
+. `dirname $0`/../parse_params.sh
 
 echo "<eiout>"
 echo "<eicommands>"
@@ -917,7 +930,7 @@ The code at Line 3 removes the temporal directory prefix from the file
 name and stores the result in variable \texttt{dest}. Line 4-7
 generate the actual command to add a marker.
 %
-Note that \texttt{parseparams.sh} sets the variable \texttt{rootdir}
+Note that \texttt{parse\_params.sh} sets the variable \texttt{rootdir}
 to the value of \lst{_ei_root} that is passed to \texttt{myapp.sh}
 using the ``\texttt{-r}'' parameter.
 %
