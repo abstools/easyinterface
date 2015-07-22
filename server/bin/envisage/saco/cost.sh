@@ -7,7 +7,7 @@
 # execute saco_settings.sh to set some environment variables needed by
 # costabs, etc.
 #
-. `dirname $0`/saco_settings.sh
+. `dirname $0`/../envisage_settings.sh
 
 # Execute costabs, we add '-ei_version 2' to the parameters since now
 # saco's output uses the old easy interface language
@@ -26,3 +26,6 @@ else
     cat /tmp/costabs.stderr
     echo "</eierror>"
 fi
+
+\rm -f /tmp/costabs.stderr
+

@@ -7,7 +7,7 @@
 # execute saco_settings.sh to set some environment variables needed by
 # costabs, etc.
 #
-. `dirname $0`/saco_settings.sh
+. `dirname $0`/../envisage_settings.sh
 
 # Execute mh_shell, we add '-ei_version 2' to the parameters since now
 # saco's output uses the old easy interface language
@@ -26,3 +26,5 @@ else
     cat /tmp/mhp.stderr
     echo "</eierror>"
 fi
+
+\rm -f /tmp/mhp.stderr

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. `dirname $0`/../parse_params.sh
+exec `dirname $0`/parse_params.sh
 
 echo "<eiout>"
 echo "<eicommands>"
