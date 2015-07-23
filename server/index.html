@@ -1,52 +1,24 @@
 <html>
 <head>
- <title>Testing the EI Server</title>
- 
-<script src="./lib/jquery.js"></script>
-<style>
-  #console-div{
-    border:2px solid #0000FF;
-    margin:10px;
-    width:80%;
-  }
-  .ok{
-    border:2px solid #00FF00 !important; 
-  }
-  .err{
-    border:2px solid #FF0000 !important;
-    background:#000;
-    color:white;
-  }
-</style>
- <script>
-   var jsonParams={"command":"ping","h":-1};
-   jsonParams["h"]=0;
-   var eirequest = jsonParams;
-   $.post("./eiserver.php",
-   {
-     eirequest: eirequest
-   }).done(function(data) {
-     data = jQuery.parseXML(data);
-     console.log(data);
-     if($("ei_error",data).length >0){
-   console.log($(data,"ei_error"));
-       $("#console-div").text("ERROR\n"+$(data).find("ei_error").text());
-       $("#console-div").addClass("err");
-     }else{
-       $("#console-div").text($(data).text());
-       $("#console-div").addClass("ok");
-     }
-   }).error(function(data) {
-     data = jQuery.parseXML(data);
-     console.log(data);
-     $("#console-div").text("ERROR\n"+$(data).text());
-     $("#console-div").addClass("err");
-   });
+<title>EasyInerface Server Test</title>
 
- </script>
+<script>
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange=function() {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+	document.getElementById("ei").innerHTML=xmlhttp.responseText;
+    }
+}
+xmlhttp.open("POST", "eiserver.php");
+xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+xmlhttp.send("eirequest="+JSON.stringify({"command" : "ping"}));
+</script>
 </head>
+
 <body style="background-color: white;">
-Easy intereface test</br>
-<textarea id="console-div" ></textarea>
+<div id="ei">
+Cnnecting to EasyInterface Server. If this message does not change in
+a second then somthing is wrong in yout EasyInterface settings
+</div>
 </body>
 </html>
