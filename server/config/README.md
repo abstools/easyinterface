@@ -2,10 +2,15 @@
 
 This directory includes 3 files:
 
-* `eiserver.cfg` is the main configuration file
-* `default.cfg` is a configuration file that includes the basic demo applications
-* `envisage.cfg` is the configuration file for the **Envisage Collaboratory**
+* `eiserver.default.cfg` is the main configuration file, which refers
+  to other configuration files from the directory `default`
 
-By default, `eiserver.cfg` is a copy of `default.cfg`. For installing
-the **Envisage Collaboratory** just copy `envisage.cfg` to
+* `envisage.cfg` is the configuration file for the **Envisage
+  Collaboratory**, they refer to other configuration files from the
+  directory `envisage`
+
+By default, the EasyInterface server uses `eiserver.default.cfg`,
+unless there is a file `eiserver.cfg`. Thus, if you want to enable the
+Envisage Collaboratory you should copy `envisage.cfg` to
 `eiserver.cfg`.
+
