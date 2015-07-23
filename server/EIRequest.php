@@ -14,6 +14,11 @@ class EIRequest
 
   function __construct() {
     $this->request = $_POST['eirequest'];
+
+    if (is_string($this->request)) {
+      $this->request = json_decode($this->request, true);
+    }
+
     if ( ! array_key_exists( 'command', $this->request ) ) {
       throw new Exception("Missing command in EI request ");
     } 
@@ -24,7 +29,7 @@ class EIRequest
 
      switch ( $this->request['command'] ) {
      case "ping":
-	 return "All is ok!";
+	 return "EasyInterface Server is Alive!";
 	 break;
      case "general_info":
        return file_get_contents(EIConfig::$cfgDir . "/" . EIConfig::$cfgFile  );
