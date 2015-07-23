@@ -909,8 +909,8 @@ window.FileManager = (function() {
 	});
       }
     },
-		    
-		    //
+
+    //
     getFolderFileIds:
     function(id,parents) {
       var arr = {id:id,child:new Array(),type:"file",complete:parents};
@@ -932,13 +932,14 @@ window.FileManager = (function() {
       }
       return arr;
     },
-		    //
+
+    //
     getEiFiles:
     function(ids){
       var self = this;
       var fileIds = new Array();
-      for(var i =0;i< ids.length;i++)
-	fileIds[i] = self.getFolderFileIds(ids[i],true);
+      for(var i =0; i<ids.length; i++)
+	  fileIds[i] = self.getFolderFileIds(ids[i],true);
       var recursive = function(Ids,files){
 	//Ids = [{id:0,child:[{},{}],type:"file",len:0,complete:bool}];
 	for(var i=0;i<Ids.length;i++) {

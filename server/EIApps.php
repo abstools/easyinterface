@@ -140,7 +140,6 @@ static function get_app_help( $app_id ) {
     // files
     //   
     $files_str = "";
-    $dirs_str = "";
     $root_str = "";
     if ( array_key_exists( '_ei_files', $parameters ) ) {    
       $aux = tempnam(sys_get_temp_dir(),"_ei_files");
@@ -148,7 +147,7 @@ static function get_app_help( $app_id ) {
       unlink($aux);
       mkdir($dir, 0755);
       $root_str = $dir;
-      EIApps::build_directories($files_str,$dirs_str,$dir,$parameters,true);
+      EIApps::build_directories($files_str,$dir,$parameters);
       unset( $parameters['_ei_files'] );
     }
 
@@ -293,7 +292,6 @@ static function get_app_help( $app_id ) {
     }//end parameters
     $replace_pairs = array(
 			   "_ei_files" => $files_str,
-			   "_ei_dirs" => $dirs_str,
 			   "_ei_root" => $root_str,
 			   "_ei_outline" => $outline_str,
 			   "_ei_parameters" => $parameters_str,
@@ -313,7 +311,6 @@ static function get_app_help( $app_id ) {
     return $output;
   }
 
-
   private static function checkvalue($posibles, $actual){
     foreach($posibles["option"] as $opt){
       if(!array_key_exists("value",$opt["@attr"]))
@@ -324,34 +321,32 @@ static function get_app_help( $app_id ) {
     return false;
   }
 
-  private static function build_directories(& $files_str,& $dirs_str,
-					    $dir, $parameters,$recursive)
+  private static function valid_file_name( $fname ) {
+    return preg_match("/^[a-zA-z0-9\-_\.\/]+$/",$fname) && strpos($fname,"..") == false;
+  }
+
+  private static function build_directories(& $files_str, $dir, $parameters )
   {
     foreach ( $parameters['_ei_files'] as $file ) {
-      if(!$recursive && !preg_match("/^[a-zA-z0-9\@\-_\.]+$/",$file["name"])) 
-	throw new Exception("Forbidden filename: ".$file["name"]
-			    .". Filenames can only contain the "
-			    ."following characters: [a-z][A-Z][0-9][_][-][.]."
-			    ." Spaces and others characters are forbbiden.");
-      if($recursive && !preg_match("/^[a-zA-z0-9\@\-_\.\/]+$/",$file["name"])) 
-	throw new Exception("Forbidden filename: ".$file["name"]
-			    .". Filenames can only contain the "
-			    ."following characters: [a-z][A-Z][0-9][_][-][.]."
-			    ." Spaces and others characters are forbbiden.");
-      if( array_key_exists('type',$file)
-	  && strcmp($file['type'],'directory')==0){
-	// is dir then create dir and save path on dirs_str
-	$newdir=$dir."/".$file["name"];
-	mkdir($newdir,0755,$recursive);
-	$dirs_str .= " ".$newdir;
-	//search more files or dirs on this newdir
-	EIApps::build_directories($files_str,$dirs_str,$newdir,$file,false);
-      }
-      else{ //is file then save name and content
-	$aux = $file["name"];
-	$filename = $dir."/".$aux;
+      if ( !EIApps::valid_file_name( $file["name"] ) )
+      	throw new Exception("Forbidden filename: ".$file["name"]
+      			    .". Filenames can only contain the "
+      			    ."following characters: [a-z][A-Z][0-9][_][-][.][/]."
+      			    ." Spaces and others characters are forbidden."
+                            ." It cannot contain .. as well");
+
+      // if it is a file, save it
+      if( array_key_exists('type',$file) && strcmp($file['type'],'file') == 0 ) {
+	$filename = $dir."/".$file["name"];
+        $dirname  = dirname($filename);
+	file_put_contents("/tmp/xxx",$filename);
+
+	// create the directories of the leading path
+	if ( !file_exists($dirname) )
+	  mkdir($dirname,0755,true);
+
 	file_put_contents($filename,$file["content"]);
-	$files_str .= " ".$filename;
+	$files_str .= " ".$filename;  // concatenate the filename to the list of filenames
       }
     }
   }	  

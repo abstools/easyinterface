@@ -177,7 +177,13 @@ Web Service, call it to get new commands or actions.
    first. (all are async).
 ** TODO Shell client
 ** TODO Doesnt work correctly in Safari Browser
-** TODO Refresh outline for 1 file only still does not work
+** TODO build_directories and getEiFiles
+
+        I changed build_directories in EIApps.php to ignore directory
+        elements, and to create directories using the file
+        dirname. Function getEiFiles should be changed so it does not
+        pass directories --SAMIR
+
 ** TODO Allow submenus in the applications menu
 * Research
 ** graphviz (lenguaje dot para grafos)
