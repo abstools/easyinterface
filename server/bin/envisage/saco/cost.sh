@@ -20,11 +20,11 @@ ${SACOHOME}/src/interfaces/shell/costabs $@ -ei_version 2 &> /tmp/costabs.stderr
 if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
-    echo "<eierror>"
+    echo "<ei_error>"
     echo "Error occurred while executing the resource usage analysis:"
     echo ""
     cat /tmp/costabs.stderr
-    echo "</eierror>"
+    echo "</ei_error>"
 fi
 
 \rm -f /tmp/costabs.stderr

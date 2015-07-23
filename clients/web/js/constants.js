@@ -14,15 +14,18 @@ var _ei = {
   },
   outlang: {
       syntax: {
-	  eicommands     : "eicommands",   // tag
-	  eiactions      : "eiactions",    // tag
-	  eiout          : "eiout",        // tag
-	  eierror        : "eierror",      // tag
-	  dest           : "dest",         // attr
-	  color          : "color",        // attr
-	  elements       : "elements",     // tag
-	  selector       : "selector",     // tag
-	  selectorvalue  : "value",
+	  eicommands       : "eicommands",         // tag
+	  eiactions        : "eiactions",          // tag
+	  eiout            : "eiout",              // tag
+	  eierror          : "ei_error",           // tag
+	  eiappout         : "ei_app_output",      // tag
+	  eiserverout      : "ei_server_output",   // tag
+	  eiserverresponse : "ei_server_response", // tag
+	  dest             : "dest",               // attr
+	  color            : "color",              // attr
+	  elements         : "elements",           // tag
+	  selector         : "selector",           // tag
+	  selectorvalue    : "value",
 
 	  //
 	  outclass       : "outclass",     // attr

@@ -90,7 +90,7 @@ window.OutputManager = (function() {
 		                 "<"+_ei.outlang.syntax.eicommands+">"+
            		            "<"+_ei.outlang.syntax.printonconsole+">"+
 	        	              "<"+_ei.outlang.syntax.content+" format='text'>"+
-		                        $(output).text() +
+		                        $(output).find(_ei.outlang.syntax.eiappout).text() +
 		                      "</"+_ei.outlang.syntax.content+">"+
 		                    "</"+_ei.outlang.syntax.printonconsole+">"+
 		                 "</"+_ei.outlang.syntax.eicommands+">"+

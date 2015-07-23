@@ -20,11 +20,11 @@ ${SACOHOME}/src/interfaces/mhp/shell/mhp_shell $@ -ei_version 2 -mode complete -
 if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
-    echo "<eierror>"
+    echo "<ei_error>"
     echo "Error occurred while executing May-Happen-in-Parallel analysis:"
     echo ""
     cat /tmp/mhp.stderr
-    echo "</eierror>"
+    echo "</ei_error>"
 fi
 
 \rm -f /tmp/mhp.stderr

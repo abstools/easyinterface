@@ -433,7 +433,7 @@ window.EasyInterface = (function() {
 		    if(ex.find("ei_error").length)
 			alert(ex.find("ei_error").text());
 		    else
-			self.initExamples_aux(ex.find("> ei_response > examples"), serverNum,null);	
+			self.initExamples_aux(ex.find("examples"), serverNum,null);	
 		});
 	  }
 }

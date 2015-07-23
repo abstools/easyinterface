@@ -20,11 +20,11 @@ ${SACOHOME}/src/interfaces/deadlock/shell/deadlock_shell $@ -ei_version 2 &> /tm
 if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
-    echo "<eierror>"
+    echo "<ei_error>"
     echo "Error occurred while executing deadlock analysis:"
     echo ""
     cat /tmp/deadlock.stderr
-    echo "</eierror>"
+    echo "</ei_error>"
 fi
 
 \rm -f /tmp/deadlock.stderr

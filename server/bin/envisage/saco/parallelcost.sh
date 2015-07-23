@@ -20,11 +20,11 @@ ${SACOHOME}/src/interfaces/shell/costabs $@ -field_abstraction zero_one -paralle
 if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
-    echo "<eierror>"
+    echo "<ei_error>"
     echo "Error occurred while executing the parallel cost:"
     echo ""
     cat /tmp/costabs.stderr
-    echo "</eierror>"
+    echo "</ei_error>"
 fi
 
 rm -f /tmp/costabs.stderr

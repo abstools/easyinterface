@@ -193,9 +193,10 @@ window.Outline = (function() {
 		self.addChilds(this,id);
 	    });
 	},
+
 	resetLayout:
 	function( out ) {
-	  out=$(out).find("ei_response");
+	  out=$(out).find(_ei.outlang.syntax.eiappout);
 	  this.addChilds(out,null);
 	},
 
@@ -219,7 +220,7 @@ window.Outline = (function() {
 	    },
 	    function(out) {
 		self.outlineHolder.empty();
-		var error = $(out).find("> ei_response").find("> eierror");
+		var error = $(out).find(_ei.outlang.syntax.eierror);
 		if ( error.size() > 0) {
 		    dialogBox.dialog("close");
 		    self.outputmanager.reportError( error.text() );

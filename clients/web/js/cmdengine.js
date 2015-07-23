@@ -16,11 +16,11 @@ window.CmdEngine = (function() {
 	exec:
 	function( cmdInfo, callback, errorcb) {
 
-	    // the following json object will be based to the php sc
+	    // the following json object will be passed to the EasyInterface server
 	    var jsonParams = {
-		"command": _ei.serverCommand.app.execute,
-		"app_id": cmdInfo.appId,
-		"parameters":{}
+		"command":    _ei.serverCommand.app.execute,
+		"app_id":     cmdInfo.appId,
+		"parameters": {}
 	    };
 
 	    // add the parameters to the json object
@@ -30,16 +30,17 @@ window.CmdEngine = (function() {
 		jsonParams["parameters"][p]=vals;
 	    }
 
+	    // add the files
 	    if ( cmdInfo.files ) 
 		jsonParams["parameters"]["_ei_files"] =  cmdInfo.files;
-	  if ( cmdInfo.entries ) {
-	    var outStr = "";
-	    for(var i in cmdInfo.entries){
-	      outStr += " " + cmdInfo.entries[i];
+
+	    // add the outline entries
+	    if ( cmdInfo.entries ) {
+		jsonParams["parameters"]["_ei_outline"] =  cmdInfo.entries;
 	    }
-		jsonParams["parameters"]["_ei_outline"] =  cmdInfo.entries;//outStr;
-	  }
-	  jsonParams["parameters"]["_ei_clientid"] = _ei.clientId;
+
+	    // add the client id
+	    jsonParams["parameters"]["_ei_clientid"] = _ei.clientId;
 
 	    //var eirequest = JSON.stringify(jsonParams);
 	    var eirequest = jsonParams;
@@ -56,7 +57,10 @@ window.CmdEngine = (function() {
 		       errorcb(e);
 		     }
 	    	   }).error(function(data) {
-		       if ( _ei.debug ) console.log("Error: ",data);
+		       if ( _ei.debug ) {
+			   console.log("HTTP Request error occurred: ");
+			   console.log(data);
+		       }
 	    	       errorcb(data);
 	    	   });
 	}
