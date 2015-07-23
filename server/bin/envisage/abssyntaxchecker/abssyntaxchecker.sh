@@ -1,7 +1,6 @@
 #! /bin/bash
 
-. `dirname $0`/../envisage_settings.sh  # this file is located in server/bin/envisage
-
+. envisage/envisage_settings.sh
 
 echo "<eiout>"
 echo "<eicommands>"

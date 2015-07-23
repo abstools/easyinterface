@@ -1,13 +1,13 @@
 #!/bin/bash
 
-### A wrapper script for SACO's parallel cost analysis
+### A wrapper script for SACO's Parallel Cost Analysis
 ###
 ###
 
-# execute saco_settings.sh to set some environment variables needed by
-# costabs, etc.
+# execute envisage_settings.sh to set some environment variables
+# needed by costabs, etc.
 #
-. `dirname $0`/../envisage_settings.sh
+. envisage/envisage_settings.sh
 
 # Execute costabs, we add '-ei_version 2' to the parameters since now
 # saco's output uses the old easy interface language

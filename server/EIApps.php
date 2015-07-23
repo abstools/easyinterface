@@ -305,6 +305,8 @@ static function get_app_help( $app_id ) {
    
     //    print $cmdline; // TODO -- shoudl go into some tags
     $outputLines = array();
+    $cmdline = "cd bin; $cmdline";
+
     exec($cmdline, $outputLines);
     $output =  implode("\n", $outputLines);
 

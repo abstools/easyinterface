@@ -1,6 +1,6 @@
 #! /bin/bash
 
-. `dirname $0`/../envisage_settings.sh  # this file is located in server/bin/envisage
+. envisage/envisage_settings.sh
 
 java -jar $ABSFRONTEND -outline $@ 2> /tmp/absoutline.stderr
 
