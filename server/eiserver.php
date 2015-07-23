@@ -8,7 +8,6 @@ include "EIRequest.php";
 include "EIApps.php";
 include "EIExamples.php";
 
-
 println("<ei_response>");
 try {
   $request = new EIRequest();

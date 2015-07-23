@@ -111,12 +111,12 @@ static function get_app_help( $app_id ) {
 
     // prefix to be attached to each parameter anme
     $param_prefix = "-";
-    if( array_key_exists("prefix",$paramsArr["@attr"]))
+    if( $paramsArr["@attr"] && array_key_exists("prefix",$paramsArr["@attr"])) 
 	$param_prefix = $paramsArr["@attr"]["prefix"];
 
     // boolean to check compatible parameters or not
     $param_check = false;
-    if( array_key_exists("check",$paramsArr["@attr"]))
+    if( $paramsArr["@attr"] && array_key_exists("check",$paramsArr["@attr"]))
 	$param_check = $paramsArr["@attr"]["check"];
 
     // the parameters template
@@ -339,7 +339,6 @@ static function get_app_help( $app_id ) {
       if( array_key_exists('type',$file) && strcmp($file['type'],'file') == 0 ) {
 	$filename = $dir."/".$file["name"];
         $dirname  = dirname($filename);
-	file_put_contents("/tmp/xxx",$filename);
 
 	// create the directories of the leading path
 	if ( !file_exists($dirname) )

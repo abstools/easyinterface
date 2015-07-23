@@ -2,7 +2,7 @@
 
 class EIConfig {
   static public $cfgDir            = "./config";
-  static public $cfgFile           = "./eiserver.cfg";
+  static public $cfgFile           = "./eiserver.default.cfg"; // changed in init to eiserver.cfg if exists
 
   static private $cfgXML            = null;
 
@@ -26,6 +26,8 @@ class EIConfig {
     EIConfig::$appExecXML = array();
     EIConfig::$appParametersXML = array();
     EIConfig::$exsetXML = array();
+    if ( file_exists(EIConfig::$cfgDir . "/eiserver.cfg") )
+       EIConfig::$cfgFile = "/eiserver.cfg";
   }
 
 
