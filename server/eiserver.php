@@ -1,6 +1,6 @@
 <?php header('Access-Control-Allow-Origin: *'); ?>
 
-<? 
+<?php
 
 include "EIConfig.php";
 include "misc.php";
