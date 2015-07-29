@@ -14,3 +14,7 @@ unless there is a file `eiserver.cfg`. Thus, if you want to enable the
 Envisage Collaboratory you should copy `envisage.cfg` to
 `eiserver.cfg`.
 
+# Windows
+
+If you are running on windows, copy `eiserver.default.win.cfg` to 
+`eiserver.cfg`
