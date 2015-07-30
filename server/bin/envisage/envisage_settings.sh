@@ -17,4 +17,4 @@ export PATH=${PATH}:${SACOHOME}/bin
 
 # ABSTOOLS
 export ABSTOOLSHOME=${EC_ABSTOOLSHOME}
-export ABSFRONTEND=${ABSTOOLSHOME}/frontend/dist/absfrontend.jar
+export ABSFRONTEND=${EC_ABSFRONTEND}/absfrontend.jar
