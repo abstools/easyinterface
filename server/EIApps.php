@@ -143,7 +143,7 @@ static function get_app_help( $app_id ) {
     $root_str = "";
     if ( array_key_exists( '_ei_files', $parameters ) ) {    
       $aux = tempnam(sys_get_temp_dir(),"_ei_files");
-      $dir = $aux;
+      $dir = str_replace("\\", "/", $aux);
       unlink($aux);
       mkdir($dir, 0755);
       $root_str = $dir;
@@ -330,6 +330,7 @@ static function get_app_help( $app_id ) {
 
   private static function build_directories(& $files_str, $dir, $parameters )
   {
+  
     foreach ( $parameters['_ei_files'] as $file ) {
       if ( !EIApps::valid_file_name( $file["name"] ) )
       	throw new Exception("Forbidden filename: ".$file["name"]
