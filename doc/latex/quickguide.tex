@@ -334,7 +334,7 @@ following:
 \medskip
 \noindent
 When the server receives the files from the client, it stores them in
-a temporal directory, e.g., in \texttt{/tmp}, replaces \lst{_ei_files}
+a temporary directory, e.g., in \texttt{/tmp}, replaces \lst{_ei_files}
 by the list of their names, and then execute the resulting
 command-line (now you see why we call it command-line template).
 %
@@ -873,8 +873,8 @@ name \texttt{/dir1/dir2/prog.abs}. However, when the server passes
 this file to the application it assigns it the name
 \texttt{/tmp/\_ei\_filesXYZ/dir1/dir2/prog.abs}. 
 %
-This is because the server stores all files in the temporal directory
-\texttt{/tmp/\_ei\_filesXYZ}. This temporal directory is not fixed, it
+This is because the server stores all files in the temporary directory
+\texttt{/tmp/\_ei\_filesXYZ}. This temporary directory is not fixed, it
 can change from one request to another, and it might vary from one
 operating system to another.
 
@@ -883,11 +883,11 @@ value of \lst{dest}, it must use the original name
 \texttt{/dir1/dir2/prog.abs}.
 %
 Thus, we must know in advance that the server uses
-\texttt{/tmp/\_ei\_filesXYZ} as a temporal directory so we can remove
+\texttt{/tmp/\_ei\_filesXYZ} as a temporary directory so we can remove
 it from \texttt{/tmp/\_ei\_filesXYZ/dir1/dir2/prog.abs} to get the
 original name \texttt{/dir1/dir2/prog.abs}. 
 %
-We can do this by asking the server to pass the name to the temporal
+We can do this by asking the server to pass the name to the temporary
 directory to the application. This can be done using \lst{_ei_root} in
 the command-line template, e.g., we can modify \texttt{myapp.cfg} to
 the following:
@@ -902,7 +902,7 @@ the following:
 where \lst{[...]} stands for the template we had \texttt{myapp.cfg}
 already (i.e., we just add ``\lst{-r _ei_root}'').
 %
-The server will change \lst{_ei_root} by the name of the temporal
+The server will change \lst{_ei_root} by the name of the temporary
 directory in which the files are saved, e.g., by
 \texttt{/tmp/\_ei\_fileXYZ} in the example above.
 
@@ -926,7 +926,7 @@ done
 
 \medskip
 \noindent
-The code at Line 3 removes the temporal directory prefix from the file
+The code at Line 3 removes the temporary directory prefix from the file
 name and stores the result in variable \texttt{dest}. Line 4-7
 generate the actual command to add a marker.
 %
