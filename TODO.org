@@ -185,6 +185,7 @@ Web Service, call it to get new commands or actions.
         pass directories --SAMIR
 
 ** TODO Allow submenus in the applications menu
+Better add parameters??
 * Research
 ** graphviz (lenguaje dot para grafos)
 * Moving to github
