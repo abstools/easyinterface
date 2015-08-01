@@ -305,7 +305,6 @@ static function get_app_help( $app_id ) {
    
     //    print $cmdline; // TODO -- shoudl go into some tags
     $outputLines = array();
-    $cmdline = "$cmdline";
     
     chdir("bin"); // we always execute in the bin directory
     exec($cmdline, $outputLines);
