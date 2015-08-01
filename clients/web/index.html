@@ -72,17 +72,28 @@
   <link type="text/css" rel="stylesheet" href="./css/ei.default.css"/>
 
 <script>
-  $( function() {
-      var x = new EasyInterface({ 
-          holder: $("#ei_1"),
-          theme: "./html/eitheme.resizable.html",
-          cfgFile: "/ei/clients/web/eiclient.cfg",
-          apps: [ { server: "/ei/server/eiserver.php", apps: "_all"/*/["cost"]/**/ } ] ,
-	  examples: [ { server: "/ei/server/eiserver.php", examples: "_all"/*/["cost"]/**/ } ] ,
-	  outlineapp: "absoutline",
-	  outlineserver:"/ei/server/eiserver.php",
-//	  httpproxy:""
-      });
+
+$( function() {
+
+  var baseURI = document.baseURI;             
+  var n = baseURI.lastIndexOf("clients/web");
+
+  if ( n != -1 ) {
+    eiserverURI = baseURI.slice(0,n).concat("server/eiserver.php");
+  } else {
+    eiserverURI = "/ei/server/eiserver.php";
+  }
+
+  new EasyInterface({ 
+    holder: $("#ei_1"),
+    theme: "./html/eitheme.resizable.html",
+    cfgFile: "/ei/clients/web/eiclient.cfg",
+    apps: [ { server: eiserverURI, apps: "_all"/*/["cost"]/**/ } ] ,
+    examples: [ { server: eiserverURI, examples: "_all"/*/["cost"]/**/ } ] ,
+    outlineapp: "absoutline",
+    outlineserver:eiserverURI,
+ // httpproxy:""
+  });
   });
 </script>
 </head>
