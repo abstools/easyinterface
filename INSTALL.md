@@ -2,25 +2,18 @@
 
 EasyInterface consists of 
 
- * applications server, where you configure your applications; and 
- * several clients (web, eclipse, etc.) that provide access to the
-   applications installed on the server.
+ * an applications server where you install and configure your applications; and 
+ * several clients (web, eclipse, etc.) that provide access to the applications installed on the server.
 
-Next we explain how to install the EasyInterface server and how to use
-the different clients. The server comes with several simple
-applications for the purpose of demonstrating various features, you
-can refer to `docs/manual.pdf` to see how to integrate your own
-applications.
+Next we explain how to install the EasyInterface server and how to use the different clients. The server comes with several simple applications for the purpose of demonstrating various features, and for integrating you own application please refer to [docs/manual.pdf](file://docs/manual.pdf).
 
-In what follows we assume that you have cloned a copy of EasyInterface
-into a directory called `easyinterface`.
+In what follows we assume that you have already downloaded or cloned the github respository of EasyInterface into a directory called `easyinterface`. Moreover, make sure that all files inside the directory have read and execute permissions to `others`, for example, in Unix based systems this can be done as follows:
+
+	> chmod -R 755 easyinterface
 
 ## Installing the EasyInterface Server
 
-The installation consists in first installing an `Apache Web Server`
-(with a corresponding PHP module), and then configuring it to
-recognize the EasyInterface directory. Follow the steps below
-depending on if you are using `Linux`, `OS X` or `Windows`.
+The installation consists in installing an `Apache Web Server` (with a corresponding PHP module) and then configuring it to recognize the EasyInterface directory. If you already have Apache installed and the `easyinterface` directory is placed in a visible directory then no fruther configuration is required, simply visit the corresponding address (e.g., if it is placed in the `public_html` directory, visit [http://localhost/~user/easyinterface](http://localhost/~user/easyinterface)). Otherwise follow the steps below depending on the operating system you are using, `Linux`, `OS X` or `Windows`.
 
 ### Linux
 
@@ -33,13 +26,7 @@ following in a shell:
     > sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
     > sudo service apache2 restart
 
-Once installed test that it works correctly by visiting
-http://localhost and test that PHP works correctly by visiting
-http://localhost/info.php (this link might be different from on
-distribution to another).
-
-Otherwise, edit `/etc/apache2/mods-enabled/alias.conf`
-and add the following lines:
+Once installed test that it works correctly by visiting [http://localhost](http://localhost) and test that PHP works correctly by visiting [http://localhost/info.php](http://localhost/info.php) (this address might be different from one distribution to another). Next, to make it the `easyinterface` visible, edit `/etc/apache2/mods-enabled/alias.conf` and add the following lines:
 
 	  Alias /ei "/path-to/easyinterface"
 
@@ -49,20 +36,15 @@ and add the following lines:
 	     Require all granted
 	  </Directory>
 
-You will have to restart Apache to activate this change, which can be
-done by executing the following in a shell:
+Next to restart Apache, to activate this change, by executing the following in a shell:
     
     > sudo service apache2 restart
 
-To test that the EasyInterface server works correctly visit
-`http://localhost/ei`.
+Now visit [http://localhost/ei](http://localhost/ei) to check that EasyInterface works correctly.
 
 ### OS X
 
-OS X typically comes with Apache installed, and all you need is to
-configure it to recognize the EasyInterface directory. This can be
-done by editing `/etc/apache2/httpd.conf` to include the following
-lines:
+OS X typically comes with Apache installed, and all you need is to configure it to recognize the `easyinterface` directory. This can be done by editing `/etc/apache2/httpd.conf` add the following lines:
 
 	  Alias /ei "/path-to/easyinterface"
 
@@ -72,17 +54,18 @@ lines:
 	     Require all granted
 	  </Directory>
 
-Afterwards you should restart Apache, and then visit
-`http://localhost/ei` to test that EasyInterface works correctly.
+Next to restart Apache, to activate this change, by executing the following in a shell:
+    
+    > sudo apachectl restart
+
+or from `System Preferences > Sharing > Web Sharing`.  Now visit [http://localhost/ei](http://localhost/ei) to check that EasyInterface works correctly.
+
 
 ### Windows
 
-There are several third-party distributions that makes it easy to
-install Apache on Windows, we have used `WAMP`. Once installed, in
-`c:\wamp` for example, you need is to configure it to recognize the
-EasyInterface directory which can be done by editing
-`c:\wamp\bin\apache\apache.XYZ\httpd.conf` to include the following
-lines:
+Apache Web Server for Microsoft Windows is available from [a number of third party vendors](http://httpd.apache.org/docs/current/platform/windows.html#down)). We have tested it using [WampServer](http://www.wampserver.com/).
+
+Install the [WampServer](http://www.wampserver.com/), for example in `c:\wamp`, the edit `c:\wamp\bin\apache\apache.X.Y.Z\httpd.conf` add the following lines:
 
 	  Alias /ei "/path-to/easyinterface"
 
@@ -92,9 +75,22 @@ lines:
 	     Require all granted
 	  </Directory>
 
-Afterwards you should restart Apache, and then visit
-`http://localhost/ei` to test that EasyInterface works correctly.
+Next restart restart Apache, and visit [http://localhost/ei](http://localhost/ei) to check that EasyInterface works correctly.
 
-In addition, the demp application that are installed by default use
-bash (since they are bash scripts), so you will also need to install
-win-bash to use them -- they assume it is installed in `c:\bash\bash`.
+
+In addition, the demo application that come by by default with 
+EasyInterface are basically bash scripts, and thus you need to install [win-bash](http://win-bash.sourceforge.net/) if you want to use them -- these applications assume that win-bash is installed in `c:\bash`, in particular `c:\bash\bash` is used to execute them.
+
+## Installing the EasyInterface Clients
+
+### The web-client
+
+Just visit [http://localhost/ei/clients/web](http://localhost/ei/clients/web)
+
+### The Eclipse client
+
+Not available yet
+
+### The remote-shell client
+
+Not available yet
