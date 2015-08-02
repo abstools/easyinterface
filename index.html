@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>EasyInerface</title>
+
+<style>
+body {
+	font-family:"Trebuchet MS", Arial, Verdana;
+	font-size:1em;
+	color:#555555;
+	background-color:#FFFFFF;
+	text-align:left;
+}
+
+a {
+	color:#4D87CE;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+a:hover {
+	color:#2a65ad;
+}
+
+</style>
+
+<script src="clients/web/lib/jquery-ui/js/jquery.js"></script>
+
+<script>
+
+$( function() {
+
+$.post("server/eiserver.php",
+  {
+    eirequest: { "command" : "ping" },
+  })
+  .done( function(data) {
+      $("#eiserver").html(data);
+      $("#eiclients").css("visibility","visible");
+  })
+  .error( function(data) {
+      $("#eiserver").html(data);
+  });
+
+});
+
+</script>
+</head>
+
+
+<body style="background-color: white;">
+
+<div id="eiserver">
+Connecting to EasyInterface Server. If this message does not change
+in a second then somthing is wrong in your EasyInterface
+settings. Refer to <a href="INSTALL.md">INSTALL.md</a> for
+installation instructions.
+</div>
+
+<div id="eiclients" style="visibility: hidden;">
+<br />
+EasyInterface Clients:
+<ul>
+  <li><a href="clients/web">Web-Client</li></li>
+</ul>
+</body>
+</div>
+</html>
