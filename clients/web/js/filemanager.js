@@ -325,7 +325,7 @@ window.FileManager = (function() {
 			    else
 			      ids=$(obj).attr("fmid");
 			    self.tools.apply(ids);
-			  }
+			  },
 			},
 			"Outline": {
 			  "label": "Refresh Outline here",
@@ -951,11 +951,11 @@ window.FileManager = (function() {
 	      content: self.getFileContent(Ids[i].id)
 	    };  
 	  }else{
-	    files[files.length] = {
-	      id: Ids[i].id,
-	      type: "directory",
-	      name: (self.calculatePathById(Ids[i].id)).substr(1).replace(/.$/, '')
-	    };
+	    //files[files.length] = {
+	    //  id: Ids[i].id,
+	    //  type: "directory",
+	    //  name: (self.calculatePathById(Ids[i].id)).substr(1).replace(/.$/, '')
+	    //};
 	    recursive(Ids[i].child,files);
 	  }
 	}

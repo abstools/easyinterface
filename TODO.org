@@ -159,6 +159,7 @@ folder.
 **** create interface to show outline when is required
 **** change execution to ignore outline when is not needed
 *** TODO Menu apply in filemanager
+what options?
 *** TODO Outline with type of files
     Todo a "pelo"...
     .extension
@@ -177,7 +178,7 @@ Web Service, call it to get new commands or actions.
    first. (all are async).
 ** TODO Shell client
 ** TODO Doesnt work correctly in Safari Browser
-** TODO build_directories and getEiFiles
+** FEEDBACK build_directories and getEiFiles
 
         I changed build_directories in EIApps.php to ignore directory
         elements, and to create directories using the file
