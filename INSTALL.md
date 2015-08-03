@@ -89,6 +89,6 @@ By default the server is configured to execute the demo applications in a Unix b
 The demo applications are simple bash scripts, and thus you need to install [win-bash](http://win-bash.sourceforge.net/) if you want to use them. To do so, simply download the corresponding `zip` file and extract it in `c:\bash` (it is important to place it in `c:\bash` since the configuration files use `c:\bash\bash.exe`  to execute the bash scripts).
 
 
-## Installing/Using EasyInterface Clients
+## Step III: Installing/Using EasyInterface Clients
 
 The Web client can be used by visiting [http://localhost/ei/clients/web](http://localhost/ei/clients/web). For information on other clients see [clients/README.md](clients/README.md).
