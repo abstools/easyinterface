@@ -29,7 +29,7 @@ class EIRequest
 
      switch ( $this->request['command'] ) {
      case "ping":
-	 return "EasyInterface Server is Alive!";
+	 return "EasyInterface server is alive and kicking!";
 	 break;
      case "general_info":
        return file_get_contents(EIConfig::$cfgDir . "/" . EIConfig::$cfgFile  );

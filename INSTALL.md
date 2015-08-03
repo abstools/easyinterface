@@ -5,21 +5,20 @@ EasyInterface consists of
  * An applications server (PHP scripts on top of a Web server) where you install and configure your applications; and 
  * Several clients (web, eclipse, etc.) that provide access to the applications installed on the server.
 
-In what follows we explain how to install the EasyInterface server and comment on how to use the different clients. After installing the server it is recommended to read Chapter 2 of the user manual [docs/manual.pdf](file://docs/manual.pdf) which explains how to use the demo applications that come with EasyInterface through the web-client, and, moreover, develops and integrate a simple application to experiment with various features, etc.
+In what follows we explain how to install the server and how to use the different clients. Once the server is installed and tested to be working correctly, it is recommended to read Chapter 2 of the user manual [docs/manual.pdf](file://docs/manual.pdf), it develops and integrate a simple application in EasyInterface step by step, which is useful to get started with EasyInterface.
 
-## Downloading EasyInterface
+## Step I: Downloading EasyInterface
 
 In what follows we assume that you have already [downloaded](http://github.com/abstools/easyinterface) EasyInterface into a directory called `easyinterface`, and that all files inside this directory have read and execute permissions to `others` which can be done, for example, in Unix based systems by executing:
 
 	> chmod -R 755 easyinterface
 
-The purpose of this is to make these files visible to the `Apache Web Server` on which the EasyInterface serve is running. This is (most likley) not required if you're using Microsoft Windows. 
+The purpose of this is to make all files visible to the `Apache Web Server` on which the EasyInterface server runs. This is (most likley) not required if you are using Microsoft Windows. 
 
-## Installing EasyInterface Server
+## Step II: Installing EasyInterface Server
 
-The installation consists in installing an `Apache Web Server` (with `PHP` enabled) and then configuring it to recognize the EasyInterface directory. If you already have Apache installed and the `easyinterface` directory is placed in a visible directory then no further configuration is required, simply visit the corresponding address (e.g., if it is placed in the `public_html` directory, visit [http://localhost/~user/easyinterface](http://localhost/~user/easyinterface)). Otherwise follow the steps below depending on the operating system you are using, `Linux`, `OS X` or `Windows`.
+The installation consists in installing an `Apache Web Server` (with `PHP` enabled) and then configuring it to recognize the `easyinterface` directory. If you already have Apache installed and the `easyinterface` directory is visible then no further configuration is required, simply visit the corresponding address (e.g., if it is placed in the `public_html` directory, visit [http://localhost/~user/easyinterface](http://localhost/~user/easyinterface)). Otherwise follow the steps below depending on which operating system you are using, `Linux`, `OS X` or `Windows`.
 
-**IMPORTANT**: once you finish installing the server, you should refer to [server/config/README.md](server/config/README.md) for further information on configuring the server.
 
 ### Linux
 
@@ -44,7 +43,7 @@ To activate this change you need to restart Apache by executing the following in
     
     > sudo service apache2 restart
 
-Now visit [http://localhost/ei](http://localhost/ei) to check that EasyInterface works correctly.
+Now visit [http://localhost/ei](http://localhost/ei) to check that EasyInterface works correctly. If no error message is shown, you can proceed to the next section and start using the Web client.
 
 ### OS X
 
@@ -92,4 +91,4 @@ The demo applications are simple bash scripts, and thus you need to install [win
 
 ## Installing/Using EasyInterface Clients
 
-The Web-Client can be used by visiting [http://localhost/ei/clients/web](http://localhost/ei/clients/web). For information on other clients see [clients/README.md](clients/README.md).
+The Web client can be used by visiting [http://localhost/ei/clients/web](http://localhost/ei/clients/web). For information on other clients see [clients/README.md](clients/README.md).
