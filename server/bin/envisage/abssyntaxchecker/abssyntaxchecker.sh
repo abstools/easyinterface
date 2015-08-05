@@ -6,6 +6,7 @@ echo "<eiout>"
 echo "<eicommands>"
 echo "<printonconsole>"
 echo "<content format='text'>"
+echo "<![CDATA["
 
 java -jar $ABSFRONTEND $@ 2> /tmp/abssyntaxchecker.stderr
 
@@ -17,6 +18,7 @@ else
     cat /tmp/abssyntaxchecker.stderr
 fi
 
+echo "]]>"
 echo "</content>"
 echo "</printonconsole>"
 echo "</eicommands>"

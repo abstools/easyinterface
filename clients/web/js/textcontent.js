@@ -16,7 +16,10 @@ window.TextContent = (function() {
 
    function TextContent(options) {	
        this.content = $("<div></div>");
-       this.content.append( "<div class='preformatted'>"+$(options.content).text()+"</div>" );
+       var text = $(options.content).text();
+       text = text.replace(">","&gt;");
+       text = text.replace("<","&lt;");
+       this.content.append( "<div class='preformatted'><pre>"+text+"</pre></div>" );
    }
 
 
