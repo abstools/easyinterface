@@ -75,6 +75,13 @@
 
 $( function() {
 
+ // for now we stop if we detect Safari browser
+ //
+ if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+    $("#ei_1").html("<span style='color: red; font-weight:bold;'>Safari browser is not supported yet</span>, please use Google Chrome, Firefox or Internet explorer.");
+  return;
+  }
+
   var baseURI = document.baseURI;             
   var n = baseURI.lastIndexOf("clients/web");
 
