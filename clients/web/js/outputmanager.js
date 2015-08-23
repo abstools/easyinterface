@@ -14,6 +14,7 @@ window.OutputManager = (function() {
 
 	this.ActionsCollection =  [
 	    CodeLineAction,
+	    TimeLineAction,
 	    OnClickAction
 	];
 
