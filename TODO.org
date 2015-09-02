@@ -169,7 +169,20 @@ what options?
 ** TODO addmarkercommand should accumulate text (SAMIR)
 ** TODO SVG Streaming
 Web Service, call it to get new commands or actions.
-** TODO Time line command
+** FEEDBACK Time line command
+It could be:
+<timeline widget="cosole|dialog" title="TEXT" auto="SECONDS">
+(<step autoclean="BOOLEAN">
+<eicommand>
+...
+</eicommand>
+</step>)*
+
+</timeline>
+
+And to solve the streaming problem we can add a command: askUrl
+It seems:
+<askUrl delay="SECONDS" tries="NUMBER" url="PATH" />
 ** TODO Example of SVG animation
 ** TODO selectors do not work with svg in jquery, we should find a workaround. SVG stuff should be redesigned
    changecss, onclick and all the commands that works with
