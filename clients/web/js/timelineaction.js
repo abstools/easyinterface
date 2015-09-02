@@ -150,12 +150,12 @@ window.TimeLineAction = (function() {
  	    self.tl.slider( "disable" );
 	    self.status = "pause";
 	    
-	    for (var i = self.currMin; i < self.currMax+1; i++){
+	    for(var i=self.currMin; i<self.currMax+1;i++){
 	      if (self.commands[i])
 		self.commands[i].asyncIterate(function(c) { c.undo(); });
 	    }
 	    
-	    
+	    this.dialogBox.dialog("destroy").remove();
 	  }
 	},
 	

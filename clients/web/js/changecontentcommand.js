@@ -52,24 +52,23 @@ window.ChangeContentCommand = (function() {
 	function() {
 	  var self = this;
 	    if ( !this.added ) {
-
 	      for(var i=0; i<this.selectors.length; i++) {
 		self.previousContent[i] = new Array();
-		var j = 0;
 
-		$(this.selectors[i]).each(function() {
-		  console.log($(self.selectors[i]),this);
-		  self.previousContent[i][j] = $(this).html();
+		var obj=$(this.selectors[i]);
+		for(var j=0; j< obj.length;j++){
+		  var actual = obj[j];
+		  self.previousContent[i][j]=$(actual).html();
+		  
 		  if(self.ccaction == "prepend"){
-		    $(this).prepend($("div >",self.content));
+		    $(actual).prepend($("div>>",self.content).clone());
 		  }else if(self.ccaction == "append"){
-		    $(this).append($("div >",self.content));
+		    $(actual).append($("div>>",self.content).clone());
 		  }else if(self.ccaction == "replace"){
-		    $(this).html($("div >",self.content));
+		    $(actual).html($("div>",self.content).clone());
 		  }
-		  $(this).html($(this).html());
-		  j = j+1;
-		});
+		  $(actual).html($(actual).html());
+		}
 	      }
 		this.added = true;
 	    } else {
@@ -89,8 +88,8 @@ window.ChangeContentCommand = (function() {
 	      $(this).html(self.previousContent[i][j]);
 	      j = j+1;
 	    });
-	    this.added = false;
 	  }
+	  this.added = false;
 	}
     }
 

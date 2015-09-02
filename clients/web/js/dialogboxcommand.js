@@ -54,7 +54,7 @@ window.DialogBoxCommand = (function() {
 	"undo":
 	function() {
 	    if ( this.dialogBox ) {
-		this.dialogBox.dialog("close");
+		this.dialogBox.dialog("destroy").remove();
 	    }
 	}
     }
