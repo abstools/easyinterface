@@ -7,6 +7,7 @@ window.OutputManager = (function() {
 	    AddMarkerCommand, 
 	    HighlightLinesCommand, 
 	    SetCSSCommand, 
+	    ChangeContentCommand,
 	    AddInLineMarkerCommand, 
 	    DialogBoxCommand,
 	    WriteFileCommand

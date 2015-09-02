@@ -25,7 +25,7 @@ var _ei = {
 	  color            : "color",              // attr
 	  elements         : "elements",           // tag
 	  selector         : "selector",           // tag
-	  selectorvalue    : "value",
+	  selectorvalue    : "value",              // attr
 
 	  //
 	  outclass       : "outclass",     // attr
