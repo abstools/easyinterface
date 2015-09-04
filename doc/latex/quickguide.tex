@@ -1,10 +1,10 @@
 {% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
 }
 
-\chapter{\ei in a Nutshell}
+\chapter{A Quick Guide to \ei}
 
-In this chapter we give quick introduction to \emph{integrating an
-  application in the \ei framework}. In particular, we develop a
+This chapter provides a quick introduction on \emph{how to integrate
+  an application in the \ei framework}. In particular, we develop a
 simple application, integrate it in the \ei server, and try it out
 through the web-client.
 %
@@ -18,39 +18,54 @@ Windows when they are different.
 %
 Note that in this chapter we only use the web-client, for other
 clients refer to Chapter~\ref{ch:clients}.
-
+%
 We assume that \ei is already installed and working, which can be done
 following the instructions in
-``\href{http://github.com/abstools/easyinterface}{INSTALL.md}''. Thus,
-if you visit \url{http://localhost/ei/clients/web} you would get a
-page similar to the one shown in Figure~\ref{}. Let us start by
-explaining the over all idea using the demo examples that already
-available in the distribution of \ei.
-
-
-In the top part of this page, you can see a button named \applybutton
-and to its right a combo-box with several items named \texttt{Test-0},
-\texttt{Test-1}, etc. These item correspond to applications that are
-installed on the \ei server, the web-client is by default configured
-to connect to the server at \url{http://localhost/ei/server} and asks
-for all applications available. If you click in the \settingbutton you
-will see that each application has also some parameters that can be
-set to some specific values, these parameters where returned by the
-server as well. If you select an application, and click on
-\applybutton, the web-client sends a request to the server to execute
-this application together with the values of the selected parameters
-and the file that is currently active in the editor area. 
+``\href{http://github.com/abstools/easyinterface}{INSTALL.md}''.  
 %
-The serve in trun executeds the corresponding application, which is in
-this case is the script \texttt{server/bin/default/test-i.sh}, and
-redirect back the output to the client which will either print it in
-the console, or view it graphicaly if it uses the \ei output
-lagauge. Execute the demo application just to get an idea on which
-output we are ta;king about.
 
-In the rest of this chapter we explain, step by step, how to add you
-own application to \ei. We do so by incrementally developing a simple
-application and integrating it in the \ei server.
+Let us start by trying some demo applications that are available by
+default in the web-client.
+%
+If you visit \url{http://localhost/ei/clients/web}, you should get a
+page similar to the one shown in Figure~\ref{}.
+%
+At the top part of this page you can see a button named \applybutton,
+and to its right a combo-box with several items named \texttt{Test-0},
+\texttt{Test-1}, etc. These items correspond to applications available
+in the web-client.
+%
+To the left of \applybutton there is a button named \settingbutton, if
+you click it you will see that each \texttt{Test-i} has also some
+parameters that can be set to some value.
+%
+Note that, by default, the web-client is configured to connect to the
+server at \url{http://localhost/ei/server} and ask for all
+applications, together withe their corresponding parameters, that are
+available at that server. 
+%
+Note also that application \texttt{Test-i} actually corresponds to the
+bash-script \texttt{server/bin/default/test-i.sh}, and that its
+configuration file is \texttt{server/config/default/test-i.cfg} (later
+you will understand the details of such configuration files).
+%
+
+If you select an application, from the combo-box, and click on
+\applybutton, the web-client sends a request to the server to execute
+this application. The request includes also the current values of the
+parameters and the file that is currently active in the editor area.
+%
+The server, in turn, executes the corresponding program, i.e., the
+bash-script \texttt{server/bin/default/test-i.sh} in this case, and
+redirects its output back to the web-client.  
+%
+The web-client will either print this output in the console area, or
+view it graphically if it uses the \ei output language. Execute the
+demo applications just to get an idea on which output we are talking
+about.
+%
+In the rest of this chapter we explain, step by step, how to add your
+own application to \ei.
 
 \section{Add Your First Application to the \ei Server}
 
