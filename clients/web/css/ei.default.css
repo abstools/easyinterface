@@ -230,7 +230,7 @@ body {
 
 /* the outline area */
 .ei-outline-holder {
-    overflow: hidden;
+    overflow: auto;
     border:1px solid #a6c9e2;
     border-radius:5px;
     float: left; 
