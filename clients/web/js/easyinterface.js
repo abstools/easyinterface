@@ -463,7 +463,8 @@ window.EasyInterface = (function() {
 			var user = $(this).attr("owner");
 			var repo = $(this).attr("repo");
 			var branch = $(this).attr("branch");
-			self.filemanager.addGithub(user,repo,branch,parentId);
+			var dir = $(this).attr("path");
+			self.filemanager.addGithub(user,repo,branch,dir,parentId);
 			break;
 		    }
 		});

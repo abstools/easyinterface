@@ -113,7 +113,7 @@ window.FileManager = (function() {
 	    "delete_node" : false,
 	    "remove" : false,
 	    "icon": {image:"./lib/jstree/themes/classic/folderL.png"},
-	    "valid_children":["fileLock","folderLock","folderRepo"]
+	    "valid_children":["fileLock","folderLock","folderRepo","fileRepo"]
 	  },
 	  "fileRepo":{
 	    "icon": {image:"./lib/jstree/themes/classic/fileR.png"},
@@ -1109,7 +1109,7 @@ window.FileManager = (function() {
     },
 		    //
     addGithub:
-    function(user,repo,branch,pId){
+    function(user,repo,branch,dir,pId){
       var self = this;
       if(!self.conectgithubBase){
 	self.githubs[0] = new Github({
@@ -1118,7 +1118,6 @@ window.FileManager = (function() {
 	});
 	self.conectgithubBase = true;
       }
-      var dir = ""; // ToDo - get directory
       self.buildRepo(self.githubs[0],user,repo,branch,dir,pId,true);
       //request close!
 
@@ -1140,6 +1139,12 @@ window.FileManager = (function() {
       if(!branch || branch == "")
 	branch = 'master';
       if(dir!=""){
+	console.log(dir);
+	if(dir[0]=="/")
+	  dir = dir.substring(1);
+	if(dir[dir.length-1]=="/")
+	  dir = dir.substring(0,dir.length-1);
+	console.log(dir);
 	repo.contents(branch,dir, function(err,content){
 	  if(!err){
 	    var isTree = $.isArray(content);
