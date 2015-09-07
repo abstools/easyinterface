@@ -1,161 +1,73 @@
 {% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
 }
 
-\chapter{Quick Installation Guide}
+\chapter{A Quick Guide to \ei}
 
-In this chapter we explain how to get a local installation of the \ei
-framework, and how to integrate an application. We assume the (server)
-installation is done under \texttt{Linux}, however, the instructions
-are clear enough to be applied to other operating systems.
-
-\section{Downloading \ei}
-
-First checkout a copy of \ei from the following github repository:
-\eigithub.
+This chapter provides a quick introduction on \emph{how to integrate
+  an application in the \ei framework}. In particular, we develop a
+simple application, integrate it in the \ei server, and try it out
+through the web-client.
 %
-In the rest of this chapter, when needed, we will use
-\texttt{/path-to/easyinterface} to refer to the absolute path of
-\ei. This directory includes the following sub-directories:
+The presentation is incremental, we start with a simple application
+and in each step we add more features to demonstrate the different
+parts of the \ei framework.
 %
-\begin{enumerate} 
+In our explanation we assume that a Unix based operating system is
+used, however, we comment on how to do the analog operations on
+Windows when they are different.
 %
+Note that in this chapter we only use the web-client, for other
+clients refer to Chapter~\ref{ch:clients}.
 %
-\item \texttt{clients}: includes several sub-directories, one for each
-  client, e.g., web, eclipse, shell, etc. In this chapter we will
-  mainly focus on the web-client;
+We assume that \ei is already installed and working, which can be done
+following the instructions in
+``\href{http://github.com/abstools/easyinterface}{INSTALL.md}''.  
 %
-\item \texttt{doc}: includes relevant documentation;
+
+Let us start by trying some demo applications that are available by
+default in the web-client.
 %
+If you visit \url{http://localhost/ei/clients/web}, you should get a
+page similar to the one shown in Figure~\ref{}.
 %
-\item \texttt{examples}: includes several program examples, basically
-  \abs programs, that can be used in the \ei clients. Note that these
-  examples are programs to run applications on and not applications to
-  be integrated in the server; and
+At the top part of this page you can see a button named \applybutton,
+and to its right a combo-box with several items named \texttt{Test-0},
+\texttt{Test-1}, etc. These items correspond to applications available
+in the web-client.
 %
-\item \texttt{server}: includes the \ei server.
+To the left of \applybutton there is a button named \settingbutton, if
+you click it you will see that each \texttt{Test-i} has also some
+parameters that can be set to some value.
 %
-\end{enumerate}
+Note that, by default, the web-client is configured to connect to the
+server at \url{http://localhost/ei/server} and ask for all
+applications, together withe their corresponding parameters, that are
+available at that server. 
 %
-Make sure that all files under \texttt{easyinterface} have
-\texttt{read} and \texttt{execute} permissions for \texttt{other},
-which can be done by executing the following command:
-
-\medskip
-\begin{lstlisting}[style=shell]
-> chmod -R 755 /path-to/easyinterface
-\end{lstlisting}
-
-\section{Setting up an HTTP Server}
-
-The \ei server is written in PHP, and thus requires an HTTP server to
-be installed. Installing such server, together with a corresponding
-PHP support, depends on the operating system you are using. 
+Note also that application \texttt{Test-i} actually corresponds to the
+bash-script \texttt{server/bin/default/test-i.sh}, and that its
+configuration file is \texttt{server/config/default/test-i.cfg} (later
+you will understand the details of such configuration files).
 %
-In \href{http://www.ubuntu.com}{Ubuntu}, for example, you can install
-\href{http://httpd.apache.org/}{Apache2} by executing the following
-instructions:
 
-\medskip
-\begin{lstlisting}
-> sudo apt-get update
-> sudo apt-get install apache2
-> sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
-> sudo service apache2 restart
-\end{lstlisting}
-
-\medskip
-\noindent
-Once installed, make sure that it works correctly by visiting
-\url{http://localhost/info.php} --- you should get a page with some
-information on the PHP module.
+If you select an application, from the combo-box, and click on
+\applybutton, the web-client sends a request to the server to execute
+this application. The request includes also the current values of the
+parameters and the file that is currently active in the editor area.
 %
-\texttt{OS X} typically has Apache installed, and you just need to
-activate it.\fixme{elaborate on OS X}
-
-\section{Setting up the \ei Server}
-
-Next we install the \ei server (on top of the HTTP server of the
-previous section).
+The server, in turn, executes the corresponding program, i.e., the
+bash-script \texttt{server/bin/default/test-i.sh} in this case, and
+redirects its output back to the web-client.  
 %
-Installing the \ei server amounts to binding the URL
-\url{http://localhost/ei} to the directory
-\texttt{/path-to/easyinterface} and giving it enough permissions so PHP
-scripts can be executed. This can be done by editing
-\texttt{/etc/apache2/mods-enabled/alias.conf} to include the following
-configuration snippet:
-
-\medskip
-\noindent
-\begin{lstlisting}
-Alias /ei "/path-to/easyinterface"
-
-<Directory "/path-to/easyinterface">
-   Options FollowSymlinks MultiViews Indexes IncludesNoExec
-   AllowOverride All
-   Require all granted
-</Directory>
-\end{lstlisting}
-
-\medskip
-\noindent
-Once modified, you should restart the HTTP server:
-
-\medskip
-\begin{lstlisting}
-> sudo service apache2 restart
-\end{lstlisting}
-
-\medskip
-\noindent
-Finally test that the \ei server works correctly by visiting
-\url{http://localhost/ei/server} where you should get a message
-confirming that the server is up.
+The web-client will either print this output in the console area, or
+view it graphically if it uses the \ei output language. Execute the
+demo applications just to get an idea on which output we are talking
+about.
 %
-In \texttt{OS X} you have to add the above configuration line to
-\texttt{/etc/apache2/http.conf}. \fixme{elaborate on OS X}
+In the rest of this chapter we explain, step by step, how to add your
+own application to \ei.
 
-
-\section{Setting up the \ei Web-Client}
-
-By default the web-client is already configured to connect to the \ei
-server that is available at \url{http://localhost/ei/server}, and,
-moreover, to retrieve all applications that are installed on that
-server. Thus, for now we just have to check that it works as expected
-before proceeding to the next section.
-%
-First visit \url{http://localhost/clients/web} and check that you get
-a page similar to the one depicted in Figure~\ref{}.  Next click on
-the \applybutton button, you should get a message in the console area
-congratulating you on your first use of \ei. Let us first briefly
-explain what actually happened when you clicked on \applybutton, as it
-will help you to understand the next steps.
-
-When you clicked on \applybutton, the web-client asked the server to
-execute an application that is associated with the program (bash
-script) \texttt{server/bin/default/test-1.sh}, the server did so and
-redirected the standard output of \texttt{test-1.sh} to the client
-which in turn printed it on the console. You can change the message
-printed in \texttt{test-1.sh} and check that you get a different
-output on the console.
-
-Next to the \applybutton button you can see a ComboBox that lists the
-available applications, select any of them and click on \applybutton
-again. Each application demonstrates some aspects of the output
-language that we will see later (e.g., highlighting lines). Note that
-application ``Test i'' is associated with the bash script
-\texttt{server/bin/default/test-i.sh}. 
-%
-In the next section you learn how to integrate your applications into
-this list by installing them on the \ei server.
-
-\section{Add Your First Application to \ei}
-
-In this section we explain how to add an applications to \ei using a
-step by step example. Where we start with a simple application and in
-each step we add more features.
-
-
-\subsection{Add Your First Application to the \ei Server}
+\section{Add Your First Application to the \ei Server}
 
 When we add an application to the \ei server it will appear
 automatically in the applications menu of the web-client (unless you
@@ -295,7 +207,7 @@ Select this application and click on the \applybutton button, the
 message "Hello World!" will printed on the console area.
 
 
-\subsection{Passing Input Files to Your Application}
+\section{Passing Input Files to Your Application}
 
 Applications typically receive input files (e.g., programs) to
 process. You must have noticed that the web-client provides the
@@ -392,7 +304,7 @@ from the filemanager and choose \applybutton from its context
 menu. You should see the output of the application in the console
 area.
 
-\subsection{Passing Outline Entities to Your Application}
+\section{Passing Outline Entities to Your Application}
 
 In the web-client, the area on the right is called the outline area
 (see Figure~\ref{}).
@@ -476,7 +388,7 @@ the \texttt{MFA} application again to see the result of the last
 changes. It is always recommended to check that the application works
 correctly from a shell first.
 
-\subsection{Passing Parameters to Your Application}
+\section{Passing Parameters to Your Application}
 
 In addition to input files and outline entities, real applications
 receive other parameters to control different aspects. In this section
@@ -660,7 +572,7 @@ executing the command-line. Execute the \texttt{MFA} application from
 the web-client with different values for the parameters to see how the
 output changes.
 
-\subsection{Using the \ei Output Language in Your Application}
+\section{Using the \ei Output Language in Your Application}
 
 In the example that we have developed so far, the web-client simply
 printed the output of \texttt{myapp.sh} in the console area. This is
@@ -705,7 +617,7 @@ In the rest of this section we discuss some commands and actions that
 are supported in \eiol, for the complete list see
 Chapter~\ref{ch:eiol}.
 
-\subsubsection{Printing in the Console Area}
+\subsection{Printing in the Console Area}
 
 Recall that when the \eiol is used, the web-client does not redirect
 the output to the console and thus we need a command to
@@ -825,7 +737,7 @@ Execute \texttt{myapp.sh} in a shell first to check that it works
 correctly, and then execute the \texttt{MFA} application from the
 web-client to see the effect of these changes.
 
-\subsubsection{Adding Markers}
+\subsection{Adding Markers}
 
 Next we explain a command for adding a marker next to a code line in
 the editor area. The following is an example of such command:
@@ -938,7 +850,7 @@ Execute \texttt{myapp.sh} in a shell first to check that it works
 correctly, and then execute the \texttt{MFA} application from the
 web-client to see the effect of these changes.
 
-\subsubsection{Highlighting Code Lines}
+\subsection{Highlighting Code Lines}
 
 The following command can be used to highlight code lines:
 
@@ -982,7 +894,7 @@ Execute \texttt{myapp.sh} in a shell first to check that it works
 correctly, and then execute the \texttt{MFA} application from the
 web-client to see the effect of these changes.
 
-\subsubsection{Adding Inline Markers}
+\subsection{Adding Inline Markers}
 
 Inline markers are widgets placed inside the code. They typically
 include some read-only. The following command adds an inline marker:
@@ -1028,7 +940,7 @@ correctly, and then execute the \texttt{MFA} application from the
 web-client to see the effect of these changes.
 
 
-\subsubsection{Opening a Dialog Box}
+\subsection{Opening a Dialog Box}
 
 The following command can be used to open a dialog box with some
 content:
@@ -1072,7 +984,7 @@ correctly, and then execute the \texttt{MFA} application from the
 web-client to see the effect of these changes.
 
 
-\subsubsection{Adding Code Line Actions}
+\subsection{Adding Code Line Actions}
 
 A code line action defines a list of commands to be executed when the
 user clicks on a line of code (more precisely, on a marker placed next
@@ -1163,7 +1075,7 @@ Execute \texttt{myapp.sh} in a shell first to check that it works
 correctly, and then execute the \texttt{MFA} application from the
 web-client to see the effect of these changes.
 
-\subsubsection{Adding OnClick Actions}
+\subsection{Adding OnClick Actions}
 
 OnClick actions are similar to code line actions. The difference is
 that instead of assigning the action to a line of code, we can assign
@@ -1256,7 +1168,9 @@ web-client to see the effect of these changes. In particular, clicking
 on the list of files in the console area (anywhere in the yellow
 region) should open a dialog box.
 
-\subsubsection{Adding Example}
+\subsection{Adding SVG Content}
+
+\subsection{How to add examples to the file-manager}
 
 The left side of the web-client includes several program
 examples. This part is flexible and you can add you own set of
