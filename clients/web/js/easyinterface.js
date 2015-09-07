@@ -109,8 +109,7 @@ window.EasyInterface = (function() {
 		alert(ids);
 		self.outline.refresh( ids ); 
 	    } );
-
-
+      this.initResizeEfect(); 
 	   
 
     }
@@ -468,6 +467,14 @@ window.EasyInterface = (function() {
 			break;
 		    }
 		});
+	},
+	initResizeEfect:
+	function() {
+	  var self = this;
+	  var RE = new ResizeEfect();
+	  RE.addHorizontalEfect("filemanager","codearea");
+	  RE.addHorizontalEfect("codearea","outline");
+	  RE.addVerticalEfect("up","console");
 	}
 
     }

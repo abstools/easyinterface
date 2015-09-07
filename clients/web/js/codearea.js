@@ -116,7 +116,7 @@ window.CodeArea = (function() {
 	    // create a CodeMirror for this tab
 	    var ed = CodeMirror( content.find("#"+tabTag+"-ed").get(0), { 
  	        lineNumbers: true, 
- 		mode: "text/abs",//x-java", 
+ 		mode: "text/clike",//x-java", 
  		value: tabContent,
 		
 		gutters: ["actionGutter","CodeMirror-linenumbers","infoGutter"],
