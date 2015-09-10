@@ -109,7 +109,7 @@ window.EasyInterface = (function() {
 		alert(ids);
 		self.outline.refresh( ids ); 
 	    } );
-      this.initResizeEfect(); 
+      this.initResizeEffect(); 
 	   
 
     }
@@ -468,13 +468,13 @@ window.EasyInterface = (function() {
 		    }
 		});
 	},
-	initResizeEfect:
+	initResizeEffect:
 	function() {
 	  var self = this;
-	  var RE = new ResizeEfect();
-	  RE.addHorizontalEfect("filemanager","codearea");
-	  RE.addHorizontalEfect("codearea","outline");
-	  RE.addVerticalEfect("up","console");
+	  var RE = new ResizeEffect();
+	  RE.addHorizontalEffect("filemanager","codearea");
+	  RE.addHorizontalEffect("codearea","outline");
+	  RE.addVerticalEffect("up","console");
 	}
 
     }
