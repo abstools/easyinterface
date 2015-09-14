@@ -1,15 +1,21 @@
 .dragbarV{
-   background-color:black;
+   background-color:#C0C0FF;
    height:100%;
    float: left;
-   width: 3px;
+   width: 4px;
    cursor: col-resize;
+   -webkit-box-shadow: inset 0px 0px 2px -1px rgba(0,0,0,1);
+   -moz-box-shadow: inset 0px 0px 2px -1px rgba(0,0,0,1);
+   box-shadow: inset 0px 0px 2px -1px rgba(0,0,0,1);
 }
 
 .dragbarH{
-   background-color:black;
+   background-color:#C0C0FF;
    width:100%;
    float: left;
-   height: 3px;
+   height: 5px;
    cursor: row-resize;
+   -webkit-box-shadow: inset 0px 0px 2px -1px rgba(0,0,0,1);
+   -moz-box-shadow: inset 0px 0px 2px -1px rgba(0,0,0,1);
+   box-shadow: inset 0px 0px 2px -1px rgba(0,0,0,1);
 }
