@@ -21,7 +21,6 @@ window.FileManager = (function() {
     this.paste=false;
     this.githubs = new Array(); // 0-> for general conect (without user)
     this.githubId = 1; //next id to github conections.
-    this.conectgithubBase = false; // github conection app, without user.
     this.initFileManager();
     this.initialize();
     
@@ -885,7 +884,6 @@ window.FileManager = (function() {
 	});
       }else if(fmInfo.attr.urlGitHub && !fmInfo.attr.urlLoaded ){
 	var gh = fmInfo.attr.githubId;
-	console.log(fmInfo.attr);
 	var response = this.githubs[gh].getBlob(fmInfo.attr.url, function(err,data){
 	  if(err){
 	    fmInfo.attr.content = "Error: "+err;
@@ -1111,13 +1109,12 @@ window.FileManager = (function() {
     addGithub:
     function(user,repo,branch,dir,pId){
       var self = this;
-      if(!self.conectgithubBase){
-	self.githubs[0] = new Github({
-	  token: github_Token,
-	  auth: "oauth"
-	});
-	self.conectgithubBase = true;
-      }
+
+      self.githubs[0] = new Github({
+	    username: "",
+	    password: "",
+            auth: "basic"
+      });
       self.buildRepo(self.githubs[0],user,repo,branch,dir,pId,true);
       //request close!
 
@@ -1139,12 +1136,10 @@ window.FileManager = (function() {
       if(!branch || branch == "")
 	branch = 'master';
       if(dir!=""){
-	console.log(dir);
 	if(dir[0]=="/")
 	  dir = dir.substring(1);
 	if(dir[dir.length-1]=="/")
 	  dir = dir.substring(0,dir.length-1);
-	console.log(dir);
 	repo.contents(branch,dir, function(err,content){
 	  if(!err){
 	    var isTree = $.isArray(content);
@@ -1239,22 +1234,13 @@ window.FileManager = (function() {
 	    var github_connector = null;
 	    if (ownerGH =="" || repoGH =="")
 	      return;
-	    if(userGH != "" && $("#passGH").val() !=""){
-	      github_connector = new Github({
-		username: userGH,
-		password: $("#passGH").val(),
-		auth: "basic"
-	      });
-	    }else if(!self.conectgithubBase){
-	      self.githubs[0] = new Github({
-		token: github_Token,
-		auth: "oauth"
-	      });
-	      self.conectgithubBase = true;
-	      github_connector = self.githubs[0];
-	    }else{
-	      github_connector = self.githubs[0];
-	    }
+	    
+	    github_connector = new Github({
+	      username: userGH,
+	      password: $("#passGH").val(),
+	      auth: "basic"
+            });
+
 	    self.buildRepo(github_connector,ownerGH,repoGH,branchGH,dirGH,fm.fmObj[fmId].node.attr("fmId"));
 	  });
 /*
