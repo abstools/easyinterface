@@ -106,7 +106,6 @@ window.EasyInterface = (function() {
 		}
 	    } ).click(function() { 
 		var ids = [self.codearea.getCurrentTabId()];
-		alert(ids);
 		self.outline.refresh( ids ); 
 	    } );
       this.initResizeEffect(); 
