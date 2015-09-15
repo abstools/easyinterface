@@ -544,7 +544,7 @@ window.FileManager = (function() {
 		  
 		  self.fmIdByPath[newpath] =  self.fmIdByPath[oldpath];
 		  delete self.fmIdByPath[oldpath];
-		  if(newfmInfo.attr.rel == "folder"){
+		  if(newfmInfo.attr.rel == "folder" || newfmInfo.attr.rel == "folderRepo"){
 		    $(newfmInfo.attr.members).each(function(k,v){
 		      var tempfmInfo = self.fmObj[v].info;
 		      var newtemppath = self.calculatePath(tempfmInfo);
@@ -552,11 +552,17 @@ window.FileManager = (function() {
 		      self.fmIdByPath[newtemppath] =  self.fmIdByPath[oldtemppath];
 		      delete self.fmIdByPath[oldtemppath];
 		    });
+		  }else if(self.fmObj[ fmId ].info.attr.open){
+		    self.codearea.updateTitle(fmId,newname);
+		    if($("#mdfile-"+fmId).length){
+		      var parent = $("#mdfile-"+fmId).parent();
+		      $(".ui-dialog-title",parent).html(newname);
+		    }
 		  }
 		}else{
 		  $( "<div>Sorry, but '"+newname
 		    +"' already exists in this folder, please choose a different name</div>" ).dialog({
-		      title: "Error: Fuilename already in use",
+		      title: "Error: Filename already in use",
 		      resizable: false,
 		      height:140,
 		      modal: true
