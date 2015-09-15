@@ -118,7 +118,6 @@ window.CodeArea = (function() {
  	        lineNumbers: true, 
  		mode: "text/abs",//x-java", 
  		value: tabContent,
-		
 		gutters: ["actionGutter","CodeMirror-linenumbers","infoGutter"],
 		highlightSelectionMatches: {showToken: /\w/}
  	    });
