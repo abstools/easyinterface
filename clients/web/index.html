@@ -42,6 +42,8 @@
   <link type="text/css" rel="stylesheet" src="./lib/jquery.svg/jquery.svg.css" />
 
   <!-- the ei stuff -->
+  <script src="./js/config.js"></script>
+
   <script src="./js/constants.js"></script>
   <script src="./js/misc.js"></script>
   <script src="./js/set.js"></script>
@@ -99,16 +101,7 @@ $( function() {
     eiserverURI = "/ei/server/eiserver.php";
   }
 
-  new EasyInterface({ 
-    holder: $("#ei_1"),
-    theme: "./html/eitheme.resizable.html",
-    cfgFile: "/ei/clients/web/eiclient.cfg",
-    apps: [ { server: eiserverURI, apps: "_all"/*/["cost"]/**/ } ] ,
-    examples: [ { server: eiserverURI, examples: "_all"/*/["cost"]/**/ } ] ,
-    outlineapp: "absoutline", // "coutline", 
-    outlineserver:eiserverURI,
- // httpproxy:""
-  });
+  loadConfig();
   });
 </script>
 </head>
