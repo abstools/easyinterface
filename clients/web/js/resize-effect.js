@@ -20,7 +20,7 @@ window.ResizeEffect = (function() {
 	  self.count = self.count+1; 
 	  var me = self.count;
 	  self.dragging = 0;
-	  $('#'+leftId).after("<div id='drag-"+me+"' class='dragbarV'></div>");
+	  $('#'+leftId).after("<div id='drag-"+me+"' class='dragbarV'><div class='colordragV'></div></div>");
 
 	  $('#drag-'+me).mousedown(function(e){
 	    self.ww[me] = $('#'+leftId).parent().width();
@@ -60,7 +60,7 @@ window.ResizeEffect = (function() {
 	  self.count = self.count+1;
 	  var me = self.count;
 	  self.dragging = 0;
-	  $("#"+upId).after("<div id='drag-"+me+"' class='dragbarH'></div>");
+	  $("#"+upId).after("<div id='drag-"+me+"' class='dragbarH'><div style='height:25%'></div><div class='colordragH'></div></div>");
 	  $('#drag-'+me).mousedown(function(e){
 	    self.ww[me] = $('#'+upId).parent().height();
 	    e.preventDefault();

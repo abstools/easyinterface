@@ -3,20 +3,19 @@
 }
 
 .easyinterface {
-    margin: 50px;
     background: white;
-    margin-left:auto;
-    margin-right:auto;
-    margin-bottom:auto;
-    margin-top:auto;
+    margin: auto;
     border:1px solid #a1a1a1;
-    padding: 0pt;
     min-height: 500px;
     min-width: 600px;
     width: 95%;
     height: 95%;
-    padding: 5pt 5pt;
+    padding: 7px 7px;
     box-shadow: 5px 5px 2px #888888;
+-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .ei-paramwidget-checkbox {
@@ -141,46 +140,39 @@
 
 
 
-#parameters,#helps
-{
+#parameters,#helps {
     overflow: auto;
 }
-
-
-
-
 
 
 /* the tool bar */
 
 .ei-toolbar {
-    float: top; 
-    width: 99.7%;
-    height: 5.5%;
-    padding: 0pt;
-    margin: 0pt;
-
+    height: 35px;
+    padding: 2px 3px;
+    margin: 0px;
 }
-
 
 /* the file manager area */
 
 .ei-file-code-outline {
-    margin: 2pt 0pt 1pt 0pt; 
-    /* border: 1px solid;  */
-    width: 100%; 
+    position:relative;
+    margin: 2pt 0pt 2pt 0pt; 
     height:60%
 }
 
 .ei-filemanager-holder {
+    position:relative;
     overflow: auto;
-    border:1px solid #a6c9e2;
+    border: 1px solid #a6c9e2;
     border-radius:5px;
     float: left; 
     width: 20%;
-    height: 98.5%;
-    margin: 0pt
-    padding: 2pt 2pt;
+    height: 100%;
+-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 
@@ -188,12 +180,11 @@
 
 .ei-codearea-holder
 {
+  position:relative;
     float: left; 
-    width: 60%;
-    height: 99%;
-    padding: 0pt;
-   /* margin: 0pt 2pt;*/
-    padding: 0pt;
+    width:58%;
+    height: 100%;
+
 }
 
 .ei-codearea {
@@ -222,20 +213,23 @@
 .CodeMirror {
     padding: 0px;
     margin: 0px;
-    padding: 2pt 2pt;
+    /*padding: 2pt 2pt;*/
   height: 100%;
 }
 
 /* the outline area */
 .ei-outline-holder {
+  position:relative;
     overflow: auto;
     border:1px solid #a6c9e2;
     border-radius:5px;
     float: left; 
-    width: 18%;
-    height: 97%;
-    margin: 0pt;
-    padding: 2pt 2pt;
+    width: 20%;
+    height: 100%;
+-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 
@@ -245,7 +239,7 @@
 .ei-console-holder {
     float: bottom;
     width: 100%;
-    height: 32.5%;
+    height: 32%;
 
     overflow: auto;
 }
@@ -253,9 +247,9 @@
 .ei-console {
     /* border: 1px solid red; */
     width: 99.7%;
-    overflow: auto;
+    overflow: hidden;
     padding: 0pt;
-    height: 98%;
+    height: 90%;
     margin: 0pt 0pt 0pt 0pt;
 }
 
@@ -349,20 +343,7 @@
 
 
 .custom-combobox {
-    position: relative;
-    display: inline-block;
-}
-.custom-combobox-toggle {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin-left: -1px;
-    padding: 0;
-    /* support: IE7 */
-    *height: 1.7em;
-    *top: 0.1em;
-}
-.custom-combobox-input {
-    margin: 0;
-    padding: 0.3em;
+  float: right;
+  height: 33.8px;
+  margin-left: 3.2px;
 }
