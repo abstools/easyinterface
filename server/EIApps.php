@@ -155,9 +155,11 @@ static function get_app_help( $app_id ) {
       // can reconstruct file names easily (i.e., whatever comes after
       // _ei_files is the name passed by the client)
 
-      $aux = tempnam(sys_get_temp_dir(),"easyinterface_")."/_ei_files";  
+      $aux = tempnam(sys_get_temp_dir(),"easyinterface_"); 
       $dir = str_replace("\\", "/", $aux);
       unlink($aux);
+      mkdir($dir, 0755);
+      $dir .= "/_ei_files";
       mkdir($dir, 0755);
       $root_str = $dir;
       EIApps::build_directories($files_str,$dir,$parameters);
