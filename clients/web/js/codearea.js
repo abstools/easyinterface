@@ -181,7 +181,14 @@ window.CodeArea = (function() {
 	  tabInfo.editor.setValue(content);
 	  this.tabInfoByPos[tabInfo.pos] = tabInfo;
 	},
-
+	updateTitle:
+	function(id,title) {
+	  var tabInfo = this.tabInfoById[id];
+	  var tabTag = this.tabId_to_tabTag(id);
+	  tabInfo.label = title;
+	  $("li#tablabel-"+tabTag+"> a ").html(title);
+	  this.tabInfoByPos[tabInfo.pos] = tabInfo;
+	},
 	//
 	showTab: 
         function(id) {
