@@ -9,10 +9,18 @@
 #
 . envisage/envisage_settings.sh
 
+# decide which executable to use
+#
+if [[ -e ${SACOHOME}/bin/maypar ]] ; then
+    PROGRAM=${SACOHOME}/bin/maypar
+else
+    PROGRAM=${SACOHOME}/src/interfaces/mhp/shell/mhp_shell
+fi
+
 # Execute mh_shell, we add '-ei_version 2' to the parameters since now
 # saco's output uses the old easy interface language
 #
-${SACOHOME}/bin/maypar $@ -ei_version 2 -mode complete -highlight '/dev/null' &> /tmp/mhp.stderr
+${PROGRAM} $@ -ei_version 2 -mode complete -highlight '/dev/null' &> /tmp/mhp.stderr
 
 # If costabs exit with exit-code 0 we just print the output to the
 # stdout, otherwise we print an error message to the stdout as well.

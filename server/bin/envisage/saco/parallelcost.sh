@@ -9,10 +9,18 @@
 #
 . envisage/envisage_settings.sh
 
+# decide which executable to use
+#
+if [[ -e ${SACOHOME}/bin/costabs ]] ; then
+    PROGRAM=${SACOHOME}/bin/costabs
+else
+    PROGRAM=${SACOHOME}/src/interfaces/shell/costabs
+fi
+
 # Execute costabs, we add '-ei_version 2' to the parameters since now
 # saco's output uses the old easy interface language
 #
-${SACOHOME}/bin/costabs $@ -field_abstraction zero_one -parallel_cost yes -ei_version 2 &> /tmp/costabs.stderr
+${PROGRAM} $@ -field_abstraction zero_one -parallel_cost yes -ei_version 2 &> /tmp/costabs.stderr
 
 # If costabs exit with exit-code 0 we just print the output to the
 # stdout, otherwise we print an error message to the stdout as well.
