@@ -839,11 +839,14 @@ window.FileManager = (function() {
 
     //
     openFile: 
-    function( fileId ) {
+    function( fileId, force ) {
       if( fileId < 0 ) return;
       var fmInfo = this.fmObj[ fileId ].info;
-      
-      if ( fmInfo.attr.open ) {
+      var extension = /^.+\.([^.]+)$/.exec(fmInfo.attr.label);
+      extension = (extension == null) ? "": extension[1];
+      if ( extension == "md" && !force){
+	this.openMD(fmInfo);
+      }	else if ( fmInfo.attr.open ) {
 	this.codearea.showTab(fmInfo.attr.fmId);
       } else {
 	this.loadFile( fmInfo.attr.fmId );
@@ -851,6 +854,50 @@ window.FileManager = (function() {
 	fmInfo.attr.open = true;
       }
       
+    },
+
+		    //
+    openMD:
+    function (fmInfo){
+      var self = this;
+      if(fmInfo.attr.open){
+	//get new content from codearea
+	fmInfo.attr.content = self.codearea.getTabContent(fmInfo.attr.fmId);
+      }else{
+	self.loadFile(fmInfo.attr.fmId);
+      }
+      var htmlMD = markdown.toHTML(fmInfo.attr.content);
+      if($("#mdfile-"+fmInfo.attr.fmId).length){
+	$(".dialog-div","#mdfile-"+fmInfo.attr.fmId+"").html(htmlMD);
+	$("#mdfile-"+fmInfo.attr.fmId).dialog("open");
+	return;
+      }
+      var owner = $("<div id='mdfile-"+fmInfo.attr.fmId+"' class='dialog-div'></div>");
+      $(owner).append($("<div class='dialog-div'></div>"));
+      $(".dialog-div",owner).html(htmlMD);
+      //create dialog box with markdown
+      $(owner).dialog({
+	title: fmInfo.attr.label,
+	resizable: true,
+	height:400,
+	width: 600,
+	modal: false,
+	buttons: {
+	  "Close": function() {
+	    $( this ).dialog( "close" );
+	  },
+	  "Edit": function(){
+	    self.openFile(fmInfo.attr.fmId,true);
+	  },
+	  "Refresh": function(){
+	    if(self.fmObj[ fmInfo.attr.fmId ].info.attr.open){
+	      fmInfo.attr.content = self.codearea.getTabContent(fmInfo.attr.fmId);
+	      var htmlMD2 = markdown.toHTML(fmInfo.attr.content);
+	      $(".dialog-div","#mdfile-"+fmInfo.attr.fmId+"").html(htmlMD2);
+	    }
+	  }
+	}
+      });
     },
 
 		    //
