@@ -403,11 +403,11 @@
       // Retrieve the tree a commit points to
       // -------
 
-      this.getTree = function(tree, cb) {
+      this.getTree = function(tree,sync, cb) {
         _request("GET", repoPath + "/git/trees/"+tree, null, function(err, res) {
           if (err) return cb(err);
           cb(null, res.tree);
-        });
+        },'',sync);
       };
 
       // Post a new blob object, getting a blob SHA back

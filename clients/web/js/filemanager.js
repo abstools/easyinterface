@@ -819,7 +819,7 @@ window.FileManager = (function() {
 	var parentMembers = this.fmObj[ parentId ].info.attr.members;
 	parentMembers[ parentMembers.length ] = fmInfo.attr.fmId;
       }
-      
+
       this.fmIdByPath[path] = fmInfo.attr.fmId;
       return fmInfo.attr.fmId;
     
@@ -951,13 +951,14 @@ window.FileManager = (function() {
 
 		    //
     openFolder:
-    function(folderId){
+    function(folderId,sync){
       var self = this;
       var fmInfo = self.fmObj[folderId].info;
       if(fmInfo.attr.urlGitHub && !fmInfo.attr.urlLoaded){
 	var gh = fmInfo.attr.githubId;
-	self.githubs[gh].getTree(fmInfo.attr.url, function(err, tree) {
-	  self.buildGithubTree(gh,tree,"",folderId,fmInfo.attr.branch);
+	self.githubs[gh].getTree(fmInfo.attr.url,sync, function(err, tree) {
+	  fmInfo.attr.urlLoaded = true;
+	  self.buildGithubTree(gh,tree,"",folderId,fmInfo.attr.branch,sync);
 	  
 	});
       }
@@ -970,6 +971,7 @@ window.FileManager = (function() {
       if(this.fmObj[id].info.attr.rel == "folder" 
 	|| this.fmObj[id].info.attr.rel == "folderLock"
 	|| this.fmObj[id].info.attr.rel == "folderRepo"){
+	  this.openFolder(id,true);
 	  var fmInfo = this.fmObj[id].info;
 	  var size = fmInfo.attr.members.length;
 	  arr.type="folder";
@@ -1208,7 +1210,7 @@ window.FileManager = (function() {
 	  }
 	});
       }else{
-	repo.getTree(branch, function(err, tree) {
+	repo.getTree(branch,false, function(err, tree) {
 	  if(!err){
 	    parentId = self.addFolder(repoId,parentId,"Repo");
 	    self.buildGithubTree(repoId,tree,dir,parentId,branch,close);  
