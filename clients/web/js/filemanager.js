@@ -998,13 +998,17 @@ window.FileManager = (function() {
       var recursive = function(Ids,files){
 	//Ids = [{id:0,child:[{},{}],type:"file",len:0,complete:bool}];
 	for(var i=0;i<Ids.length;i++) {
-	  if(Ids[i].type == "file"){
-	    files[files.length] = {
-	      id: Ids[i].id,
-	      type: "file",
-	      name: (self.calculatePathById(Ids[i].id)).substr(1),
-	      content: self.getFileContent(Ids[i].id)
-	    };  
+	  if(Ids[i].type == "file" ){
+	    var name = (self.calculatePathById(Ids[i].id)).substr(1);
+	    var extension = /^.+\.([^.]+)$/.exec(name);
+	    extension = (extension == null) ? "": extension[1];
+	    if(extension != "md")
+	      files[files.length] = {
+		id: Ids[i].id,
+		type: "file",
+		name: name,
+		content: self.getFileContent(Ids[i].id)
+	      };  
 	  }else{
 	    //files[files.length] = {
 	    //  id: Ids[i].id,
