@@ -6,7 +6,7 @@
 \label{ch:overview}
 
 The \ei framework provides a simple way to build interfaces, e.g, a
-web-interface or an Eclipse plug-in, for tools written in (almost) any
+web-interface or an Eclipse plugin, for tools written in (almost) any
 programming language.
 %
 Moreover, it does not require the programmer to be familiar with any
@@ -52,7 +52,7 @@ In what follows we start explaining the inner components of the server
 side, and which problems they solve, and then we move on to explain the
 client side.
 
-\subsection{The Server Side}
+\section{The Server Side}
 \label{ch:overview:arch:server}
 
 The problem that we want to solve at the server side is: 
@@ -124,29 +124,58 @@ back to the client.
 \section{The Clients Side}
 \label{ch:overview:arch:clients}
 
-Although now we have a relatively easy way to execute application on
-the server side, we still need to make HTTP POST requests, etc. We are
-interesting replacing this by (graphical) user interfaces that does so
-automatically. For this, we provide clients that allow the user to
-select an application to execute, set the values of the corresponding
-parameters and then it automatically generate the corresponding
-request and communicate with the \ei server.
-
-The first client is a web-interface that can be executed in a browser
-and looks like an environment for developing programs, the second is
-an Eclipse-plugin that runs inside the Eclipse IDE, and the last we
-call a remote-shell that can be used from a command-line.
+Although we now have a relatively easy way to execute applications on
+the server side, it is still not as easy as we aimed at.
 %
-Now since the web-client and the Eclipse plugin include a developing
-environment, it would be nice to provide away such that apps can view
-their output in a graphical way (e.g., open dialog box, highlight code
-lines, add markers in the editor). For this, the \ei framework defines
-a text-based output language that can be used by the applications to
-describe their output, and the clients include an interpreter that
-transform this text-based command into graphical element.
+Our aim is to simplify this process further by providing (graphical)
+user interfaces that automatically (1) connect to the \ei server and
+ask for the list of available applications; (2) let the user choose an
+application to execute and set the values of the corresponding
+parameters; (3) generate a corresponding request and send it to the
+\ei server; and (4) shows the returned output to the user.
+%
+The \ei framework provides three such interfaces: a
+\emph{web-interface} that can be executed in a browser and looks like
+a developing environment; an Eclipse-plugin that runs within the
+Eclipse IDE; and a remote-shell that can be used from a command-line.
 
+Since the web-client and the Eclipse plugin include are GUI based
+developing environments, \ei provide also, to an application, the
+possibility to generate output that has some graphical effect, e.g.,
+open dialog-boxes, highlight code line, add markers, etc. To use this
+feature, the applications should be modified to use the \ei output
+language. The following is a snippet of such output:
 
+\medskip
+\begin{lstlisting}
+<highlightlines dest="/Examples_1/iterative/sum.s"> 
+  <lines> <line from="5" to="10"/> </lines>
+</highlightlines>
+...
+<oncodelineclick dest="/Examples_1/iterative/sum.c" outclass="info" >
+  <lines><line from="17" /></lines>
+  <eicommands>
+    <dialogbox boxtitle="Hey!"> 
+      <content format="text">
+       (* Click on the marker again to close this window *)
+      </content>
+    </dialogbox>
+  </eicommands>
+</oncodelineclick>
 
+\end{lstlisting}
+
+\medskip
+\noindent
+The \lst{highlightlines} indicates that lines $5--10$ of the file
+\texttt{/Examples\_1/iterative/sum.s} (which is opened in the editor)
+should be highlighted. The \lst{oncodelineclick} tag indicates that
+when clicking on line $17$, a dialog-box with a corresponding message
+should be opened.
+%
+Note that the application is only modified once to produce such
+output, then it will have a corresponding effect in all interfaces
+that support this language.
 
 
 
