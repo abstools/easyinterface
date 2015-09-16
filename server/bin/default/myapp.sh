@@ -167,7 +167,7 @@ do
   echo "<lines><line from='20' /></lines>"
   echo "<eicommands>"
   echo "<highlightlines>"
-  echo "<lines><line from='20' to='25'/></lines>"
+  echo "<lines><line from='20' to='22'/></lines>"
   echo "</highlightlines>"
   echo "<dialogbox boxtitle='Hey!'> "
   echo "<content format='html'>"
