@@ -1059,6 +1059,10 @@ window.FileManager = (function() {
 		    //
     getIdByPath:
     function(path){
+      var i = path.indexOf("/_ei_files/");
+      if ( i != -1 )
+	  path = path.substr(i+10,path.length);
+
       if(this.existsFm(path))
 	return this.fmIdByPath[path];
       else

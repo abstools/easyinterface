@@ -8,6 +8,4 @@ var loadConfig = function(){
       $('body').html("<span style='color:red'>No config file found, please contact admin.</span>");
     });
   });
-    
-
 }
