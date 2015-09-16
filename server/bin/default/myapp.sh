@@ -128,25 +128,22 @@ fi
 
 for f in $files 
 do
-  dest=${f#$rootdir}
-  echo "<addmarker dest='$dest' outclass='error'>"
+  echo "<addmarker dest='$f' outclass='error'>"
   echo "<lines><line from='1'/></lines>"
-  echo "<content format='text'> text for info marker of $dest</content>"
+  echo "<content format='text'> text for info marker of $f</content>"
   echo "</addmarker>"
 done
 
 for f in $files 
 do
-  dest=${f#$rootdir}
-  echo "<highlightlines dest='$dest' outclass='info'>"
+  echo "<highlightlines dest='$f' outclass='info'>"
   echo "<lines><line from='5' to='10'/></lines>"
   echo "</highlightlines>"
 done
 
 for f in $files 
 do
-  dest=${f#$rootdir}
-  echo "<addinlinemarker dest='$dest' outclass='info'>"
+  echo "<addinlinemarker dest='$f' outclass='info'>"
   echo "  <lines><line from='15' /></lines>"
   echo "  <content format='html'> Awesome line of code!!</content>"
   echo "</addinlinemarker>"
@@ -166,8 +163,7 @@ echo "<eiactions>"
 
 for f in $files 
 do
-  dest=${f#$rootdir}
-  echo "<oncodelineclick dest='$dest' outclass='info' >"
+  echo "<oncodelineclick dest='$f' outclass='info' >"
   echo "<lines><line from='20' /></lines>"
   echo "<eicommands>"
   echo "<highlightlines>"
