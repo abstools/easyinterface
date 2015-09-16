@@ -1250,30 +1250,30 @@ window.FileManager = (function() {
 	  $("#addRFiles-"+site,div).click(function(event){ handleButtonAdd(event);});
 	  break;
 	case "GitHub":
-	  var formu = $('<div id="addGitFiles"></div>');
+	  var formu = $('<div id="formGithub">'+
+			'<label><b>Owner*: </b></label>'+
+			'<input type="text" id="ownerGH"/>'+
+			'<br/>'+
+			'<label><b>Repository*: </b></label>'+
+			'<input type="text" id="repoGH"/>'+
+			'<br/>'+
+			'<label>Directory: </label>'+
+			'<input type="text" id="dirGH"/>'+
+			'<br/>'+
+			'<label>Branch: </label>'+
+	  '<input type="text" id="branchGH" value="master"/>'+
+			'<br/></div>');
 
-	  $(formu).append($('<label>User: </label>'));
-	  $(formu).append($('<input type="text" id="userGH" class="aaaaa" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Password: </label>'));
-	  $(formu).append($('<input type="password" id="passGH" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Owner*: </label>'));
-	  $(formu).append($('<input type="text" id="ownerGH" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Repository*: </label>'));
-	  $(formu).append($('<input type="text" id="repoGH" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Directory: </label>'));
-	  $(formu).append($('<input type="text" id="dirGH" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Branch: </label>'));
-	  $(formu).append($('<input type="text" id="branchGH" value="master"/>'));
-	  $(formu).append($('<br/>'));
+
 	  var AddButton = $('<button id="connect-'+site+'">Connect</button>');
 	  $(AddButton).button();
 	  $(formu).append(AddButton);
-
+	  $(formu).append('<br/><small>User and password are only for private repositories</small>'+
+			  '<br/><label>User: </label>'+
+			  '<input type="text" id="userGH"/>'+
+			  '<br/>'+
+			  '<label>Password: </label>'+
+			  '<input type="password" id="passGH"/>');
 	  $(div).append(formu);
 	  $("input#userGH",div).focusout(function(event){
 	    if($("#ownerGH").val() == ""){
