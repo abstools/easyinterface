@@ -102,9 +102,17 @@ $( function() {
   }
 
   loadConfig();
-  _ei_data.holder = $("#ei_1");
-  _ei_data.theme = "./html/eitheme.resizable.html";
-  new EasyInterface(_ei_data);
+  if(_ei_data.title){
+    document.title = _ei_data.title;
+  }
+  new EasyInterface({
+    holder: $("#ei_1"),
+    theme: "./html/eitheme.resizable.html",
+    apps: _ei_data.apps,
+    examples: _ei_data.examples,
+    outlineapp: _ei_data.outlineapp,
+    outlineserver: _ei_data.outlineserver,
+  });
  });
 </script>
 </head>
