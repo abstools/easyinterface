@@ -2,10 +2,10 @@
 }
 
 
-\chapter{An Overview of the \ei Framework}
+\chapter{Overview of the \ei Framework}
 \label{ch:overview}
 
-The \ei framework provides a simple way to build interfaces, e.g, a
+The \ei framework provides a simple way to build interfaces, e.g., a
 web-interface or an Eclipse plugin, for tools written in (almost) any
 programming language.
 %
@@ -14,43 +14,50 @@ GUI library or web programming. Roughly, the only requirement is that
 the application can be executed from a command-line and that its
 output goes to the standard output.
 %
-With the \ei framework we achieve the goal: \emph{build an application
-  once, and get several sophisticated interfaces for free}.
+
+The goal of \ei is to provide developers with a toolkit to \emph{build
+  their applications once and get several interfaces for free}.
 %
-In the rest of this chapter we explain the different components of
-this framework, and how they are combined to achieve the above goal.
-%
-As will bed noticed later, the \ei framework was developed with
-program analysis tools in mind, this why the graphical user interfaces
-that it provides are basically developing environment that allow
-editing programs, etc.
+\ei was originally developed for building a common frontend for
+program analysis tools developed in the
+\envisage\footnote{http://www.envisage-project.eu} project. This is
+why, as the reader will notice later, its graphical user interfaces
+are basically developing environments that allow editing programs,
+etc.
+
+In the rest of this chapter we overview the different components of
+\ei, and explain how they are combined to achieve the above goal.
+
+\begin{figure}[h]
+\hrule\smallskip
+\begin{center}
+\includegraphics[width=0.5\textwidth]{fig/ei.pdf}
+\end{center}
+\caption{The Architecture of the \ei Framework}
+\label{fig:eiframework}
+\hrule
+\end{figure}
 
 \section{The Architecture of \ei}
 \label{ch:overview:arch}
 
-\begin{figure}[h]
-\begin{center}
-\fbox{\includegraphics[width=0.5\textwidth]{fig/ei.pdf}}
-\end{center}
-\caption{The Architecture of the \ei Framework}
-\label{fig:eiframework}
-\end{figure}
-
-The architecture of the \ei framework is depicted in
+The architecture of \ei is depicted in
 Figure~\ref{fig:eiframework}. It includes two main components:
 %
 (1) \emph{server side}: a machine with several applications (the
-circles \texttt{App1}, \texttt{App2}, etc.) that can be executed from
-a command-line and produce their output to the standard output. These
-are the applications that we want to make available for the outside
-world, i.e., execute them as services on the internet; and
+circles \texttt{App1}, \texttt{App2}, etc., in
+Figure~\ref{fig:eiframework}) that can be executed from a command-line
+and their output goes to the standard output. These are the
+applications that we want to make available for the outside world,
+i.e., execute them as services on the internet; and
 %
-(2) \emph{client side}: several clients that makes it easy to
-  communicate with the server side to execute application, etc.
+(2) \emph{client side}: several clients that make it easy to
+communicate with the server side to execute an application, etc.
 %
-In what follows we start explaining the inner components of the server
-side, and which problems they solve, and then we move on to explain the
-client side.
+In what follows, we first explain the inner components of the server
+side and which problems they solve, and then we explain the client
+side.
+%
 
 \section{The Server Side}
 \label{ch:overview:arch:server}
@@ -58,23 +65,24 @@ client side.
 The problem that we want to solve at the server side is: 
 %
 \begin{quote}
-  provide a uniform way for accessing the locally installed
-  application as services (i.e., through the internet).
+  Provide a uniform way for remotely accessing locally installed
+  applications as services.
 \end{quote}
 %
 This problem is solved by the \ei server, which is collection of PHP
-programs that run on an HTTP server. The \ei server allows specifying
-how a local applications can be executed and which parameter they take
-using simple configuration files (\texttt{App1.cfg},
-\texttt{App2.cfg}, etc.). For example, the following is a snippet of
-such configuration file:
+programs that run on top of an HTTP server. This server allows
+specifying how a local application can be executed and which
+parameters it takes using simple configuration files
+(\texttt{App1.cfg}, \texttt{App2.cfg}, etc.,
+Figure~\ref{fig:eiframework}). For example, the following is a snippet
+of such configuration file:
 
 \medskip
 \begin{lstlisting}
-<app id='myapp' visible="true">
+<app id="myapp" visible="true">
   ...
   <execinfo method="cmdline">
-    <cmdlineapp>./default/myapp.sh _ei_parameters</cmdlineapp>
+    <cmdlineapp>(*/path-to/myapp.sh*) _ei_parameters</cmdlineapp>
   </execinfo>
   <parameters prefix = "-" check="false">
     ...
@@ -98,8 +106,8 @@ parameter called ``\texttt{c}'' that can take one of the values $1$ or
 $2$.
 %
 Once the configuration file is installed on the \ei server, anyone can
-access the application using an HTTP POST request that include
-something similar to the following:
+access the application using an HTTP POST request that includes the
+following text:
 
 \medskip
 \begin{lstlisting}
@@ -117,19 +125,22 @@ something similar to the following:
 \medskip
 \noindent
 When the \ei server receives such a request, it generates a
-corresponding command-line (according to what is describe din the
+corresponding command-line (according to what is specified in the
 configuration file), executes it, and redirect the standard output
 back to the client.
+%
 
-\section{The Clients Side}
-\label{ch:overview:arch:clients}
+\section{The Client Side}
+\label{ch:overview:arch:client}
 
 \begin{figure}[t]
+\hrule\smallskip
 \begin{center}
-\includegraphics[width=0.95\textwidth]{fig/webclient.pdf}
+\includegraphics[width=1\textwidth]{fig/webclient.pdf}
 \end{center}
 \caption{\ei Web Client}
 \label{fig:webclient}
+\hrule
 \end{figure}
 
 Although we now have a relatively easy way to execute applications on
@@ -144,13 +155,14 @@ parameters; (3) generate a corresponding request and send it to the
 %
 The \ei framework provides three such interfaces: a
 \emph{web-interface} that can be executed in a browser and looks like
-a developing environment; an Eclipse-plugin that runs within the
-Eclipse IDE; and a remote-shell that can be used from a command-line.
+a developing environment (see Figure~\ref{fig:webclient}); an
+Eclipse-plugin that runs within the Eclipse IDE; and a remote-shell
+that can be used from a command-line.
 
-Since the web-client and the Eclipse plugin include are GUI based
-developing environments, \ei provide also, to an application, the
-possibility to generate output that has some graphical effect, e.g.,
-open dialog-boxes, highlight code line, add markers, etc. To use this
+Since the web-client and the Eclipse plugin are GUI based developing
+environments, \ei provide also, to an application, the possibility to
+generate output that has some graphical effects, e.g., open
+dialog-boxes, highlight code lines, add markers, etc. To use this
 feature, the applications should be modified to use the \ei output
 language. The following is a snippet of such output:
 
@@ -175,19 +187,15 @@ language. The following is a snippet of such output:
 
 \medskip
 \noindent
-The \lst{highlightlines} indicates that lines $5--10$ of the file
+The \lst{highlightlines} indicates that lines 5--10 of the file
 \texttt{/Examples\_1/iterative/sum.s} (which is opened in the editor)
 should be highlighted. The \lst{oncodelineclick} tag indicates that
 when clicking on line $17$, a dialog-box with a corresponding message
 should be opened.
 %
 Note that the application is only modified once to produce such
-output, then it will have a corresponding effect in all interfaces
-that support this language.
-
-
-
-
+output, and will have similar effect in all interfaces that support
+this output language.
 
 %%% Local Variables: 
 %%% mode: latex

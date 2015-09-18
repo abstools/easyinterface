@@ -1,7 +1,7 @@
 {% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
 }
 
-\chapter{A Quick Guide to \ei}
+\chapter{Quick Guide to \ei}
 
 This chapter provides a quick introduction on \emph{how to integrate
   an application in the \ei framework}. In particular, we develop a
@@ -20,24 +20,25 @@ Note that in this chapter we only use the web-client, for other
 clients refer to Chapter~\ref{ch:clients}.
 %
 We assume that \ei is already installed and working, which can be done
-following the instructions in
-``\href{http://github.com/abstools/easyinterface}{INSTALL.md}''.  
+following the instructions available in
+\texttt{\href{http://github.com/abstools/easyinterface}{INSTALL.md}}.
 %
 
 Let us start by trying some demo applications that are available by
 default in the web-client.
 %
 If you visit \url{http://localhost/ei/clients/web}, you should get a
-page similar to the one shown in Figure~\ref{}.
+page similar to the one shown in Figure~\ref{fig:webclient}.
 %
 At the top part of this page you can see a button with the label
 \applybutton, and to its right a combo-box with several items
 \texttt{Test-0}, \texttt{Test-1}, etc. These items correspond to
-applications available in the web-client.
+applications available in the web-client, and we will refer to it as
+the applications menu.
 %
 To the left of \applybutton there is a button with the label
 \settingbutton, if you click it you will see that each \texttt{Test-i}
-has also some parameters that can be set to some value.
+has also some parameters that can be set to some values.
 %
 Note that, by default, the web-client is configured to connect to the
 \ei server at \url{http://localhost/ei/server} and ask for all
@@ -53,8 +54,8 @@ you will understand the details of such configuration files).
 If you select an application, from the combo-box, and click on
 \applybutton, the web-client sends a request to the server to execute
 this application. The request includes also the current values of the
-parameters (thos in the settings section) and the file that is
-currently active in the editor area.
+parameters (those in the settings section) and the file that is
+currently active in the code editor area.
 %
 The server, in turn, executes the corresponding program, i.e., the
 bash-script \texttt{server/bin/default/test-i.sh} in this case, and
@@ -68,16 +69,14 @@ talking about (e.g., highlight text, markers).
 In the rest of this chapter we explain, step by step, how to add your
 own application to \ei.
 
+
 \section{Add Your First Application to the \ei Server}
 
 When we add an application to the \ei server it will appear
 automatically in the applications menu of the web-client (unless you
 have changed the configuration of the web-client already!).
 %
-This is because the web-client is configured to retrieve all
-applications that are installed on the server that is available at
-\url{http://localhost/ei/server}. Let us add a simple ``Hello World''
-application.
+Let us add a simple ``Hello World'' application.
 
 We start by creating a bash-script that represents the executable of
 our application (it could be any other executable). We will place this
@@ -317,7 +316,7 @@ console area.
 \section{Passing Outline Entities to Your Application}
 
 In the web-client, the area on the right is called the outline area
-(see Figure~\ref{}).
+(see Figure~\ref{fig:webclient}).
 %
 Since \ei was designed mainly for applications that process programs,
 e.g., program analysis tools, this area is typically dedicated for a
@@ -340,7 +339,8 @@ program entities for all files in the sub-tree).
 Note that to generate this tree-view the web-client actually executes
 a ``hidden'' application that is installed on the server, namely
 \texttt{server/bin/default/coutline.sh}, but this is not relevant to
-our discussion now (see Section~\ref{} for more details). 
+our discussion now (see Section~\ref{ch:clients:web:outline} for more
+details).
 %
 Note also
 that \texttt{coutline.sh} is limited and will not works perfectly for
@@ -350,7 +350,7 @@ or \texttt{void} followed by something of the form
 %
 This script is provided just to give an idea on how an application
 that generates an outline is connected to the web-client (see
-Section~\ref{} for more details).
+Section~\ref{ch:clients:web:outline} for more details).
 
 As in the case of input files, the web-client always passes the
 selected entities to the server when the \applybutton button is
@@ -567,7 +567,7 @@ The tag \lst{flag} defines a parameter with name ``s''. This parameter
 has no value, it is either provided in the command-line or not, and
 its \lst{default} value is \lst{"false"}, i.e., not provided. For the
 complete set of parameters supported in \ei see
-\xmlstructref{parameters} in Chapter~\ref{}.
+\xmlstructref{parameters} in Chapter~\ref{ch:server}.
 
 Go to the web-client, reload the page, and click on the \settingbutton
 button and look for the tab with the title \texttt{MFA}.  You will now
@@ -602,7 +602,7 @@ lines, adding markers, etc.
 %
 In this section we will explain the basics of this language by
 extending \texttt{myapp.sh} to use it, for more details see
-Chapter~\ref{}.
+Chapter~\ref{ch:eiol}.
 
 An output in \eiol is an XML structure of the following form:
 

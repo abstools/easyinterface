@@ -1,6 +1,7 @@
 {% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
 }
-\chapter{Easy Interface Server}
+\chapter{\ei Server}
+\label{ch:server}
 
 This chapter describes the server side of the \ei platform. In
 particular how to install it on an HTTP server and set some
@@ -733,33 +734,4 @@ At the moment we write an example with
     },
     function(data) { });
 \end{lstlisting}
-
-\chapter{Outline App}
-
-\section{Input}
-I don't know the Input
-
-\section{Output}
-The Outline App returns an XML with the outline tree.
-
-%% 
-\bigskip
-\xmlstruct
-{outline}
-{
-%
-  Defines a list of points to be analysed.
-\begin{itemize}
-  \item \xmlstructattr{text} is the name to be show.
-   \item \xmlstructattr{value} is the internalname .
-\item \xmlstructattr{selectable} indicates if this node can be
-  selected.
-\item \xmlstructattr{icon} indicates an alternative path for the icon
-  of the node.
-
-\end{itemize}
-%
-}
-{\xmlstructrefwb{outline}}
-
 
