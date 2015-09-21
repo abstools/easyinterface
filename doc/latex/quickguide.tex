@@ -139,7 +139,7 @@ in \texttt{default}):
       This is my first <b>EasyInterface</b> application!
     </content>
   </apphelp>
-  <execinfo method="cmdline">
+  <execinfo>
     <cmdlineapp>(*./default/myapp.sh*)</cmdlineapp> % (* *) are used to escape
   </execinfo>
 </app>
@@ -167,9 +167,7 @@ information can be found. The actual content goes inside the
 attribute (use 'text' for plain text).
 %
 The most important part is the \lst{execinfo} tag, which provides
-information on how to execute the application. The attribute
-\lst{method} declares that this application should be executed from a
-command-line as described in \lst{cmdlineapp}.
+information on how to execute the application. 
 %
 The text inside \lst{cmdlineapp} is interpreted as a command-line
 \emph{template}, such that when the server is requested to execute the

@@ -206,13 +206,18 @@ This XML tag is the root of the configurations file.
 \bigskip
 \xmlstruct
 {apps}
-{
+{%
 %
-  Defines a list of \apps (to be available on the \ei server). Each
-  \app is defined by an $\xmlstructrefwb{APP}$ XML structure.
+  The first form of this tag declares a list of applications (to be
+  added to the server). Each such application is defined by one
+  $\xmlstructref{app}$ environment.
+% 
+  The second form is an alternative in which the file \lst{src}
+  includes the actual definition, i.e., an XML of the first form. Use
+  the second form for better organization of the applications.
 %
 }
-{\xmlstructrefwb{eiserver}}
+{}%r%
 
 %% APP
 \bigskip
@@ -224,41 +229,33 @@ This XML tag is the root of the configurations file.
 %
   \begin{itemize}
 
-  \item \xmlstructattr{id} is an identifier used when referring to the
-    \app, it should be unique among the \apps available on the same
-    server.
+  \item \lst{id} is a unique identifier used to ref to this
+    application when communicating with the server.
 
-  \item \xmlstructattr{visible} indicates if the \app should be listed
-    when the list of available \apps is requested, by default it is
-    \xmlstructvalue{true}. Note that even if an app is not
-    \emph{publicly} visible, it can be used like any other \app (you
-    just need to know its identifier).
+  \item \lst{visible} indicates if this application should be listed
+    when the list of available applications is requested --- by
+    default it is \xmlstructvalue{true}. Note that even if an
+    application is not \emph{publicly} visible, it can be used like
+    any other application by thos who know it \lst{id} (you just need
+    to know its identifier).
 
   \item \xmlstructref{appinfo} provides some general information about
-    the \app, like title, logo, description, etc.
+    the \app, e.g., title, logo, etc.
 
-  \item \xmlstructref{apphelp} is a (formatted) text that provides
-    enough information on how the \app can be used, etc. It will be
-    mainly used in the help sections of the different clients.
+  \item \xmlstructref{apphelp} provides enough information on how the
+    application can be used, etc. It is mainly used in the help
+    sections of the different clients.
 
   \item \xmlstructref{execinfo} defines how the tool can be executed
-    (e.g., command-line, server). This information is used by the
-    \apps server to forward execution requests to corresponding \apps.
+    (e.g., from a command-line). 
 
-  \item \xmlstructref{parameters} defines the parameters accepted by
-    the \app. This parameters are usually passed to client, who will
-    allow users to select the appropriate values, and when and
-    execution request is sent to the \apps server, these options are
-    passed to the corresponding \app.
-
-  \item \xmlstructref{permission} defines some usage permissions for
-    the \app, e.g., who have permission to execute this app. By
-    default any one can execute.
+  \item \xmlstructref{parameters} defines the set parameters accepted
+    by the application.
 
   \end{itemize}
 %
 }
-{\xmlstructrefwb{apps}}
+{}%r%
 
 
 %% APPINFO
