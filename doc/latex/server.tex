@@ -3,100 +3,152 @@
 \chapter{\ei Server}
 \label{ch:server}
 
-This chapter describes the server side of the \ei platform. In
-particular how to install it on an HTTP server and set some
-parameters, how to make applications (\apps) available, and how to
-make examples available.
-
-
-\section{Installing the Server}
- 
-All you need to make the directory \lstinline{server} accessible
-through the HTTP server, and moreover PHP access must be guaranteed
-to this directory.
-
-\fxwarning{Revise this section, and explain the installation script once it
-  is ready}
-
-
-\section{Configuring the Applications Server}
-\label{server:sec:config}
-
-The applications server requires a configuration file that defines
-some setting parameters, available applications, and available
-examples.
+This chapter describes the server side of the \ei framework, that we
+refer to as the \ei server (or simply the server).
 %
-By default, it uses \filename{config/eiserver.cfg}, however, this can
-be changed by editing the \filename{server/EIConfig.php}.
-%
-The content of this file should adhere to the
-$\xmlstructrefwb{eiserver}$ XML structure as described in
-Section~\ref{sec:server:xmfref}
+As explained in Section~\ref{ch:overview:arch:server}, the goal of
+this server is to provide a uniform way to access local applications
+and examples (i.e., those installed on the same machine where the
+server runs).
 
-\section{Configuration XML Reference}
-\label{sec:server:xmfref}
+
+The \ei server achieves the above goal by:
+%
+(1) providing a way to describe, using XML based configuration files,
+how to execute a local application and which parameters it takes, as
+well as define sets of related examples; and 
+%
+(2) providing a JSON based protocol that can be used to request
+information on those applications and examples, execute applications,
+etc.
+%
+Section~\ref{ch:server:config} describes the syntax of the server
+configuration file, which covers point~(1) above; and
+Section~\ref{ch:server:protocol} describes the protocol that can be
+used to communicate with the server.
+%
+This chapter does not cover issues related to installation, for such
+documentation see
+\texttt{\href{http://github.com/abstools/easyinterface}{INSTALL.md}}.
+
+
+\section{Configuring the \ei Server}
+\label{ch:server:config}
+
+This section describes how to configure the \ei server.
+%
+Section~\ref{ch:server:config:file} explains where the configuration
+file show be placed, and Section~\ref{ch:server:config:xml} describes
+the (valid) content of this file.
+%
+Before proceeding to the next sections, it highly recommended to read
+Chapter~\ref{ch:quickguide} to get a general idea on how the
+configuration file looks like, etc.
+
+
+\subsection{Name and Path of the Configuration File}
+\label{ch:server:config:file}
+
+By default the server looks for the configuration file
+\texttt{server/config/eiserver.cfg}, and if no such file exists it
+uses \texttt{server/config/eiserver.default.cfg}.
+%
+The default installation comes with a predefined
+\texttt{sever/config/eiserver.default.cfg} that includes some demo
+applications and corresponding examples. It is very recommended not
+make substantial changes to \texttt{eiserver.default.cfg}, and instead
+create your own \texttt{eiserver.cfg}. This way you can always have a
+correct configuration file at hand from which you can copy, etc.
+
+\subsection{The Syntax of the Configuration File}
+
+The content of the configuration file should adhere to the
+$\xmlstructrefwb{eiserver}$ XML structure that is described
+below. 
+%
+Inside this tag you can define applications, examples, etc. The best
+way to understand how to do is follow the links in the defintion of
+$\xmlstructrefwb{eiserver}$.
+
+\subsubsection*{The main XML tag of the configuration file}
 
 %% EISERVER
 \bigskip
 \xmlstruct
 {eiserver}
-{
-%
-  This XML tag should be the root of the configurations file (see
-  Section~\ref{server:sec:config}).
+{%
+This XML tag is the root of the configurations file.
 %
   The \xmlstructref{settings} section is used for setting some global
-  parameters; the \xmlstructref{apps} section defines which \apps are
-  available on the server; and \xmlstructref{examples} defines which
-  example groups are available on the server.
+  parameters; the \xmlstructref{apps} section defines which
+  applications are available on the server; and
+  \xmlstructref{examples} defines which sets of examples are available
+  on the server.
 %
 }
-{
-%
-  The server configuration file (see Section~\ref{server:sec:config})
-%
-}
+{}%r%
 
+\subsubsection*{General settings}
 
 %% SETTINGS
 \bigskip
 \xmlstruct
 {settings}
-{
+{%
 %
-  To be done, so far we do not have any global parameter
+  This tag is does not include anything yet. It is reserved for future
+  use, where we plan to put general settings that are related to the
+  server and not to specific application or examples set.
 %
 }
-{\xmlstructrefwb{eiserver}}
+{}%r%
+
+\subsubsection*{Examples settings}
 
 %% EXAMPLES
 \bigskip
 \xmlstruct
 {examples}
-{
+{%
 %
- Example groups available on the server
+  The first form of this tag is used to declare sets of examples sets
+  that are available in the server, where each such set is defined by
+  one \xmlstructref{exset}.
+%
+  It is also possible to use the second form, where
+  \xmlstructref{cfgfilename} is a file that contains an XML structure
+  of the first form. Use the later form better organization of the
+  different example sets.
 %
 }
-{\xmlstructrefwb{eiserver}}
+{}%r%
 
-%% EXAMPLES
+%% EXSET
 \bigskip
 \xmlstruct
 {exset}
-{
+{%
 %
-  The \xmlstructattr{id}
-  \\
-  Contains diferents types of elements
+  The first form of this tag declare a set of examples, which are
+  defined by collection of \xmlstructref{exelements} (files,
+  directories, and links to github repositories).
+%
+  The attribute \xmlstructattr{id} is a unique identifier that is use
+  to refer to this set when communicating with the server.
+%
+  It is also possible to use the second form, where
+  \xmlstructref{cfgfilename} is a file that contains an XML structure
+  of the first form. However, in such case the \xmlstructattr{id} is
+  take from the second form and can be ignored in the the content of
+  \xmlstructref{cfgfilename}.
 %
 }
-{\xmlstructrefwb{examples}}
+{}%r%
 
 %% EXAMPLE element
 \bigskip
 \xmlstruct
-{exelements}
+{exelement}
 {
 %
   Diferent types of element
@@ -114,7 +166,7 @@ Section~\ref{sec:server:xmfref}
 
 %
 }
-{\xmlstructrefwb{exelements}}
+{}%
 
 %% File
 \bigskip
@@ -144,6 +196,8 @@ Section~\ref{sec:server:xmfref}
 %
 }
 {\xmlstructrefwb{exelements}}
+
+\subsubsection*{Applications settings}
 
 %% APPS
 \bigskip
@@ -696,7 +750,7 @@ Any text
 
 \bigskip
 \bigskip
-\section{Configuration JSON}
+\section{Communicating with \ei Server}
 
 At the moment we write an example with
  all the things that you can write.

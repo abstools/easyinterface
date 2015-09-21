@@ -2,6 +2,7 @@
 }
 
 \chapter{Quick Guide to \ei}
+\label{ch:quickguide}
 
 This chapter provides a quick introduction on \emph{how to integrate
   an application in the \ei framework}. In particular, we develop a
@@ -28,7 +29,8 @@ Let us start by trying some demo applications that are available by
 default in the web-client.
 %
 If you visit \url{http://localhost/ei/clients/web}, you should get a
-page similar to the one shown in Figure~\ref{fig:webclient}.
+page similar to the one shown in Figure~\ref{fig:webclient} on
+Page~\pageref{fig:webclient}.
 %
 At the top part of this page you can see a button with the label
 \applybutton, and to its right a combo-box with several items
@@ -316,7 +318,7 @@ console area.
 \section{Passing Outline Entities to Your Application}
 
 In the web-client, the area on the right is called the outline area
-(see Figure~\ref{fig:webclient}).
+(see Figure~\ref{fig:webclient} on Page~\pageref{fig:webclient}).
 %
 Since \ei was designed mainly for applications that process programs,
 e.g., program analysis tools, this area is typically dedicated for a
@@ -362,7 +364,7 @@ using a ``\texttt{-e}'' parameter as follows:
 
 \medskip
 \begin{lstlisting}
-> myapp.sh -f file1.abs file2.abs file3.abs -e sum.c:main sum.c:sum
+> myapp.sh -f file1.c file2.c file3.c -e sum.c:main sum.c:sum
 \end{lstlisting}
 
 \medskip 
@@ -428,7 +430,7 @@ For example, \texttt{myapp.sh} could then be invoked as follows:
 
 \medskip
 \begin{lstlisting}
-> myapp.sh -f file1.abs file2.abs file3.abs -e sum.c:main sum.c:sum -s -c words
+> myapp.sh -f file1.c file2.c file3.c -e sum.c:main sum.c:sum -s -c words
 \end{lstlisting}
 
 \medskip
