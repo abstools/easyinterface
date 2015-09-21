@@ -130,17 +130,16 @@ This XML tag is the root of the configurations file.
 {%
 %
   The first form of this tag declare a set of examples, which are
-  defined by collection of \xmlstructref{exelements} (files,
-  directories, and links to github repositories).
+  defined by collection of \xmlstructref{exelement} (a file, a
+  directory, or a link to a github repository).
 %
-  The attribute \xmlstructattr{id} is a unique identifier that is use
+  The attribute \xmlstructattr{id} is a unique identifier that is used
   to refer to this set when communicating with the server.
 %
   It is also possible to use the second form, where
   \xmlstructref{cfgfilename} is a file that contains an XML structure
-  of the first form. However, in such case the \xmlstructattr{id} is
-  take from the second form and can be ignored in the the content of
-  \xmlstructref{cfgfilename}.
+  of the first form. However, in such case the \xmlstructattr{id} that
+  appear in \xmlstructref{cfgfilename} is ignored.
 %
 }
 {}%r%
@@ -149,53 +148,57 @@ This XML tag is the root of the configurations file.
 \bigskip
 \xmlstruct
 {exelement}
-{
+{%
 %
-  Diferent types of element
+  An example element, which can be a file $\xmlstructref{file}$, a
+  folder $\xmlstructref{folder}$, or a link to a github repository
+  $\xmlstructref{github}$.
 %
 }
-{\xmlstructrefwb{exset}, \xmlstructrefwb{folder}}
-%% Folder
-\bigskip
-\xmlstruct
-{folder}
-{
-%
-  Default values:\\
-  name -> internal
+{}%r%
 
-%
-}
-{}%
 
 %% File
 \bigskip
 \xmlstruct
 {file}
-{
+{%
 %
-  Default values:\\
-  name -> internal
-
+  This tags declares a file, where the \lst{name} attribute is its
+  name and \lst{url} is a link to its content. Note that \lst{name} is
+  not necessarily the same as the one in \lst{url}.
 %
 }
-{\xmlstructrefwb{exelements}}
+{}%r%
+
+%% Folder
+\bigskip
+\xmlstruct
+{folder}
+{%
+%
+  This tags declares a folder with \lst{name} as its name. The content
+  of this is a list of \xmlstructref{exelement} tags, which in turn
+  declare the inner files, folders, etc.
+%
+}
+{}%r%
+
 
 %% GitHub
 \bigskip
 \xmlstruct
 {github}
-{
+{%
 %
-  Default values:\\
-  branch -> ``master''\\
-  path -> ``/ '' \\
-  internal -> ``owner + @ + repo''\\
-  name -> internal
-  
+  Declares a reference to the public github repository \lst{repo}
+  which is owned by the user \lst{owner}. Optionally one can also
+  refer to a specific \lst{branch} which \texttt{master} by default,
+  and to a specific \lst{path} (a directory or a single file) which is
+  a the root directory by default.
 %
 }
-{\xmlstructrefwb{exelements}}
+{}%r%
 
 \subsubsection*{Applications settings}
 
@@ -735,6 +738,11 @@ An integer value
 
 \noindent
 \xmlstructdef{url}
+
+A url
+
+\noindent
+\xmlstructdef{exurl}
 
 A url
 
