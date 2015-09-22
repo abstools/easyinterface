@@ -28,13 +28,11 @@ class EIRequest
    {
 
      switch ( $this->request['command'] ) {
+
      case "ping":
 	 return "EasyInterface server is alive and kicking!";
 	 break;
-     case "general_info":
-       return file_get_contents(EIConfig::$cfgDir . "/" . EIConfig::$cfgFile  );
-       break;
-       
+
      case "app_info":
        if ( ! array_key_exists( 'app_id', $this->request ) )
 	 throw new Exception("Missing app_id");
