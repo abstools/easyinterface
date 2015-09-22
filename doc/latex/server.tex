@@ -812,42 +812,244 @@ A path to a configuration file. Should be relative to
 
 The explanation is given in \xmlstructref{server}{cmdlineapp}
 
-\section{Communicating with \ei Server}
+\section{Communicating with the \ei Server}
 \label{ch:server:protocol}
 
-At the moment we write an example with
- all the things that you can write.
+This section describes the protocol to be user for communicating with
+the \ei server. If you are not developing any \ei client, then this
+section is not relevant for you.
 
+The \ei server is a collection of PHP scripts running on top of an
+HTTP server. Communicating with the server is done through HTTP POST
+requests. In particular, the request should be assigned to a POST
+attribute called ``\texttt{eirequest}'' (the actual value of
+``\texttt{eirequest}'' is a JSON record that we will described in
+the next sections). The following is an example of how one can
+communicate with the server using JavaScript:
+
+\bigskip
 \begin{lstlisting}
- var jsonParams = {
-      "command": "execute",//command
-      "app_id": "costa",//app id
-      "parameters": {
-          "lsa":["true"],//flag parameter
-          "flag2":["false"], //flag parameter
-          "sone":["sla"], //selectone parameter
-          "smany":["slaa","tru"], //selectmany parameter
-          "_ei_files": [
-              {
-                  "name": "prueba",
-                  "type": "directory",
-              },
-              {
-                  "name":"f1.txt",
-                  "type": "file",
-                  "content": "I'm f1.txt file\\n"
-              },
-              {
-                  "name":"f2.txt",
-                  "content": "I'm f2.txt file\\n"
-              }
-          ]//array of files and directories
-      }//end parameters
-  };// end jsonParams
-
-   $\$$.post("eiserver.php",
-    {
-       eirequest: JSON.stringify(jsonParams)
-    },
-    function(data) { });
+var req = ...; // the actual JSON record of the request
+$\$$.post("http://localhost/ei/server/eiserver.php",
+{
+  eirequest: req
+},
+function(data) { 
+  // do something with data
+});
 \end{lstlisting}
+
+\bigskip
+\noindent
+The response of the server is an XML of the following form:
+
+\bigskip
+\begin{lstlisting}
+<ei_response>
+  <ei_server_output> ...  </ei_server_output>
+  <ei_output> ... </ei_output>
+  <ei_error> ... </ei_error>
+</ei_response>
+\end{lstlisting}
+
+\bigskip
+\noindent
+Where
+%
+\begin{itemize}
+%
+\item \lst{ei_server_output} includes messages printed by
+  server. These messages are not the response to the request, but
+  rather debugging messages that can be useful when developing
+  clients, etc.
+%
+\item \lst{ei_output} includes the response to the request, i.e., if
+  we request to execute an application the output of that application
+  goes inside this tag.
+%
+\item \lst{ei_error} includes error messages that are related to the
+  request.
+%
+\end{itemize}
+%
+Typically, \lst{ei_output} and \lst{ei_error} are mutually exclusive,
+i.e., only one can appear in the response.
+
+\bigskip 
+In the next section we describe how the format of the request for
+driving information on applications, execute and application, and
+retrieve example sets.
+
+\subsection{Retrieve Information on Available Applications}
+
+To retrieve information on a given application, or all visible
+applications on the server, use the following request:
+
+\bigskip
+\begin{lstlisting}
+{
+  command: CMD,
+  app_id: ID
+}
+\end{lstlisting}
+
+\bigskip
+\noindent
+where (1) \texttt{CMD} is \texttt{app\_info},
+\texttt{app\_parameters}, or \texttt{app\_details}; and (2)
+\texttt{ID} is either the special value \texttt{\_ei\_all} (i.e., all
+applications) or an application identifier as specified in
+\xmlstructref{server}{app}.
+%
+A successful request will return (inside the \lst{ei_output} tag) the
+XML structure \xmlstructref{server}{apps} (that is defined in the
+configuration file) after filtering out some information as we explain
+next.
+%
+First any application that does not match \texttt{ID} is removed (if
+\texttt{ID} is \texttt{\_ei\_all} then only non-visible applications
+are removed). Then, for any remaining applications:
+%
+\begin{itemize}
+%
+\item if \texttt{CMD} equals \texttt{app\_info}, it returns only the
+  \xmlstructref{server}{appinfo} of each application;
+%
+\item if \texttt{CMD} equals \texttt{app\_parameters}, it returns only the
+  \xmlstructref{server}{parameters} of each application; and
+%
+\item if \texttt{CMD} equals \texttt{app\_details}, it returns
+  everything except \xmlstructref{server}{execinfo} of each
+  application.
+%
+\end{itemize}
+%
+Note that \xmlstructref{server}{execinfo} is never returned as it
+reveals information on how to execute an application locally.
+
+
+
+\subsection{Execute an Application}
+
+Next we describe, by mean of an example, the form of a request for
+executing an application. Suppose we are interested in executing an
+application with identifier \texttt{myapp} where, in addition, we
+would like to pass it some values for the parameters, files to
+process, outline entities, and the identified of the client who is
+making the request. Such a request has the following form:
+
+\bigskip
+\begin{lstlisting}
+{
+  command: (*"execute"*),
+  app_id: (*"myapp"*),
+  (*parameters*): {
+    (*"l"*): (*[ "true" ]*),
+    (*"f"*): (*[ "false" ]*),
+    (*"s"*): (*[ "yes" ]*),
+    (*"x"*): (*[ "1", "2" ]*), 
+    (*"\_ei\_clientid"*): (*"webclient"*),
+    (*"\_ei\_outline"*): (* [ "ent1", "ent2", ... ]*),
+    (*"\_ei\_files"*): [
+                  {
+                    (*path*): (*"dir1"*),
+                    (*type*): (*"dir"*),
+                  },
+                  {
+                    (*path*): (*"dir2/file1.c"*),
+                    (*type*): (*"text"*),
+                    (*content*): (*"This is the content of dir2/file1.c"*)
+                  },
+                  {
+                    (*path*): (*"dir2/file2.c"*),
+                    (*type*): (*"text"*),
+                    (*content*): (*"This is the content of dir2/file2.c"*)
+                  },
+                  {
+                    (*path*): (*"dir3/file1.c"*),
+                    (*type*): (*"text"*),
+                    (*content*): (*"This is the content of dir3/file1.c"*)
+                  }
+                ]
+  }
+}
+\end{lstlisting}
+
+\bigskip
+\noindent
+Let us explain the different parts of this request: 
+%
+\begin{itemize}
+%
+\item \texttt{command} must have the value \texttt{``execute''};
+%
+\item \texttt{app\_id} should refer to the identifier of the
+  application that we want to execute (it can be visible or not);
+%
+\item \texttt{parameters} is a JSON record that includes all the
+  information, e.g., application parameters and files, that we want to
+  pass to over, as we explain below.
+\end{itemize}
+%
+Before explaining the details of the parameter records, it is
+recommend that your refresh you memory with the details of the
+command-line template as described
+in~\xmlstructref{server}{cmdlineapp}. The parameters JSON record
+includes the following information:
+%
+\begin{itemize}
+%
+\item \emph{Application parameters:} any field (of the JSON record)
+  whose name does not start with \texttt{\_ei} is a parameter that is
+  supposed to be defined in the \xmlstructref{server}{parameters}
+  environment of the corresponding application. The value of such
+  field is a list of elements that represent the value of the
+  parameter. If the parameter is supposed to take a single value then
+  list must have a single element.
+%
+\item \emph{Files}: the field \texttt{\_ei\_files} represent the files
+  that we want to pass to the application. Its value is an array of
+  JSON records where each record represent a text file or a directory
+  (binary files are not supported yet). The \texttt{path} field of the
+  record refers to the file or directory name, it is relative to the
+  root of the temporal directory where the server saves these
+  files. The \texttt{type} field indicates the type of the file. In
+  the case of text files, the field \texttt{content} represent the
+  actual content of the file.
+%
+\item \emph{Outline entities}: the filed \texttt{\_ei\_outline} is a
+  list of elements representing thee selected entities from the
+  outline.
+%
+\item \emph{Client identifier}: the field \texttt{\_ei\_clientid}
+  indicates the identifier of the client who has performed the
+  request.
+%
+\end{itemize}
+
+
+
+\subsection{Retrieve Example Sets}
+
+To retrieve the example sets use the following request:
+
+\bigskip
+\begin{lstlisting}
+{
+  command: "exset_details",
+  app_id: ID
+}
+\end{lstlisting}
+
+\bigskip
+\noindent
+where \texttt{ID} is either the special value \texttt{\_ei\_all}
+(i.e., all example sets) or an examples set identifier as specified in
+\xmlstructref{server}{exset}.
+%
+A successful request will return (inside the \lst{ei_output} tag) the
+XML structure \xmlstructref{server}{examples} (that is defined in the
+configuration file) after filtering out those example sets that do not
+match the value of \texttt{ID}, i.e, if \texttt{ID} is
+\texttt{\_ei\_all} then it returns all example sets, otherwise only
+the indicated one.
