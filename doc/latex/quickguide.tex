@@ -567,7 +567,7 @@ The tag \lst{flag} defines a parameter with name ``s''. This parameter
 has no value, it is either provided in the command-line or not, and
 its \lst{default} value is \lst{"false"}, i.e., not provided. For the
 complete set of parameters supported in \ei see
-\xmlstructref{parameters} in Chapter~\ref{ch:server}.
+\xmlstructref{server}{parameters} in Chapter~\ref{ch:server}.
 
 Go to the web-client, reload the page, and click on the \settingbutton
 button and look for the tab with the title \texttt{MFA}.  You will now
@@ -611,10 +611,10 @@ An output in \eiol is an XML structure of the following form:
 \begin{lstlisting}
 <eiout> 
  <eicommands>
-    $\xmlstructref{eicommand}$*
+    $\xmlstructref{eiout}{eicommand}$*
  </eicommands>
  <eiactions>
-    $\xmlstructref{eiaction}$*
+    $\xmlstructref{eiout}{eiaction}$*
  </eiactions>
 </eiout>
 \end{lstlisting}
@@ -622,15 +622,15 @@ An output in \eiol is an XML structure of the following form:
 \medskip
 \noindent
 where (1) \lst{eiout} is the outermost tag that includes all the
-output elements; (2) \xmlstructref{eicommand}* is a list of commands
-to be executed; and (3) \xmlstructref{eiaction}* is a list of actions
+output elements; (2) \xmlstructref{eiout}{eicommand}* is a list of commands
+to be executed; and (3) \xmlstructref{eiout}{eiaction}* is a list of actions
 to be declared.
 %
-An \xmlstructref{eicommand} is an instruction like: \emph{print a text
+An \xmlstructref{eiout}{eicommand} is an instruction like: \emph{print a text
   on the console}, \emph{highlight lines 5-10}, \emph{add marker at
   line 5}, etc.
 %
-An \xmlstructref{eiaction} is an instructions like: \emph{when the
+An \xmlstructref{eiout}{eiaction} is an instructions like: \emph{when the
   user clicks on line 13, highlight lines 20-25}, etc.
 %
 In the rest of this section we discuss some commands and actions that
