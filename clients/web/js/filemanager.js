@@ -183,8 +183,6 @@ window.FileManager = (function() {
 			  "action": function (obj) {
 			    var fmId = obj.attr('fmId');
 			    self.requestRemote(self,fmId);
-			    /*var x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","","Repo");	    
-			       self.openFile( x );*/
 			  }
 			},
 			"Rename": {
