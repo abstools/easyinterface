@@ -583,7 +583,7 @@ window.FileManager = (function() {
       var ttype = self.fmObj[id].info.attr.rel;
       if(ttype == "folderLock" || ttype == "fileLock")
 	return true;
-      if(ttype == "folder"){
+      if(ttype == "folder" || ttype == "folderRepo"){
 	var childs = self.fmObj[id].info.attr.members;
 	var sizeChilds = childs.length;
 	for( var i = 0; i < sizeChilds; i++){
