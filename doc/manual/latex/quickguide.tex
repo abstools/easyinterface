@@ -44,7 +44,7 @@ has also some parameters that can be set to some values.
 %
 Note that, by default, the web-client is configured to connect to the
 \ei server at \url{http://localhost/ei/server} and ask for all
-applications, together withe their corresponding parameters, that are
+applications, together with their corresponding parameters, that are
 available at that server.
 %
 Note also that application \texttt{Test-i} actually corresponds to the
@@ -99,7 +99,7 @@ echo "Hello World!"
 
 \medskip
 \noindent
-As you can see, it is a simple program that prints "Hello World" on
+As you can see, it is a simple program that prints "Hello World!" on
 the standard output. Later we will see how to pass input to this
 application and how to generate more sophisticated output.
 %
@@ -140,7 +140,7 @@ in \texttt{default}):
     </content>
   </apphelp>
   <execinfo>
-    <cmdlineapp>(*./default/myapp.sh*)</cmdlineapp> % (* *) are used to escape
+    <cmdlineapp>(*./default/myapp.sh*)</cmdlineapp>
   </execinfo>
 </app>
 \end{lstlisting}
@@ -226,9 +226,9 @@ when the \applybutton button is clicked.
 When you click on the \applybutton button the web-client passes the
 currently opened file (i.e., the content of the active tab) to the
 server, and if you use the \applybutton option from the context menu
-of the file-manager (select an element from the files tree on the left,
-and use the mouse right-click to open the context menu) it passes all
-files in the corresponding sub-tree.
+of the file-manager (select an element from the files tree-view on the
+left, and use the mouse right-click to open the context menu) it
+passes all files in the corresponding sub-tree.
 %
 What is left is to tell the server how to pass these files to our
 application. Let us assume that \texttt{myapp.sh} is prepared to
@@ -256,7 +256,7 @@ following:
 When the server receives the files from the client, it stores them in
 a temporary directory, e.g., in \texttt{/tmp}, replaces \lst{_ei_files}
 by the list of their names, and then execute the resulting
-command-line (now you see why we call it command-line template).
+command-line (this is why we call it \emph{command-line template}!).
 %
 It is important to note that only \lst{_ei_files} changes in the above
 template, the rest remain the same. Thus, the parameter
@@ -265,7 +265,7 @@ anything else or even completely remove it --- that depends only on
 how our application is programmed to receive input files.
 
 Let us now change \texttt{myapp.sh} to process the received files in
-some way, .e.g., to print the number of lines in each file. For this,
+some way, e.g., to print the number of lines in each file. For this,
 replace the content of \texttt{myapp.sh} by the following:
 
 \medskip
@@ -325,7 +325,7 @@ tree-view of program entities, e.g., method names, class names, etc.
 %
 The idea is that, in addition to the input files, the user will select
 some of these entities to indicate, for example, where the analysis
-should start from or which parts of the program to analyze.
+should start from or which parts of the program to analyze, etc.
 %
 Next we explain how we can pass these selected entities to an
 application.
@@ -349,7 +349,7 @@ any C program: it simply looks for lines that start with \texttt{int}
 or \texttt{void} followed by something of the form
 \texttt{name(...)}. 
 %
-This script is provided just to give an idea on how an application
+This script is provided just explain how an application
 that generates an outline is connected to the web-client (see
 Section~\ref{ch:clients:web:outline} for more details).
 
@@ -490,7 +490,7 @@ Note that \texttt{parse\_params.sh} sets the variable
 command-line and to 0 otherwise. Before proceeding to the next step,
 execute the script from a shell to make sure that it works correctly.
 
-Our goal is show these parameters in the web-client (or any other
+Our goal is to show these parameters in the web-client (or any other
 client), so the user can select the appropriate values before
 executing the application. The \ei framework provides an easy way to
 do this, all we have to do is to modify \texttt{myapp.cfg} to include
@@ -549,7 +549,7 @@ overridden by each parameter.
 %
 The attribute \lst{check} tells the server to check the correctness of
 the parameters before passing them to the application, i.e., that they
-are valid values, etc.
+have valid values, etc.
 %
 The tag \lst{selectone} defines a parameter with \lst{name} ``c'' that
 can take one value from a set of possible ones. For example, the
@@ -641,7 +641,7 @@ Chapter~\ref{ch:eiol}.
 \subsection{Printing in the Console Area}
 
 Recall that when the \eiol is used, the web-client does not redirect
-the output to the console and thus we need a command to
+the output to the console area and thus we need a command to
 print in the console area.
 %
 The following is an example of a command that prints ``Hello World''
@@ -740,7 +740,7 @@ echo "</eiout>"
 
 \medskip
 \noindent
-The output of \texttt{myapp.sh} is give in \eiol, because at Line 5 we
+The output of \texttt{myapp.sh} is given in \eiol, because at Line 5 we
 start the output with the tag \lst{eiout} which we close at line 55.
 %
 At Line 6 we start an \lst{eicommands} tag, inside \lst{eiout}, which
@@ -779,14 +779,14 @@ the editor area. The following is an example of such command:
 \medskip
 \noindent
 The attribute \lst{dest} indicates the \emph{full path} of the file in
-which the marker should be added.
+which the marker should be added (as received from the server).
 %
 The attribute \lst{outclass} indicates the nature of the marker, which
 can be 'info', 'error', or 'warning'. This value typically affects the
 type/color of the icon to be used for the marker.
 %
 The tag \lst{lines} includes the lines in which markers should be
-added, each line is give using the tag \lst{line} where the \lst{from}
+added, each line is given using the tag \lst{line} where the \lst{from}
 attribute is the line number~(\lst{line} can be used to define a
 region in other commands, this is why the attribute is called
 \lst{from}).
@@ -836,7 +836,7 @@ The following command can be used to highlight code lines:
 \medskip
 \noindent
 Attributes \lst{dest} and \lst{outclass} are as in the \lst{addmarker}
-command. Each \lst{line} tag define a region to be highlighted. E.g.,
+command. Each \lst{line} tag defines a region to be highlighted. E.g.,
 in the above example it highlights lines 5-10. You can also use the
 attributes \lst{fromch} and \lst{toch} to indicate the columns in
 which the highlight starts and ends respectively.
@@ -883,7 +883,7 @@ marker:
 \noindent
 Attributes \lst{dest} and \lst{outclass} are as in the \lst{addmarker}
 command. Each \lst{line} tag defines a line in which a widget, showing
-the text inside the \lst{content}, is added. Note that some client,
+the text inside the \lst{content}, is added. Note that some clients,
 e.g., the web-client, allow only plain 'text' content.
 
 Let us modify \texttt{myapp.sh} to add an inline marker at line 15 of
@@ -999,14 +999,14 @@ box.
 Note that the commands inside \lst{eicommands} inherit the \lst{dest}
 and \lst{outclass} attributes of \lst{oncodelineclick}, but one can
 override them, e.g., if we add
-\lst{dest="/Examples\_1/iterative/fact.c"} to the \lst{highlightlines}
+\lst{dest="/Examples_1/iterative/fact.c"} to the \lst{highlightlines}
 command then a click highlights lines 17-19 of \texttt{fact.c} instead
 of \texttt{sum.c}.
 %
 
-Let us modify \texttt{myapp.sh} to open add a code line action, as the
-one above, for each file that it receives. Open \texttt{myapp.sh} and
-add the following code snippet immediately before the instruction that
+Let us modify \texttt{myapp.sh} to add a code line action, as the one
+above, for each file that it receives. Open \texttt{myapp.sh} and add
+the following code snippet immediately before the instruction that
 closes the \lst{eiout} tag (i.e., after closing \lst{eicommands}):
 
 \medskip
@@ -1036,7 +1036,7 @@ echo "</eiactions>"
 
 \medskip
 \noindent
-Note that at line 1 we open the tag \lst{eiactions} and at line 21 we
+Note that at line 1 we open the tag \lst{eiactions} and at line 20 we
 close it. The rest of the code simply prints a code line action as the
 one above for each file.
 %
@@ -1083,14 +1083,14 @@ commands to be executed when this text is clicked as follows:
 
 \medskip
 \noindent
-It is east to see that this action is very similar to
+It is easy to see that this action is very similar to
 \lst{oncodelineclick}, the difference is that instead of \lst{lines} we
 now use \lst{elements} to identify those HTML elements a click on
 which should execute the commands. 
 
-Let us modify \texttt{myapp.sh} to open add an OnClick action assigned
-to the list of files that it prints on the console. First look for the
-first occurrence of 
+Let us modify \texttt{myapp.sh} to add an OnClick action assigned to
+the list of files that it prints on the console. First look for the
+first occurrence of
 
 \medskip
 \begin{lstlisting}[style=script]
@@ -1099,7 +1099,7 @@ echo "<ul>"
 
 \medskip
 \noindent
-which should be at line 19, and change it by
+which should be at line 19, and replace it by
 
 \medskip
 \begin{lstlisting}[style=script]
@@ -1109,9 +1109,9 @@ echo "<ul style='background: yellow;' id='files'>"
 \medskip
 \noindent
 This change will give the list of files that we print in the console
-the identifier \texttt{files}, and will change its background color to
-yellow. Next add the following code immediately before the instruction
-that closes \lst{eiactions}:
+(i.e., the corresponding HTML) the identifier \texttt{files}, and will
+change its background color to yellow. Next add the following code
+immediately before the instruction that closes \lst{eiactions}:
 
 \medskip
 \begin{lstlisting}[style=script]
@@ -1131,9 +1131,9 @@ echo "</onclick>"
 
 \medskip
 \noindent
-Execute \texttt{myapp.sh} in a shell first to check that it works
-correctly, and then execute the \texttt{MFA} application from the
-web-client to see the effect of these changes. In particular, clicking
-on the list of files in the console area (anywhere in the yellow
-region) should open a dialog box.
+This defines an OnClick actions such that when clicking on the list of
+files in the console area (anywhere in the yellow region) should open
+a dialog box. Execute \texttt{myapp.sh} in a shell first to check that
+it works correctly, and then execute the \texttt{MFA} application from
+the web-client to see the effect of these changes.
 

@@ -8,8 +8,8 @@ refer to as the \ei server (or simply the server).
 %
 As explained in Section~\ref{ch:overview:arch:server}, the goal of
 this server is to provide a uniform way to access local applications
-and examples (i.e., those installed on the same machine where the
-server runs).
+and examples (i.e., those installed on the machine where the server
+runs).
 
 
 The \ei server achieves the above goal by:
@@ -23,9 +23,8 @@ information on those applications and examples, execute applications,
 etc.
 %
 Section~\ref{ch:server:config} describes the syntax of the server
-configuration file, which covers point~(1) above; and
-Section~\ref{ch:server:protocol} describes the protocol that can be
-used to communicate with the server.
+configuration file; and Section~\ref{ch:server:protocol} describes the
+protocol that can be used to communicate with the server.
 %
 This chapter does not cover issues related to installation, for such
 documentation see
@@ -38,10 +37,10 @@ documentation see
 This section describes how to configure the \ei server.
 %
 Section~\ref{ch:server:config:file} explains where the configuration
-file show be placed, and Section~\ref{ch:server:config:xml} describes
-the (valid) content of this file.
+file should be placed, and Section~\ref{ch:server:config:xml}
+describes the (valid) content of this file.
 %
-Before proceeding to the next sections, it highly recommended to read
+Before proceeding to the next sections, it is very recommended to read
 Chapter~\ref{ch:quickguide} to get a general idea on how the
 configuration file looks like, etc.
 
@@ -67,13 +66,14 @@ The content of the configuration file should adhere to the
 \xmlstructref{server}{eiserver} XML structure that is described below.
 %
 Inside this tag you can define applications, examples, etc. The best
-way to understand how to do is follow the links in the definition of
-\xmlstructref{server}{eiserver}.
+way to understand how to do so is follow the links in the definition
+of \xmlstructref{server}{eiserver}.
 
-\subsubsection*{General comment about XML structures} 
+\subsubsection*{General Comments about XML Structures} 
 
-For the purpose of better organization of the configuration files, any
-XML structure
+For the purpose of better organization of the configuration files, we
+provide a way to split them into several files and import one file
+into another one. Any XML structure
 
 \medskip
 \begin{lstlisting}
@@ -88,16 +88,18 @@ can be also written as
 
 \medskip
 \begin{lstlisting}
-<tagname src=$\xmlstructref{server}{cfgfilename}$ />
+<tagname src=$\xmlstructref{server}{cfgfilename}$/>
 \end{lstlisting}
 
 \medskip
 \noindent
-where the file \xmlstructref{server}{cfgfilename} includes the actual XML
-structure (of the first form). However, if the XML structure has an
-attribute \lst{id} then it must appear as well in the second form.
+where the file \xmlstructref{server}{cfgfilename} includes the actual
+XML structure (of the first form above). It will be automatically
+imported when needed. However, if the XML structure (the first form)
+has an attribute \lst{id} then it must appear as an attribute in the
+second form as well.
 
-\subsubsection*{The main XML tag of the configuration file}
+\subsubsection*{The Main XML Tag of the Configuration File}
 
 %% EISERVER
 \bigskip
@@ -107,16 +109,17 @@ attribute \lst{id} then it must appear as well in the second form.
 {%
 This XML tag is the root of the configurations file.
 %
-The \xmlstructref{server}{settings} section is used for setting some global
-parameters; the \xmlstructref{server}{apps} section defines which applications
-are available on the server; and \xmlstructref{server}{examples} defines which
-sets of examples are available on the server.
+The \xmlstructref{server}{settings} section is used for setting some
+global parameters; \xmlstructref{server}{examples} defines which sets
+of examples are available on the server; and the
+\xmlstructref{server}{apps} section defines which applications are
+available on the server.
 %
 }
 
 
 
-\subsubsection*{General settings}
+\subsubsection*{General Settings}
 
 %% SETTINGS
 \bigskip
@@ -125,13 +128,12 @@ sets of examples are available on the server.
 {settings}
 {%
 %
-  This tag is does not include anything yet. It is reserved for future
-  use, where we plan to put general settings that are related to the
-  server and not to specific application or examples set.
+  This tag does not include anything yet. It is reserved for future
+  use, where we plan to put general settings.
 %
 }
 
-\subsubsection*{Examples settings}
+\subsubsection*{Examples Settings}
 
 %% EXAMPLES
 \bigskip
@@ -140,8 +142,8 @@ sets of examples are available on the server.
 {examples}
 {%
 %
-  This tag is used to declare sets of examples sets that are available
-  in the server, where each such set is defined by one
+  This tag is used to declare sets of examples that are available in
+  the server, where each such set is defined by one
   \xmlstructref{server}{exset}.
 %
 }
@@ -154,7 +156,7 @@ sets of examples are available on the server.
 {exset}
 {%
 %
-  This tag declare a set of examples, which are defined by collection
+  This tag declare a set of examples, which are defined a collection
   of \xmlstructref{server}{exelement} (a file, a directory, or a link to a
   github repository).
 %
@@ -202,8 +204,9 @@ sets of examples are available on the server.
 {%
 %
   This tags declares a folder with \xmlstructattr{name} as its
-  name. The content of this is a list of \xmlstructref{server}{exelement}
-  tags, which in turn declare the inner files, folders, etc.
+  name. The content of this tag is a list of
+  \xmlstructref{server}{exelement} tags, which in turn declare the
+  inner files, folders, etc.
 %
 }
 
@@ -219,14 +222,14 @@ sets of examples are available on the server.
   Declares a reference to the public github repository
   \xmlstructattr{repo} which is owned by the user
   \xmlstructattr{owner}. Optionally one can also refer to a specific
-  \xmlstructattr{branch} which \texttt{master} by default, and to a
-  specific \xmlstructattr{githubpath} (a directory or a single file) which
-  is a the root directory by default.
+  \xmlstructattr{branch}, which \texttt{master} by default, and to a
+  specific path \xmlstructattr{githubpath} (a directory or a single
+  file) which is a the root directory by default.
 %
 }
 
 
-\subsubsection*{Applications settings}
+\subsubsection*{Applications Settings}
 
 %% APPS
 \bigskip
@@ -235,7 +238,7 @@ sets of examples are available on the server.
 {apps}
 {%
 %
-  Thhis tag declares a list of applications (to be added to the
+  This tag declares a list of applications (to be added to the
   server). Each such application is defined by one \xmlstructref{server}{app}
   environment.  
 %
@@ -249,8 +252,8 @@ sets of examples are available on the server.
 {app}
 {%
 %
-  This tag defines an application, where the meaning different parts
-  is as follows:
+  This tag defines an application, where the meaning of the different
+  parts is as follows:
 %
   \begin{itemize}
 
@@ -262,7 +265,7 @@ sets of examples are available on the server.
     by default it is \texttt{true}. 
     %
     Note that even if an application is not visible, it can be used
-    like any other application by those who know it
+    like any other application by those who know its
     \xmlstructattr{id}.
 
   \item \xmlstructref{server}{appinfo} provides some general information about
@@ -291,13 +294,13 @@ sets of examples are available on the server.
 {appinfo}
 {%
 %
-  This tag provides general information for an application:
+  This tag provides general information about an application:
 %
   \begin{itemize}
   \item \xmlstructref{server}{acronym} is an acronym for the application,
     e.g., COSTA;
   \item \xmlstructref{server}{title} is the full name of the application;
-  \item \xmlstructref{server}{logo} is an image corresponding to the log of
+  \item \xmlstructref{server}{logo} is an image corresponding to the logo of
     the application; and
   \item \xmlstructref{server}{desc} is a description of the tool.
   \end{itemize}
@@ -326,9 +329,9 @@ sets of examples are available on the server.
 {title}
 {%
 %
-  Plain text deciding a title, e.g., for an application. It is
+  Plain text describing a title, e.g., for an application. It is
   typically more informative than an acronym (see
-  $\xmlstructref{server}{acronym}$.
+  \xmlstructref{server}{acronym}).
 %
 }
 
@@ -341,9 +344,9 @@ sets of examples are available on the server.
 {logo}
 {%
 %
-  A link to an image --- in some standard format such
+  A link to an image --- in some standard format, .e.g.,
   \xmlstructvalue{png}, \xmlstructvalue{jpg} or \xmlstructvalue{gif}
-  --- to be used by clients as a logo (for an application). 
+  --- to be used by clients as a logo (e.g., for an application).
 %
 }
 
@@ -375,10 +378,11 @@ sets of examples are available on the server.
 %
   A (formatted) text that provides enough information on how an
   application can be used, etc. It can be provided in several formats,
-  e.g., html or plain text, by using several \xmlstructref{server}{content}
-  tags. Clients are supposed to pick the appropriate format if more
-  than one is available. It is recommended to always include a content
-  in plain text since it can be view in any client.
+  e.g., html or plain text, by using several
+  \xmlstructref{server}{content} tags. Clients are supposed to pick
+  the appropriate format if more than one is available. It is
+  recommended to always include a content in plain text since it can
+  be viewed in any client.
 %
 }
 
@@ -407,7 +411,8 @@ sets of examples are available on the server.
 {%
 %
   Provides information on how to execute an application. Currently it
-  includes only a command-line template \xmlstructref{server}{cmdlineapp}.
+  includes only the command-line template
+  \xmlstructref{server}{cmdlineapp}.
 %
 }
 
@@ -419,8 +424,8 @@ sets of examples are available on the server.
 {cmdlineapp}
 {%
 %
-  Describes how to run an application, where
-  \xmlstructref{server}{cmdtemplate} is a template describing a
+  Describes how to run an application from a command-line, where
+  \xmlstructref{server}{cmdtemplate} is a template describing the
   command-line. It is best explained by an example. Consider the
   following template example
 
@@ -432,7 +437,7 @@ sets of examples are available on the server.
   \noindent
   In this template, anything that starts with \xmlstructtemplate{_ei}
   is a template parameter that will be replaced by some corresponding
-  information, and \texttt{/path-to/app} is the application
+  value, and \texttt{/path-to/app} is the application
   executable.
   % 
   When the server receives a request for executing the corresponding
@@ -463,7 +468,7 @@ sets of examples are available on the server.
 
   \bigskip
   \hspace{0.7cm}
-  \fbox{\texttt{/path-to/app \xmlstructtemplate{a.c b.c} -m \xmlstructtemplate{a.main} \xmlstructtemplate{-v 1 -d 3 -a}}}
+  \fbox{\texttt{/path-to/app \xmlstructtemplate{/tmp/ei_FAJw1B/a.c /tmp/ei_FAJw1B/b.c} -m \xmlstructtemplate{a.main} \xmlstructtemplate{-v 1 -d 3 -a}}}
 
   \bigskip 
   \noindent
@@ -481,10 +486,7 @@ sets of examples are available on the server.
     names (separated by space) in the local file system;
 
   \item \xmlstructtemplate{_ei_root} is replaced by the local
-    temporary directory name, where all files have been saved. This
-    file is of the form \texttt{/path-to-tmp/\_ei\_files} where
-    \texttt{/path-to-tmp} depends on the operating system (e.g.,
-    \texttt{/tmp} in Linux);
+    temporary directory name, where all files have been saved;
 %%
   \item \xmlstructtemplate{_ei_outline} is replaced by a list of
     selected entities (separated by space);
@@ -506,7 +508,7 @@ sets of examples are available on the server.
 }
 
 
-\subsubsection{Application parameters}
+\subsubsection{Application Parameters}
 
 %% PARAMETERS
 \bigskip 
@@ -516,8 +518,8 @@ sets of examples are available on the server.
 {%
 %
   Defines a list of parameters that are accepted by a corresponding
-  application. Each parameter is define by one \xmlstructref{server}{param}
-  environment. 
+  application. Each parameter is defined by one
+  \xmlstructref{server}{param} environment.
   %
   The \xmlstructattr{prefix} attribute is used to specify a string
   that will be attached to each parameter name when passed to the
@@ -546,7 +548,7 @@ sets of examples are available on the server.
 \xmlstruct
 {server}
 {param}
-{
+{%
 %
   Defines a parameter accepted by a corresponding application. There
   are several types of parameters supported:
@@ -555,9 +557,8 @@ sets of examples are available on the server.
   value from a predefined set;
 \item \xmlstructref{server}{selectmany} defines a parameter that takes several
   values from a predefined set;
-\item \xmlstructref{server}{flag} defines a parameter that either appear or
-  not in the command-line; and
-\item \xmlstructref{server}{textfield} defines a parameter that take a
+\item \xmlstructref{server}{flag} defines a Boolean parameter; and
+\item \xmlstructref{server}{textfield} defines a parameter that takes a
   free-text value.
 \end{itemize}
 %
@@ -576,24 +577,24 @@ sets of examples are available on the server.
 
   \begin{itemize}
   \item \xmlstructattr{name} is the name of the parameter, it must be
-    unique among all parameters of an app;
+    unique among all parameters of an application;
 
   \item \xmlstructattr{prefix} and \xmlstructattr{check} can be used
     to override the corresponding attributes of
     \xmlstructref{server}{parameters};
 
-  \item \xmlstructref{server}{desc} provide a description of this parameter;
+  \item \xmlstructref{server}{desc} provides a description of this parameter;
 
   \item \xmlstructref{server}{option}+ is a list of possible values for
     this parameter;
 
   \item \xmlstructref{server}{defaultvalue} specifies the default value. If
     not specified then the first \xmlstructref{server}{option} is considered
-    as the default one;
+    as the default one; and
 
   \item \xmlstructattr{widgetid} specifies the preferred layout when
     used in a client with a graphical interface (e.g., combo-box,
-    radio button, etc.). This is client depends, see
+    radio button, etc.). This is client dependent, see
     Chapter~\ref{ch:clients} for more information.
 
   \end{itemize}
@@ -625,21 +626,26 @@ sets of examples are available on the server.
 %
   Defines a parameter that can take \texttt{true} or \texttt{false}
   values. The meaning of the attributes and inner environments is as
-  in \xmlstructref{server}{selectone}. In addition, the attribute
+  in \xmlstructref{server}{selectone}.  The attribute
   \xmlstructattr{explicit} is used to specify how this parameter
   should be passed to the application. For example, assume the
   parameter name is \texttt{f}, then:
   % 
   \begin{itemize}
   %  
-  \item when \xmlstructattr{explicit} is \xmlstructvalue{true} the
-    parameter is explicitly passed to the application, i.e., using
-    ``\texttt{-f true}'' or ``\texttt{-f false}''; and
-  %
-  \item when \xmlstructattr{explicit} is \xmlstructvalue{false}
+  \item when \xmlstructattr{explicit} is \xmlstructvalue{false}, the
     parameter is passed as ``\texttt{-f}'' if its value is
     \texttt{true} and not passed at all if its value is
     \texttt{false}.
+
+  \item when \xmlstructattr{explicit} is \xmlstructvalue{true} the
+    parameter is explicitly passed to the application, i.e., using
+    ``\texttt{-f X}'' where \texttt{X} is the selected value. The
+    posible values are \xmlstructvalue{true} and
+    \xmlstructvalue{false}. However, they you can redefine them
+    overwritten (only when \xmlstructattr{explicit} is
+    \xmlstructvalue{true}) using the attributes
+    \xmlstructattr{trueval} and \xmlstructattr{falseval}.
   % 
   \end{itemize}
 %
@@ -656,16 +662,15 @@ sets of examples are available on the server.
 {textfield}
 {%
 %
-  Defines a parameter that can take free-text value. The meaning of
-  the attributes and inner environments is as in
-  \xmlstructref{server}{selectone}. The \lst{initialtext} tag includes a text
-  to be shown in the corresponding text-area by default.  The meaning
-  of extra attributes is as follows:
+  Defines a parameter that can take free-text value.  The
+  \lst{initialtext} tag includes a text to be shown in the
+  corresponding text-area by default.  The meaning of the attributes
+  is as follows:
 %
 \begin{itemize}
 %
 \item \xmlstructattr{multiline} is used to specify if the free-text
-  should be single-line or multi-lines. By default its values is
+  should be single- or multi-line. By default its values is
   \xmlstructvalue{false}, i.e., single-line.
 %
 \item \xmlstructattr{passinfile} is used to indicate that the actual
@@ -677,6 +682,10 @@ sets of examples are available on the server.
   does some checks to avoid this).
 %
 \end{itemize}
+%
+The meaning of the other attributes and inner environments is as in
+\xmlstructref{server}{selectone}.
+%
 }
 
 
@@ -810,22 +819,24 @@ A path to a configuration file. Should be relative to
 \noindent
 \xmlstructdef{server}{cmdtemplate}
 
-The explanation is given in \xmlstructref{server}{cmdlineapp}
+The explanation is given in \xmlstructref{server}{cmdlineapp}.
 
 \section{Communicating with the \ei Server}
 \label{ch:server:protocol}
 
-This section describes the protocol to be user for communicating with
-the \ei server. If you are not developing any \ei client, then this
+This section describes the protocol to be used for communicating with
+the \ei server. If you are not developing an \ei client, then this
 section is not relevant for you.
 
 The \ei server is a collection of PHP scripts running on top of an
 HTTP server. Communicating with the server is done through HTTP POST
-requests. In particular, the request should be assigned to a POST
-attribute called ``\texttt{eirequest}'' (the actual value of
-``\texttt{eirequest}'' is a JSON record that we will described in
-the next sections). The following is an example of how one can
-communicate with the server using JavaScript:
+requests. 
+%
+In particular, the request should include an attribute called
+``\texttt{eirequest}'' (the actual value of ``\texttt{eirequest}'' is
+a JSON record that we will described in the next sections). The
+following is an example of how one can communicate with the server
+using jQuery:
 
 \bigskip
 \begin{lstlisting}
@@ -846,7 +857,7 @@ The response of the server is an XML of the following form:
 \bigskip
 \begin{lstlisting}
 <ei_response>
-  <ei_server_output> ...  </ei_server_output>
+  <ei_server_output> ... </ei_server_output>
   <ei_output> ... </ei_output>
   <ei_error> ... </ei_error>
 </ei_response>
@@ -858,10 +869,11 @@ Where
 %
 \begin{itemize}
 %
-\item \lst{ei_server_output} includes messages printed by
+\item \lst{ei_server_output} includes messages printed by the
   server. These messages are not the response to the request, but
   rather debugging messages that can be useful when developing
-  clients, etc.
+  clients, debugging the server, etc. Most users should ignore this
+  environment.
 %
 \item \lst{ei_output} includes the response to the request, i.e., if
   we request to execute an application the output of that application
@@ -873,12 +885,13 @@ Where
 \end{itemize}
 %
 Typically, \lst{ei_output} and \lst{ei_error} are mutually exclusive,
-i.e., only one can appear in the response.
+i.e., only one can appear in the response. 
 
 \bigskip 
-In the next section we describe how the format of the request for
-driving information on applications, execute and application, and
-retrieve example sets.
+%
+In the next section we describe the format of the request to (1)
+obtain information on the available applications; (2) execute an
+application; and (3) retrieve example sets.
 
 \subsection{Retrieve Information on Available Applications}
 
@@ -895,7 +908,7 @@ applications on the server, use the following request:
 
 \bigskip
 \noindent
-where (1) \texttt{CMD} is \texttt{app\_info},
+where (1) \texttt{CMD} can be \texttt{app\_info},
 \texttt{app\_parameters}, or \texttt{app\_details}; and (2)
 \texttt{ID} is either the special value \texttt{\_ei\_all} (i.e., all
 applications) or an application identifier as specified in
@@ -908,7 +921,7 @@ next.
 %
 First any application that does not match \texttt{ID} is removed (if
 \texttt{ID} is \texttt{\_ei\_all} then only non-visible applications
-are removed). Then, for any remaining applications:
+are removed). Then, for the remaining applications:
 %
 \begin{itemize}
 %
@@ -935,7 +948,7 @@ Next we describe, by mean of an example, the form of a request for
 executing an application. Suppose we are interested in executing an
 application with identifier \texttt{myapp} where, in addition, we
 would like to pass it some values for the parameters, files to
-process, outline entities, and the identified of the client who is
+process, outline entities, and the identifier of the client who is
 making the request. Such a request has the following form:
 
 \bigskip
@@ -988,14 +1001,14 @@ Let us explain the different parts of this request:
 %
 \item \texttt{parameters} is a JSON record that includes all the
   information, e.g., application parameters and files, that we want to
-  pass to over, as we explain below.
+  pass over, as we explain below.
 \end{itemize}
 %
-Before explaining the details of the parameter records, it is
-recommend that your refresh you memory with the details of the
+Before explaining the details of the parameters record, it is
+recommend that you refresh your memory with the details of the
 command-line template as described
-in~\xmlstructref{server}{cmdlineapp}. The parameters JSON record
-includes the following information:
+in~\xmlstructref{server}{cmdlineapp}. The parameters record includes
+the following information:
 %
 \begin{itemize}
 %
@@ -1005,20 +1018,20 @@ includes the following information:
   environment of the corresponding application. The value of such
   field is a list of elements that represent the value of the
   parameter. If the parameter is supposed to take a single value then
-  list must have a single element.
+  the list must have a single element.
 %
 \item \emph{Files}: the field \texttt{\_ei\_files} represent the files
   that we want to pass to the application. Its value is an array of
   JSON records where each record represent a text file or a directory
   (binary files are not supported yet). The \texttt{path} field of the
   record refers to the file or directory name, it is relative to the
-  root of the temporal directory where the server saves these
+  root of the temporary directory where the server saves these
   files. The \texttt{type} field indicates the type of the file. In
   the case of text files, the field \texttt{content} represent the
   actual content of the file.
 %
 \item \emph{Outline entities}: the filed \texttt{\_ei\_outline} is a
-  list of elements representing thee selected entities from the
+  list of elements representing the selected entities from the
   outline.
 %
 \item \emph{Client identifier}: the field \texttt{\_ei\_clientid}
