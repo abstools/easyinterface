@@ -84,19 +84,7 @@ static function get_app_help( $app_id ) {
   static function execute( $app_id, $parameters ) {
     $execInfo = EIConfig::get_appExecXML($app_id);
     $output = "";
-
- //   switch ( $execInfo->attributes()->method ) {
- //   case "cmdline":
-      $output = EIApps::execute_cmdline($app_id, $parameters);
- /*     break;
-    case "server":
-      $output = EIApps::execute_server($app_id, $parameters);
-      break;
-    default:
-      throw new Exception("Invalid or missing 'method' in the execinfo "
-			  ."environment of '" . $app_id . "'");
-    }*/
-
+    $output = EIApps::execute_cmdline($app_id, $parameters);
     return $output;
   }
 
@@ -174,7 +162,7 @@ static function get_app_help( $app_id ) {
       unset( $parameters['_ei_outline'] );
     }
 
-    $typesofparams = array("selectone","selectmany","flag","hidden");
+    $typesofparams = array("selectone","selectmany","flag");
     // other parameters
     //
     $parameters_str = "";
@@ -260,9 +248,6 @@ static function get_app_help( $app_id ) {
 	      throw new Exception("Flag parameter only accept true or false");
 	    break;
 
-	  case "hidden":
-	    break;
-
 	  case "textfield":
 	    break;
 
@@ -294,10 +279,6 @@ static function get_app_help( $app_id ) {
       case "flag":
 	if($values[0] == "true")
 	  $parameters_str .= " ".$localprefix."".$key ;
-	break;
-      case "hidden":
-	$parameters_str .= " ".$localprefix."".$key ;
-	$parameters_str .= " ".$values[0];
 	break;
       case "textfield":
 	$parameters_str .= " ".$localprefix."".$key;
