@@ -13,7 +13,7 @@ window.TextAreaWidget = ( function() {
 			"<div class='desc'>"+widgetInfo.desc.short+"</div>"+
 			"<div class='selector'></div>"+
 			"</div>");
-      console.log(widgetInfo);
+
 	if(widgetInfo.multiple){
 	    self.env.find("div.selector").append("<textarea rows='5' class='textfield' >"+widgetInfo.default_value+"</textarea>");
 	    self.textfield = self.env.find("textarea");

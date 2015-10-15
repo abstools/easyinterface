@@ -250,6 +250,7 @@ window.EasyInterface = (function() {
 	    //
 	    var paramInfo_show_svg_in_new_window = {
 		id: "show_svg_in_new_window",
+		options: new Array("true","false"),
 		default_value: _ei.general_settings.show_svg_in_new_window,
 		desc: { "short": "Output SVG content in new tab",
 			"long": "When selected, any SVG content will be display in a new tab in the console area"},

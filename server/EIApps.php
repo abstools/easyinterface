@@ -236,12 +236,18 @@ static function get_app_help( $app_id ) {
 	    break;
 
 	  case "flag":
+	      $tval = "true";
+	      $fval = "false";
+	      if(array_key_exists("trueval",$local["@attr"]))
+		$tval = $local["@attr"]["trueval"];
+	      if(array_key_exists("falseval",$local["@attr"]))
+		$fval = $local["@attr"]["falseval"];
 	    if( count($values)>1)
 	      throw new Exception("This parameter (".$local["@attr"]["name"]
 				  .") only accept one value");
-	    else if(count($values)==0) $values[0]="false";
-	    if($values[0] != "true" && $values[0] != "false")
-	      throw new Exception("Flag parameter only accept true or false");
+	    else if(count($values)==0) $values[0]=$fval;
+	    if($values[0] != $tval && $values[0] != $fval)
+	      throw new Exception("This flag parameter (".$local["@attr"]["name"].") only accept ".$tval." or ".$fval."");
 	    break;
 
 	  case "textfield":
@@ -273,15 +279,25 @@ static function get_app_help( $app_id ) {
 	  $parameters_str .= " ".$val;
 	break;
       case "flag":
-	if($values[0] == "true")
-	  $parameters_str .= " ".$localprefix."".$key ;
+	  $explicit = "false";
+	  if(array_key_exists("explicit",$local["@attr"]))
+	    $explicit =  $local["@attr"]["trueval"];
+	  $tval = "true";
+	  $fval = "false";
+	  if(array_key_exists("trueval",$local["@attr"]))
+	    $tval = $local["@attr"]["trueval"];
+	  if(array_key_exists("falseval",$local["@attr"]))
+	    $fval = $local["@attr"]["falseval"];
+	  if($explicit == "false" && $values[0] == $tval )
+	    $parameters_str .= " ".$localprefix."".$key ;
+	  else if ($explicit == "true")
+	    $parameters_str .= " ".$localprefix."".$key." ".$values[0];
 	break;
       case "textfield":
-	  if( $local["@attr"]["passinfile"]){
+	  if(array_key_exists("passinfile",$local["@attr"])){
 	    $name_tmpfile = tempnam($dir,$key."_");
 	    file_put_contents($name_tmpfile,$values[0]);
 	    chmod($name_tmpfile,0755);
-	    echo $values[0];
 	    $parameters_str .= " ".$localprefix."".$key;
 	    $parameters_str .= " '".$name_tmpfile."'";
 	  }else{
