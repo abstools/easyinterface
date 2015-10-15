@@ -88,10 +88,6 @@ static function get_app_help( $app_id ) {
     return $output;
   }
 
-  static function execute_server( $app_id, $parameters ) {
-    throw new Exception("Executing via server is not supported yet!");
-  }
-
   static function execute_cmdline( $app_id, $parameters ) {
     $execInfo = EIConfig::get_appExecXML($app_id);
     $pAuxy = (EIConfig::get_appParametersARRAY($app_id));
@@ -177,7 +173,7 @@ static function get_app_help( $app_id ) {
     foreach ($parameters as $key => $values) {
       $encontrado = false;
       foreach ($paramsArr as $typep => $paramsgroup){
-	//CUIDADO CUANDO SOLO HAY UNO DE UN TIPO AQUI ESTA TODO....
+	//Careful! 
 	if(array_key_exists("@attr",$paramsgroup)){
 	  //only exists one parameter of type "typep"
 	  //paramsgroup = parameter
@@ -281,8 +277,17 @@ static function get_app_help( $app_id ) {
 	  $parameters_str .= " ".$localprefix."".$key ;
 	break;
       case "textfield":
-	$parameters_str .= " ".$localprefix."".$key;
-	$parameters_str .= " '".$values[0]."'";
+	  if( $local["@attr"]["passinfile"]){
+	    $name_tmpfile = tempnam($dir,$key."_");
+	    file_put_contents($name_tmpfile,$values[0]);
+	    chmod($name_tmpfile,0755);
+	    echo $values[0];
+	    $parameters_str .= " ".$localprefix."".$key;
+	    $parameters_str .= " '".$name_tmpfile."'";
+	  }else{
+	    $parameters_str .= " ".$localprefix."".$key;
+	    $parameters_str .= " '".$values[0]."'";
+	  }
 	break;
       }//end switch localtype write str
     }//end parameters
@@ -299,7 +304,7 @@ static function get_app_help( $app_id ) {
     $cmdline = escapeshellcmd($cmdline);
  
    
-    //    print $cmdline; // TODO -- shoudl go into some tags
+    echo $cmdline; // TODO -- shoudl go into some tags
     $outputLines = array();
     
     chdir("bin"); // we always execute in the bin directory
@@ -335,7 +340,7 @@ static function get_app_help( $app_id ) {
                             ." It cannot contain .. as well");
 
       // if it is a file, save it
-      if( array_key_exists('type',$file) && strcmp($file['type'],'file') == 0 ) {
+      if( array_key_exists('type',$file) && strcmp($file['type'],'text') == 0 ) {
 	$filename = $dir."/".$file["name"];
         $dirname  = dirname($filename);
 

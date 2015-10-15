@@ -18,12 +18,7 @@
     box-sizing: border-box;
 }
 
-.ei-paramwidget-checkbox {
-  width: 100%;
-  border: 1px solid;
-}
-
-.ei-paramwidget-combo {
+.ei-paramwidget-checkbox, .ei-paramwidget-combo,.ei-paramwidget-text {
   width: 100%;
   border: 1px solid;
 }
@@ -70,7 +65,27 @@
 }
 
 .ei-paramwidget-checkbox .selector {
-  width: 30;
+  width: 30%;
+  display: inline-block;
+  margin: 0px 0px 0px 0px;  
+  vertical-align: top;
+}
+
+.ei-paramwidget-text .desc {
+  width: 70%;
+  display: inline-block;
+  margin: 0px 0px 0px 0px;  
+  vertical-align: top;
+}
+
+.ei-paramwidget-text .selector{
+  width: 30%;
+  display: inline-block;
+  margin: 0px 0px 0px 0px;  
+  vertical-align: top;
+}
+.ei-paramwidget-text .textfield{
+  width: 90%;
   display: inline-block;
   margin: 0px 0px 0px 0px;  
   vertical-align: top;

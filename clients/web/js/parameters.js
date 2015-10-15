@@ -114,10 +114,12 @@ window.Parameters = (function() {
 
 	    //more than one default value?
 	    var defaultValue;
-	    if(param.find("> default").attr("value"))
-		defaultValue = param.find("> default").attr("value");
-	    else
-		defaultValue = param.find("> default").text();
+	  if(type == "textfield")
+	    defaultValue = param.find("> initialtext").text();
+	  else if(param.find("> default").attr("value"))
+	    defaultValue = param.find("> default").attr("value");
+	  else
+	    defaultValue = param.find("> default").text();
 
 	    switch ( widget ) {
 	    case "checkbox":
@@ -216,7 +218,7 @@ window.Parameters = (function() {
 	    case "textfield":
 		this.addTextfieldWidget(sectionId,
 					{
-					    multiple: false,
+					    multiple: (param.attr("multiline") =="true")?true:false,
 					    id:name,
 					    desc: desc,
 					    default_value: defaultValue
