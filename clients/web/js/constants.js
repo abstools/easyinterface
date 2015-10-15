@@ -18,9 +18,9 @@ var _ei = {
 	  eiactions        : "eiactions",          // tag
 	  eiout            : "eiout",              // tag
 	  eierror          : "ei_error",           // tag
-	  eiappout         : "ei_app_output",      // tag
+	  eiappout         : "ei_output",          // tag
 	  eiserverout      : "ei_server_output",   // tag
-	  eiserverresponse : "ei_server_response", // tag
+	  eiserverresponse : "ei_response",        // tag
 	  dest             : "dest",               // attr
 	  color            : "color",              // attr
 	  elements         : "elements",           // tag

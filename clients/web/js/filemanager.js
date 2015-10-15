@@ -1003,7 +1003,7 @@ window.FileManager = (function() {
 	    if(extension != "md")
 	      files[files.length] = {
 		id: Ids[i].id,
-		type: "file",
+		type: "text",
 		name: name,
 		content: self.getFileContent(Ids[i].id)
 	      };  
