@@ -145,6 +145,10 @@ window.FileManager = (function() {
 	       * dnd, drag and drop
 	       */
 	      "plugins": ["types","core","unique","dnd","themes","json_data","ui","crrm","contextmenu","sort"],
+	      "ui":{
+		"select_limit" : -1,
+		"selected_parent_close" : "select_parent",
+	      },
 	      "themes": {theme: "classic"},
 	      "dnd":{"drag_copy":"on"},
 	      "types": fmType,
@@ -158,316 +162,116 @@ window.FileManager = (function() {
 	      },
 	      "contextmenu": { 
 		"items":  function(node) {
-		  switch ( node.attr('rel') ) {
-		    case "folder":
-		      return {
-			"CreateFile": {
-			  "label": "New file",
-			  "action": function (obj) {
-			    var fmId = obj.attr('fmId');
-			    var x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","");	    
-			    self.openFile( x );
-			  }
-			},
-			"CreateFolder": {
-			  "label": "New folder",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    var fmId = obj.attr('fmId');
-			    var x = self.addFolder(null,self.fmObj[ fmId ].node.attr('fmId'),"");
-			    
-			  }
-			},
-			"RemoteFile": {
-			  "label": "Add Remote File...",
-			  "action": function (obj) {
-			    var fmId = obj.attr('fmId');
-			    self.requestRemote(self,fmId);
-			  }
-			},
-			"Rename": {
-			  "label": "Rename Folder",
-			  "separator_before":true,
-			  "action": function (obj) {
-			    this.rename(obj);
-			  }
-			},
-			"Delete": {
-			  "label": "Delete Folder",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Copy": {
-			  "label": "Copy Folder",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			    
-			  }
-			},
-			"Cut": {
-			  "label": "Cut Folder",
-			  "action": function (obj) {
-			    this.cut(obj);
-			    self.copy=false;
-			  }
-			},
-			"Paste": {
-			  "label": "Paste",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    self.paste=true;
-			    this.paste(obj);
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-		    case "folderLock":
-		      return {
-			"Copy": {
-			  "label": "Copy Folder",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-
-		    case "file":
-		      return {
-			"Rename": {
-			  "label": "Rename File",
-			  "separator_before":true,
-			  "action": function (obj) {
-			    this.rename(obj);
-			    
-			  }
-			},
-			"Delete": {
-			  "label": "Delete File",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Copy": {
-			  "label": "Copy File",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			  }
-			},
-			"Cut": {
-			  "label": "Cut File",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    this.cut(obj);
-			    self.copy=false;
-
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  },
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-		    case "folderRepo":
-		      return {
-			"Copy": {
-			  "label": "Copy Folder",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			    
-			  }
-			},
-			"Delete": {
-			  "label": "Delete Folder",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-
-		      };
-		    case "fileRepo":
-		      return {
-			"Rename": {
-			  "label": "Rename File",
-			  "separator_before":true,
-			  "action": function (obj) {
-			    this.rename(obj);
-			    
-			  }
-			},
-			"Copy": {
-			  "label": "Copy File",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			    
-			  }
-			},
-			"Delete": {
-			  "label": "Delete File",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-		    case "fileLock":
-		      return {
-			"Copy": {
-			  "label": "Copy File",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-
-			  }
-			}
-
-		      };
-
-		      break;
-		    default: 
-		      return null;
+		  if(! this.is_selected(node)){
+		    this.deselect_all();
+		    this.select_node(node);
 		  }
-		}
-	      }})
+		  var items = {	
+
+		    "Apply": {
+		      "label": "Apply here",
+		      "action": function (obj) {
+			self.tools.apply(self.getSelectedId());
+		      }
+		    },
+		    "Outline": {
+		      "label": "Refresh Outline here",
+		      "separator_after":true,
+		      "action": function (obj) {
+			self.outline.refresh(self.getSelectedId());
+		      }
+		    },
+		    "CreateFile": {
+		      "label": "New file",
+		      "separator_before": true,
+		      "action": function (obj) {
+			var fmId = obj.attr('fmId');
+			var x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","");	    
+			self.openFile( x );
+		      }
+		    },
+		    "CreateFolder": {
+		      "label": "New folder",
+		      "separator_after":true,
+		      "action": function (obj) {
+			var fmId = obj.attr('fmId');
+			var x = self.addFolder(null,self.fmObj[ fmId ].node.attr('fmId'),"");
+		      }
+		    },
+		    "RemoteFile": {
+		      "label": "Add Remote File...",
+		      "separator_before": true,
+		      "action": function (obj) {
+			var fmId = obj.attr('fmId');
+			self.requestRemote(self,fmId);
+		      }
+		    },
+		    "Rename": {
+		      "label": "Rename",
+		      "separator_before":true,
+		      "action": function (obj) {
+			this.rename(obj);
+		      }
+		    },
+		    "Delete": {
+		      "label": "Delete",
+		      "action": function (obj) {
+			this.remove(obj);
+		      }
+		    },
+		    "Copy": {
+		      "label": "Copy",
+		      "action": function (obj) {
+			this.copy(obj);
+			self.copy=true;	
+		      }
+		    },
+		    "Cut": {
+		      "label": "Cut",
+		      "action": function (obj) {
+			this.cut(obj);
+			self.copy=false;
+		      }
+		    },
+		    "Paste": {
+		      "label": "Paste",
+		      "separator_after":true,
+		      "action": function (obj) {
+			self.paste=true;
+			this.paste(obj);
+		      }
+		    }
+		  };
+
+		  switch ( node.attr('rel') ) {
+
+		    case "folderLock":
+		    case "fileLock":
+		      delete items.CreateFile;
+		      delete items.CreateFolder;
+		      delete items.RemoteFile;
+		      delete items.Rename;
+		      delete items.Delete;
+		      delete items.Cut;
+		      delete items.Paste;
+		      break;
+		    case "fileRepo":
+		      delete items.CreateFile;
+		      delete items.CreateFolder;
+		    case "folderRepo":
+		      delete items.RemoteFile;
+		      delete items.Cut;
+		      delete items.Paste;
+		      break;
+		    case "file":
+		      delete items.CreateFile;
+		      delete items.CreateFolder;
+		      delete items.RemoteFile;
+		      delete items.Paste;
+		      break;
+		  };
+		  return items;
+	      }}})
 	    .bind("delete_node.jstree",function(e, data){
 	      var id = $(data.rslt.obj).attr("fmId");
 	      var parentId = $(data.rslt.parent).attr("fmId");
@@ -1025,13 +829,9 @@ window.FileManager = (function() {
 		    //
     getSelectedId:
     function(){
-      var tmp = this.jstree.jstree('get_selected');
-      var arr = new Array();
-      if(tmp.length>0){
-	tmp.each(function(){
-	  arr[arr.length] = 	parseInt($(this).attr('fmId'));
-	});
-      }
+      var arr = $.map(this.jstree.jstree('get_selected'),function(I,k){
+ 	return parseInt($(I).attr('fmId'));
+      });
       return arr;
     },
 
