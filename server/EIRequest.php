@@ -51,7 +51,7 @@ class EIRequest
 
        return EIApps::get_app_details(  $this->request['app_id']  );
 
-      case "exset_details":
+     case "exset_details":
        if ( ! array_key_exists( 'exset_id', $this->request ) )
 	 throw new Exception("Missing exset_id");
 
@@ -65,6 +65,20 @@ class EIRequest
 	 throw new Exception("Missing parameters");
 
        return EIApps::execute(  $this->request['app_id'], $this->request['parameters'] );
+
+    case "get_stream":
+       if ( ! array_key_exists( 'exec_id', $this->request ) )
+	 throw new Exception("Missing exec_id");
+
+       return EIStream::get(  $this->request['exec_id'] );
+
+
+    case "kill_stream":
+       if ( ! array_key_exists( 'exec_id', $this->request ) )
+	 throw new Exception("Missing exec_id");
+
+       return EIStream::kill(  $this->request['exec_id'] );
+
 
      default:
        throw new Exception("Invalid command in EI request");

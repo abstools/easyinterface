@@ -7,6 +7,7 @@ include "misc.php";
 include "EIRequest.php";
 include "EIApps.php";
 include "EIExamples.php";
+include "EIStream.php";
 
 println("<ei_response>");
 try {

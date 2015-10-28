@@ -133,6 +133,9 @@ A command in the \ei output language, briefly:
 \item \xmlstructref{eiout}{addinlinemarkercommand} can be used to add a line
   widget (an inlined marker) in the code editor.
 %
+\item \xmlstructref{eiout}{streamcommand} can be used to notify that
+  there is an stream application running.
+%
 \end{itemize}
 }
 
@@ -288,6 +291,23 @@ An action in the \ei output language, briefly:
 \bigskip
 \xmlstruct
 {eiout}
+{streamcommand}
+{%
+%
+  Notify that there is an application running and you can get their
+  results each \xmlstructattr{time} seconds asking to the ei server
+  with the \xmlstructattr{execid} given.
+  %
+  Also the \xmlstructref{eiout}{content} of the command will be
+  printed on the console \xmlstructattr{consoleid} that print all the
+  stream data. 
+%
+}
+
+
+\bigskip
+\xmlstruct
+{eiout}
 {oncodelineclickaction}
 {%
 %
@@ -430,6 +450,13 @@ A set of CSS properties.
 \noindent
 The value 'new' means a new console, no reference to this console is
 saved. The value 'default' means the default console of the client.
+
+
+\bigskip
+\noindent
+\xmlstructdef{eiout}{execid}
+
+ [a-z,A-Z,0-9,-,\_]+
 
 \bigskip
 \noindent

@@ -487,6 +487,10 @@ available on the server.
 
   \item \xmlstructtemplate{_ei_root} is replaced by the local
     temporary directory name, where all files have been saved;
+
+  \item \xmlstructtemplate{_ei_stream} is replaced by the local
+    temporary directory name, where stream aplications have to save
+    all files; 
 %%
   \item \xmlstructtemplate{_ei_outline} is replaced by a list of
     selected entities (separated by space);
@@ -503,6 +507,10 @@ available on the server.
     which makes it possible to provide output depending on the
     client. See Chapter~\ref{ch:clients} for a list of clients and
     their corresponding identifiers.
+%
+  \item \xmlstructtemplate{_ei_execid} is replaced by a execution
+    identifier, this makes it possible to track the information of a
+    concrete execution, especially for stream applications;
   \end{itemize}
 %
 }
