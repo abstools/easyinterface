@@ -145,7 +145,7 @@ static function get_app_help( $app_id ) {
     // can reconstruct file names easily (i.e., whatever comes after
     // _ei_files is the name passed by the client)
     
-    $aux = sys_get_temp_dir()."easyinterface_".$execid_str; 
+    $aux = sys_get_temp_dir()."/easyinterface_".$execid_str; 
     $dir = str_replace("\\", "/", $aux);
     unset($aux);
     mkdir($dir, 0755);

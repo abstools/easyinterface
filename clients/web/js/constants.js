@@ -10,7 +10,11 @@ var _ei = {
     },
     example: {
       details    : "exset_details"
-    }
+    },
+    stream: {
+      get        : "get_stream",
+      kill       : "kill_stream"
+    },
   },
   outlang: {
       syntax: {
@@ -26,6 +30,10 @@ var _ei = {
 	  elements         : "elements",           // tag
 	  selector         : "selector",           // tag
 	  selectorvalue    : "value",
+
+	  //
+	  eistreams      : "chunks",       // tag
+	  eistream       : "chunk",        // tag
 
 	  //
 	  outclass       : "outclass",     // attr
@@ -48,6 +56,14 @@ var _ei = {
 	  printonconsole : "printonconsole", // tag
 	  consoleid      : "consoleid",      // attr
 	  consoletitle   : "consoletitle",   // attr
+
+	  // STREAM command
+	  stream         : "stream",         // tag
+	  //consoleid      : "consoleid",      // attr
+	  //consoletitle   : "consoletitle",   // attr
+	  time           : "time",           //attr
+	  execid         : "execid",         //attr
+
 
 	  // ADDMARKER command
 	  addmarker      : "addmarker",     // tag

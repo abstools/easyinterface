@@ -35,7 +35,8 @@ window.CodeLineAction = (function() {
 	    outputmanager: ei_info.outputmanager,
 	    filemanager: ei_info.filemanager,
 	    console: ei_info.console,
-	    defaultConsoleId: ei_info.defaultConsoleId
+	    defaultConsoleId: ei_info.defaultConsoleId,
+	    server: ei_info.server
 	});
     };
 
@@ -69,7 +70,8 @@ window.CodeLineAction = (function() {
 		    filemanager: options.filemanager,
 		    codearea : options.codearea,
 		    console  : options.console,
-		    defaultConsoleId: options.defaultConsoleId
+		    defaultConsoleId: options.defaultConsoleId,
+		    server : options.server
 		});
 	    });
 	});

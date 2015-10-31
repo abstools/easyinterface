@@ -9,7 +9,8 @@ window.OutputManager = (function() {
 	    SetCSSCommand, 
 	    AddInLineMarkerCommand, 
 	    DialogBoxCommand,
-	    WriteFileCommand
+	    WriteFileCommand,
+	    StreamCommand
 	];
 
 	this.ActionsCollection =  [
@@ -60,10 +61,10 @@ window.OutputManager = (function() {
 
 	//
 	output:
-	function( output ) {
-
+	function( output, server, noclear ) {
 	    // first we clear all current annotations, if needed.
-	    this.clearAllAnnotations();
+	    if(!noclear)
+	     this.clearAllAnnotations();
 
 	    // we check if the returned output includes and <error>
 	    // environment, in such case we just call another method
@@ -81,7 +82,7 @@ window.OutputManager = (function() {
 	    var ei_out = $(output).find(_ei.outlang.syntax.eiout);
 
 	    // if the output does not include any <eiout> tag, we
-	    // simply print the output text on the cosole. This is
+	    // simply print the output text on the console. This is
 	    // done by generating a printconsole command
 	    //
 	    if ( ei_out.size() == 0 ) {
@@ -98,11 +99,10 @@ window.OutputManager = (function() {
 		);
 		ei_out = $(output).find(_ei.outlang.syntax.eiout);
 	    }
-	    
 	    this.version = $(ei_out).attr("version");
 	    this.lastOutput = ei_out;
 	    try {
-		this.executeEIOutput( ei_out );
+		this.executeEIOutput( ei_out, server, noclear );
 	    } catch (err) {
 		console.log("Error occurred while processing the output:");
 		console.log(err);
@@ -112,23 +112,25 @@ window.OutputManager = (function() {
 
 	//
 	executeEIOutput:
-	function( output ) {
+	function( output, server, noclear ) {
 	    var self = this;   
-
 	    // parse the commands
-	    this.commands = new Set();
+	   if (!noclear)
+ 	        this.commands = new Set();
 	    output.find("> "+_ei.outlang.syntax.eicommands).each( function() {
 	    	var dest = $(this).attr(_ei.outlang.syntax.dest) || self.codearea.getCurrentTabId();
                 var outclass = $(this).attr(_ei.outlang.syntax.outclass);
 		$(this).children().each( function() {
 		    self.parseCommand( $(this), self.commands, {
 			outclass: outclass,
-			dest: dest
+			dest: dest,
+			server: server
 		    });
 		});
 	    });
 
 	    // parse the actions
+	  if(!noclear)
 	    this.actions = new Set();
 	    output.find("> "+_ei.outlang.syntax.eiactions).each( function() {	
 		var dest = $(this).attr(_ei.outlang.syntax.dest) || self.codearea.getCurrentTabId();
@@ -139,7 +141,8 @@ window.OutputManager = (function() {
 	    	    self.parseAction( $(this), self.actions, {
 			outclass: outclass,
 			dest: dest,
-			autoclean: autoclean
+			autoclean: autoclean,
+			server: server
 		    });
 	    	});
 	    });
@@ -171,7 +174,8 @@ window.OutputManager = (function() {
 		    filemanager: this.filemanager,
 		    codearea : this.codearea,
 		    console  : this.console,
-		    defaultConsoleId: this.defaultConsoleId
+		    defaultConsoleId: this.defaultConsoleId,
+		    server   : options.server
 		});
 
 		if ( cobj != null )  {  // we have succeeded to parse 'c' 
@@ -199,7 +203,8 @@ window.OutputManager = (function() {
 		    codearea : this.codearea,
 		    console  : this.console,
 		    autoclean: this.autoclean,
-		    defaultConsoleId: this.defaultConsoleId
+		    defaultConsoleId: this.defaultConsoleId,
+		    server : options.server
 		});
 		if ( aobj != null ) {
 		    actions.add(aobj);
@@ -256,6 +261,7 @@ window.OutputManager = (function() {
 	//
 	clearAllAnnotations:
 	function() {
+	  var self = this;
 	    this.commands.asyncIterate( function(c) { c.undo(); });
 	    this.actions.asyncIterate( function(a) { a.deActivate(); });
 	    this.lastAction = false;
