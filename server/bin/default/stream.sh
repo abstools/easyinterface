@@ -1,9 +1,8 @@
 #!/bin/bash
 
-SPECIAL_PATH=$1/commands
+SPECIAL_PATH=$1
 PATH2=$1
 
-echo $$ > $1/pid 
 
 COUNT=1
 while [ $COUNT -le 100 ] 
@@ -14,9 +13,9 @@ for file in $SPECIAL_PATH/*.tmp; do
     cp $file $PATH2/$COUNT.ei
 
     COUNT=$(( $COUNT + 1 ))
-    
+    sleep 2
 done
-    sleep 1
+    sleep 4
 done
 
-touch $1/terminate
+touch $1/terminated

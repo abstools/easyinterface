@@ -2,31 +2,37 @@
 
 ##. default/parse_params.sh
 
-mkdir $1/commands 
 
-
-TEXTO="<eicommands><printonconsole>
+TEXTO="<printonconsole>
 <content format='text'>
-11111-I've received the following command-line parameters:
+Hi!
 </content>
-</printonconsole></eicommands>"
+</printonconsole>"
 
-echo $TEXTO > $1/commands/C1.tmp
+echo $TEXTO > $1/C1.tmp
 
-TEXTO="<eicommands><printonconsole>
+TEXTO="<printonconsole>
 <content format='text'>
-22222-I've received the following command-line parameters:
+I'm not a horse.
 </content>
-</printonconsole></eicommands>"
+</printonconsole>"
 
-echo $TEXTO > $1/commands/C2.tmp
+echo $TEXTO > $1/C2.tmp
 
 
-ROUT=`pwd`
-#nohup $ROUT/default/stream.sh $1 &
-touch $1/pid
+TEXTO="<printonconsole>
+<content format='text'>
+Happy Weekend!
+</content>
+</printonconsole>"
 
-sleep 2
+echo $TEXTO > $1/C3.tmp
+
+
+./default/stream.sh $1 &> /dev/null &
+echo $! > $1/pid
+
+
 echo "<eiout>"
 echo "<eicommands>"
 echo "<printonconsole>"
