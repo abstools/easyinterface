@@ -126,6 +126,12 @@
     font-family: monospace;
     white-space: pre;
 }
+pre {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
 
 .markerToolTip {
 }
