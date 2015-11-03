@@ -111,6 +111,13 @@ window.Console = (function() {
 		}
 	    });
 	    this.marker = $("");
+	  
+	  this.tabs.delegate( "span.ui-icon-transfer-e-w", "click", 
+				function() {
+				    var winId = self.winTag_to_winId( $( this ).closest( "li" ).attr( "aria-controls" ) );
+				   //if ( winId != 0 ) 
+				    self.hideWin( winId );
+				});
 
 	    this.tabs.delegate( "span.ui-icon-close", "click", 
 				function() {
@@ -159,7 +166,9 @@ window.Console = (function() {
 	    // create the panel
 	    var panel = $("<li id='tablabel-"+winTag+
 			  "'><a href='#"+winTag+"'>"+title+
-			  "</a><span style='display:inline-block;' class='ui-icon ui-icon-extlink'></span>"+
+			  "</a>"+
+			  "<span style='display:inline-block;' class='ui-icon ui-icon-transfer-e-w'></span>"+
+			  "<span style='display:inline-block;' class='ui-icon ui-icon-extlink'></span>"+
 			  "<span style='display:inline-block;' class='ui-icon ui-icon-close'></span></li>");
 	    this.tabs.find( ".ui-tabs-nav" ).append( panel );
 	    

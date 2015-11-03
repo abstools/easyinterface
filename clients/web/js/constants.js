@@ -21,6 +21,7 @@ var _ei = {
 	  eicommands       : "eicommands",         // tag
 	  eiactions        : "eiactions",          // tag
 	  eiout            : "eiout",              // tag
+	  eistream         : "ei_stream",        // tag
 	  eierror          : "ei_error",           // tag
 	  eiappout         : "ei_output",          // tag
 	  eiserverout      : "ei_server_output",   // tag
@@ -30,10 +31,6 @@ var _ei = {
 	  elements         : "elements",           // tag
 	  selector         : "selector",           // tag
 	  selectorvalue    : "value",
-
-	  //
-	  eistreams      : "chunks",       // tag
-	  eistream       : "chunk",        // tag
 
 	  //
 	  outclass       : "outclass",     // attr

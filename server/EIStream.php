@@ -4,37 +4,48 @@ class EIStream {
 
   static function get($exec_id) {
     $p = EIStream::path($exec_id);
-/*    if(!EIStream::isStream($exec_id)){
-      return "<ei_stream>FINISHED</ei_stream>";
+    if(!EIStream::isStream($exec_id)){
+      return "<ei_stream state='nostream' />";
     } 
-  */ 
+    
+    if(EIStream::finish($exec_id))
+      $state = "finish";
+    else
+      $state = "running";
+    
     exec("ls ".$p."*.ei", $files);
     sort($files, SORT_NATURAL );
+
     $output = "";
-    if(EIStream::finish($exec_id))
-      $output .= "<ei_stream>FINISHED</ei_stream>";
+    $empty = true;
+
     foreach ($files as $f){
       $aux = file_get_contents($f);
       if($aux === FALSE)
 	continue;
-      else
+      else{
+	$empty = false;
+	$output .= "<eicommands>\n";
 	$output .= $aux;
+	$output .= "</eicommands>\n";
+      }
       unlink($f);
       unset($aux);
-      $output .= "\n";
     }
-    $output .= "";
-   return $output;
+    if($empty)
+      $state .= " nonewfiles";
+    return "<ei_stream state='".$state."' >\n".$output."</ei_stream>";
   }
 
   static function kill( $exec_id ) {
-    //if(!EIStream::isStream($exec_id))
-      //return "<ei_stream>FINISHED</ei_stream>";
-   // $aux = EIStream::getPID($exec_id);
-    //if($aux === FALSE)
-     // return "<ei_stream>FINISHED</ei_stream>";
-    //exec("kill -9 ".$aux);
-    return "<ei_stream>FINISHED</ei_stream>";
+    if(!EIStream::isStream($exec_id) || EIStream::finish($exec_id))
+      return "<ei_stream state='finish' />";
+    $aux = EIStream::getPID($exec_id);
+    if($aux === FALSE)
+      return "<ei_stream state='unknown' />";
+    exec("kill -9 ".$aux);
+    exec("touch ".EIStream::path($id)."terminated");
+    return "<ei_stream state='stopped' />";
   }
 
   static function getPID( $id ) {
@@ -46,7 +57,7 @@ class EIStream {
   }
 
   static function finish($id){
-    return file_exists(EIStream::path($id)."terminate");
+    return file_exists(EIStream::path($id)."terminated");
   }
 
   static function path($id){
