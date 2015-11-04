@@ -281,6 +281,7 @@ pre {
 .ei-console-content {
     overflow: auto;
     height: 65%;
+  padding-bottom: 0em !important;
 }
 
 .ei-console-content-expanded {
@@ -302,6 +303,13 @@ pre {
     padding: 0pt; 
     float: right;
     height: 40px;
+}
+.ei-console-stream-button {
+  float: right;
+  position: relative;
+  left: 10px;
+  bottom: 10px;
+
 }
 
 .lint-error, .outclass-error {

@@ -112,13 +112,6 @@ window.Console = (function() {
 	    });
 	    this.marker = $("");
 	  
-	  this.tabs.delegate( "span.ui-icon-transfer-e-w", "click", 
-				function() {
-				    var winId = self.winTag_to_winId( $( this ).closest( "li" ).attr( "aria-controls" ) );
-				   //if ( winId != 0 ) 
-				    self.hideWin( winId );
-				});
-
 	    this.tabs.delegate( "span.ui-icon-close", "click", 
 				function() {
 				    var winId = self.winTag_to_winId( $( this ).closest( "li" ).attr( "aria-controls" ) );
@@ -167,19 +160,30 @@ window.Console = (function() {
 	    var panel = $("<li id='tablabel-"+winTag+
 			  "'><a href='#"+winTag+"'>"+title+
 			  "</a>"+
-			  "<span style='display:inline-block;' class='ui-icon ui-icon-transfer-e-w'></span>"+
 			  "<span style='display:inline-block;' class='ui-icon ui-icon-extlink'></span>"+
 			  "<span style='display:inline-block;' class='ui-icon ui-icon-close'></span></li>");
 	    this.tabs.find( ".ui-tabs-nav" ).append( panel );
 	    
 	    // create the tab content
-	    var content = $("<div id='" + winTag + "' class='ei-console-content'> </div>");
+	    var content = $("<div id='" + winTag + "' class='ei-console-content'></div>");
+	    var streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
+	    $(streamBttn).button({ 
+	  	    icons: { primary: "ui-icon-stop"}, 
+	  	    text: "stream" 
+	  	}).click( function() { 
+		  self.disableStreamButton(id);
+		  self.winInfoById[id].streamRef.off(true);
+	  	});
+	  $(streamBttn).hide();
+	    $(content).append(streamBttn);
+
 	    this.tabs.append( content );
 	    var currWinInfo = {
 	        id: id, 
 		pos: this.tabCounter, 
 	        label: title,
 	        visible: true,
+		streamButton: streamBttn,
 		panel: panel,
 		content: content
 	    };
@@ -341,8 +345,31 @@ window.Console = (function() {
 	currWinId:
 	function() {
 	    return this.currTabId;
-	}
-	
+	},
+
+	    //
+	addStreamButton:
+	function(id,ref){
+	  this.winInfoById[id].streamButton.show();
+	  this.winInfoById[id].streamRef = ref;
+	  console.log(ref);
+	},
+	  //
+	disableStreamButton:
+	function(id){
+	  this.winInfoById[id].streamButton.attr("disabled", "disabled");
+	},
+	  //
+	enableStreamButton:
+	function(id){
+	  this.winInfoById[id].streamButton.removeAttr("disabled");
+	},
+	     //
+	removeStreamButton:
+	function(id){
+	  this.winInfoById[id].streamButton.hide();
+	  this.winInfoById[id].streamRef = null;
+	},
     };
 
     return Console;

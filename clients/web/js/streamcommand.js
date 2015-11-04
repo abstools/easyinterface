@@ -66,6 +66,7 @@ window.StreamCommand = (function() {
 		this.console.createWin(this.consoleId, this.consoleTitle);
 	      }
 	      this.console.addContentToWin(this.consoleId, this.content);
+	      this.console.addStreamButton(this.consoleId,this);
 	      this.isdone = true;
 	      this.event = window.setTimeout(function(){
 	      self.requestChunks();}, self.time);
@@ -95,8 +96,13 @@ window.StreamCommand = (function() {
 	  console.log("off");
 	  if(this.event != null){
 	    window.clearTimeout(this.event);
-	    if(kill)
+	    if(kill){
 	      this.sendKill();
+
+	    }else{
+	      this.console.removeStreamButton(this.consoleId);
+	    }
+	    
 	  }
 	  this.event = null;
 	},
@@ -133,6 +139,7 @@ window.StreamCommand = (function() {
 
 	sendKill:
 	function(){
+	  this.console.disableStreamButton(this.consoleId);
 	  var self = this;
 	  var jsonParams = {
 	    "command":    _ei.serverCommand.stream.kill,
@@ -141,6 +148,10 @@ window.StreamCommand = (function() {
 	   $.post(self.server,
 		   {
 		       eirequest: jsonParams
+		   }).done(function(){
+		     	      self.console.removeStreamButton(self.consoleId);
+		   }).error(function(){
+  		     	      self.console.enableStreamButton(self.consoleId);
 		   });
 	},
 

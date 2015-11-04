@@ -40,6 +40,7 @@ class EIStream {
   static function kill( $exec_id ) {
     if(!EIStream::isStream($exec_id) || EIStream::finish($exec_id))
       return "<ei_stream state='finish' />";
+
     $aux = EIStream::getPID($exec_id);
     if($aux === FALSE)
       return "<ei_stream state='unknown' />";
@@ -49,7 +50,7 @@ class EIStream {
   }
 
   static function getPID( $id ) {
-    return get_file_contents(EIStream::path($id)."pid");
+    return file_get_contents(EIStream::path($id)."pid");
   }
 
   static function isStream($id){
