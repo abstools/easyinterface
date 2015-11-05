@@ -15,10 +15,8 @@ echo "<eicommands>"
 env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $@ &> /tmp/erlangbackend.stderr
 
 if [ $? == 0 ]; then
-    echo "<stream  execid='$execid' time='1000' consoletitle='Hola'>"
-    echo '<content 
-
-format="text">'
+    echo "<stream  execid='$execid' time='1000' consoletitle='Simulator (Erlang)'>"
+    echo '<content format="text">'
     echo 'The source files were successfully compiled to ErLang!'
     echo 'Starting the simulation'
     echo ''
@@ -28,9 +26,9 @@ format="text">'
     echo $! > $streamroot/pid
 else
     echo "<printonconsole>"
-    echo "<content format='text'>![CDATA[ There are some errors!"
+    echo "<content format='text'><![CDATA[ There are some errors!"
     cat /tmp/erlangbackend.stderr
-    echo "]]</content>"
+    echo "]]></content>"
     echo "</printonconsole>"
 fi
 
@@ -38,5 +36,3 @@ echo "</eicommands>"
 echo "</eiout>"
 
 \rm -f /tmp/erlangbackend.stderr
- 
-
