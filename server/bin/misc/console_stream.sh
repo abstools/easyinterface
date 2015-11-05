@@ -2,15 +2,13 @@
 
 outdir=$1
 csize=$2
-consoleid=$3
-fnprefix="C"
 fnext="ei"
 fncounter="0"
 
 while read -r x; 
 do
 ((fncounter++))
-fname="$outdir/$fnprefix$fncounter"
+fname="$outdir/$fncounter"
 
 #echo "<printonconsole>" > $fname
 #echo "<content format='text'><![CDATA[" >> $fname

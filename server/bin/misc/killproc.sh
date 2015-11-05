@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo $1 > /tmp/x
-
 PID=$1
 if [ -z $PID ];
 then
