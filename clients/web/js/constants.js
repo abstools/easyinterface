@@ -58,9 +58,9 @@ var _ei = {
 	  stream         : "stream",         // tag
 	  //consoleid      : "consoleid",      // attr
 	  //consoletitle   : "consoletitle",   // attr
-	  time           : "time",           //attr
-	  execid         : "execid",         //attr
-
+	  time           : "time",           // attr
+	  execid         : "execid",         // attr
+	  streamposition : "position",       // attr
 
 	  // ADDMARKER command
 	  addmarker      : "addmarker",     // tag

@@ -19,10 +19,11 @@ window.StreamCommand = (function() {
 	if ( tag != _ei.outlang.syntax.stream ) return null;
 
 	var outclass =  c.attr( _ei.outlang.syntax.outclass ) || ei_info.outclass;
-	var consolTitle = c.attr( _ei.outlang.syntax.consoletitle );
-	var consoleId = c.attr( _ei.outlang.syntax.consoleid ) || ei_info.defaultConsoleId;
-        var time  = parseInt(c.attr( _ei.outlang.syntax.time )) || 3000;
         var execid  = c.attr( _ei.outlang.syntax.execid );
+	var consolTitle = c.attr( _ei.outlang.syntax.consoletitle ) || "Stream "+execid;
+	var consoleId = c.attr( _ei.outlang.syntax.consoleid ) || execid;//|| ei_info.defaultConsoleId;
+        var time  = parseInt(c.attr( _ei.outlang.syntax.time )) || 3000;
+        var position  = c.attr( _ei.outlang.syntax.streamposition ) || "prepend";
 	var content = c.find("> "+_ei.outlang.syntax.content);
       
 	return new StreamCommand({
@@ -32,6 +33,7 @@ window.StreamCommand = (function() {
 	    consoleTitle: consolTitle,
 	    execid: execid,
 	    time: time,
+	    position: position,
 	    content: content,
 	    outclass: outclass,
 	    server: ei_info.server
@@ -43,14 +45,17 @@ window.StreamCommand = (function() {
 	this.consoleId = options.consoleId;
 	this.consoleTitle = options.consoleTitle;
         this.execid = options.execid;
+        this.position = options.position;
         this.time = options.time || 5;
         this.server = options.server;
         this.outputmanager = options.outputmanager;
         this.event = null;
-	this.content = new DocContent({ 
-	    content: options.content,
-	    outclass: options.outclass
-	}).getDOM();
+        this.outclass = options.outclass;
+	this.content = $("<div id='stream-"+this.execid+"'><div class='stream-output'></div></div>");
+        $(this.content).prepend(new DocContent({ 
+	  content: options.content,
+	  outclass: options.outclass
+	}).getDOM());
 	this.isdone = false;
     };
 
@@ -77,8 +82,9 @@ window.StreamCommand = (function() {
 	responseChunks:
 	function(data){
 	  var self = this;
-	  var ei_out = $("ei_output",data);
+	  var ei_out = $("ei_stream",data);
 	  var empty = false;
+	  console.log("data",data);
 	  var states = $("ei_stream",data).attr("state").split(" ");
 	  $(states).each(function(k,v){
 	    if (v == "finish" || v == "nostream")
@@ -86,8 +92,20 @@ window.StreamCommand = (function() {
 	    if (v == "nonewfiles")
 	      empty = true;
 	  });
-	  if(!empty)
-	    self.outputmanager.output(data,self.server,true);	  
+	  if(!empty){
+	    //self.outputmanager.output(data,self.server,true);
+	    var newcontent = new DocContent({ 
+	      content: $(ei_out).find("> "+_ei.outlang.syntax.content),
+	      outclass: "text"
+	    }).getDOM();
+	    console.log("nnn",newcontent);
+	    if(self.position == "prepend")
+	      $("#stream-"+self.execid+ "> .stream-output").prepend(newcontent);
+	    else if(self.position == "append")
+	      $("#stream-"+self.execid+ "> .stream-output").append(newcontent);
+	    else
+	      $("#stream-"+self.execid+ "> .stream-output").prepend(newcontent);
+	  }
 	},
 
 	     //
@@ -122,10 +140,10 @@ window.StreamCommand = (function() {
 		     try{
 		       data = jQuery.parseXML(data);
 		       if ( _ei.debug ) console.log(data);
-		       self.responseChunks(data);
 		     }catch(e){
-		       self.responseChunks(e);
+		       self.outputmanager.output(e,self.server,false);
 		     }
+		       self.responseChunks(data);
 	    	   }).error(function(data) {
 		       if ( _ei.debug ) {
 			   console.log("HTTP Request error occurred: ");

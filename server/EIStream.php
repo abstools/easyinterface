@@ -16,7 +16,7 @@ class EIStream {
     exec("ls ".$p."*.ei", $files);
     sort($files, SORT_NATURAL );
 
-    $output = "";
+    $output_f = "";
     $empty = true;
 
     foreach ($files as $f){
@@ -25,15 +25,22 @@ class EIStream {
 	continue;
       else{
 	$empty = false;
-	$output .= "<eicommands>\n";
-	$output .= $aux;
-	$output .= "</eicommands>\n";
+
+	$output_f .= $aux;
+	$output_f .= "\n";
+
       }
       unlink($f);
       unset($aux);
     }
+    $output ="";
     if($empty)
       $state .= " nonewfiles";
+    else{
+      $output .= "<content>\n";
+      $output .= htmlspecialchars ($output_f);
+      $output .= "</content>\n";
+    }
     return "<ei_stream state='".$state."' >\n".$output."</ei_stream>";
   }
 
@@ -44,7 +51,7 @@ class EIStream {
     $aux = EIStream::getPID($exec_id);
     if($aux === FALSE)
       return "<ei_stream state='unknown' />";
-    exec("kill -9 ".$aux);
+    exec("pkill -TERM -p ".$aux);
     exec("touch ".EIStream::path($id)."terminated");
     return "<ei_stream state='stopped' />";
   }

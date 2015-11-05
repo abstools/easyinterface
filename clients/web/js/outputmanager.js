@@ -121,7 +121,6 @@ window.OutputManager = (function() {
 	    // parse the commands
 	   if (!stream)
  	        this.commands = new Set();
-	  console.log(output,output.find("> "+_ei.outlang.syntax.eicommands));
 	    output.find("> "+_ei.outlang.syntax.eicommands).each( function() {
 	    	var dest = $(this).attr(_ei.outlang.syntax.dest) || self.codearea.getCurrentTabId();
                 var outclass = $(this).attr(_ei.outlang.syntax.outclass);
