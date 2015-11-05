@@ -352,7 +352,6 @@ window.Console = (function() {
 	function(id,ref){
 	  this.winInfoById[id].streamButton.show();
 	  this.winInfoById[id].streamRef = ref;
-	  console.log(ref);
 	},
 	  //
 	disableStreamButton:

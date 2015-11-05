@@ -37,9 +37,9 @@ class EIStream {
     if($empty)
       $state .= " nonewfiles";
     else{
-      $output .= "<content>\n";
+      $output .= "<content><![CDATA[\n";
       $output .= htmlspecialchars ($output_f);
-      $output .= "</content>\n";
+      $output .= "]]></content>\n";
     }
     return "<ei_stream state='".$state."' >\n".$output."</ei_stream>";
   }
