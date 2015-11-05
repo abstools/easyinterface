@@ -6,13 +6,11 @@ class EIStream {
     $p = EIStream::path($exec_id);
     if(!EIStream::isStream($exec_id)){
       return "<ei_stream state='nostream' />";
-    } 
-    
+    }
     if(EIStream::finish($exec_id))
       $state = "finish";
     else
       $state = "running";
-    
     exec("ls ".$p."*.ei", $files);
     sort($files, SORT_NATURAL );
 
@@ -51,8 +49,7 @@ class EIStream {
     $aux = EIStream::getPID($exec_id);
     if($aux === FALSE)
       return "<ei_stream state='unknown' />";
-    exec("pkill -KILL -P ".$aux);
-    exec("kill -9 ".$aux);
+    exec("bin/misc/killproc.sh ".$aux);
     exec("touch ".EIStream::path($id)."terminated");
     return "<ei_stream state='stopped' />";
   }
@@ -75,9 +72,6 @@ class EIStream {
     unset($aux);
     return $dir."/_ei_stream/";
   }
-
-
-  
 }
 
 ?>
