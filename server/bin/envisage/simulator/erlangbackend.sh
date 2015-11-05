@@ -15,14 +15,17 @@ echo "<eicommands>"
 env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $@ &> /tmp/erlangbackend.stderr
 
 if [ $? == 0 ]; then
-    echo "<stream  execid='$execid' time='1000'>"
-    echo '<content format="text">'
+    echo "<stream  execid='$execid' time='1000' consoletitle='Hola'>"
+    echo '<content 
+
+format="text">'
     echo 'The source files were successfully compiled to ErLang!'
     echo 'Starting the simulation'
     echo ''
     echo '</content>'
     echo '</stream>'
     envisage/simulator/erlangbackend_run.sh $streamroot $execid &> /dev/null &
+    echo $! > $streamroot/pid
 else
     echo "<printonconsole>"
     echo "<content format='text'>![CDATA[ There are some errors!"

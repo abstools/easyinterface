@@ -12,10 +12,9 @@ do
 ((fncounter++))
 fname="$outdir/$fnprefix$fncounter"
 
-echo "<eicommands>" > $fname
-echo "<printonconsole consoleid='$consoleid'>" >> $fname
-echo "<content format='text'>" >> $fname
-echo $x >> $fname
+#echo "<printonconsole>" > $fname
+#echo "<content format='text'><![CDATA[" >> $fname
+echo $x > $fname
 l=0;
 while read -t 2 -r x; 
 do
@@ -26,8 +25,7 @@ do
 	break
     fi
 done
-echo "</content>" >>  $fname
-echo "</printonconsole>" >> $fname
-echo "</eicommands>" >> $fname
-\cp $fname $fname.$fnext
+#echo "]]></content>" >>  $fname
+#echo "</printonconsole>" >> $fname
+\mv $fname $fname.$fnext
 done

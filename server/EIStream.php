@@ -51,7 +51,7 @@ class EIStream {
     $aux = EIStream::getPID($exec_id);
     if($aux === FALSE)
       return "<ei_stream state='unknown' />";
-    exec("pkill -TERM -p ".$aux);
+    exec("pkill -TERM -P ".$aux);
     exec("touch ".EIStream::path($id)."terminated");
     return "<ei_stream state='stopped' />";
   }

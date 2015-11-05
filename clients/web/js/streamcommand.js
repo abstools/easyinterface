@@ -23,7 +23,7 @@ window.StreamCommand = (function() {
 	var consolTitle = c.attr( _ei.outlang.syntax.consoletitle ) || "Stream "+execid;
 	var consoleId = c.attr( _ei.outlang.syntax.consoleid ) || execid;//|| ei_info.defaultConsoleId;
         var time  = parseInt(c.attr( _ei.outlang.syntax.time )) || 3000;
-        var position  = c.attr( _ei.outlang.syntax.streamposition ) || "prepend";
+        var position  = c.attr( _ei.outlang.syntax.streamposition ) || "append";
 	var content = c.find("> "+_ei.outlang.syntax.content);
       
 	return new StreamCommand({
@@ -74,7 +74,7 @@ window.StreamCommand = (function() {
 	      this.console.addStreamButton(this.consoleId,this);
 	      this.isdone = true;
 	      this.event = window.setTimeout(function(){
-	      self.requestChunks();}, self.time);
+	      self.requestChunks();}, 0);
 	    } else {
 		// TBD - just make it visible
 	    }
