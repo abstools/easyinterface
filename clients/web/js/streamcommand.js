@@ -124,13 +124,14 @@ window.StreamCommand = (function() {
 	requestChunks:
 	function(){
 	  var self = this;
-	  var jsonParams = {
-	    "command":    _ei.serverCommand.stream.get,
-	    "exec_id":     self.execid
-	  };
-	   $.post(self.server,
+	  if(self.event){
+	    var jsonParams = {
+	      "command":    _ei.serverCommand.stream.get,
+	      "exec_id":     self.execid
+	    };
+	    $.post(self.server,
 		   {
-		       eirequest: jsonParams
+		     eirequest: jsonParams
 		   }).done(function(data) {
 		     try{
 		       data = jQuery.parseXML(data);
@@ -138,16 +139,19 @@ window.StreamCommand = (function() {
 		     }catch(e){
 		       self.outputmanager.output(e,self.server,false);
 		     }
-		       self.responseChunks(data);
+		     self.responseChunks(data);
 	    	   }).error(function(data) {
-		       if ( _ei.debug ) {
-			   console.log("HTTP Request error occurred: ");
-			   console.log(data);
-		       }
-	    	       self.responseChunks(data);
+		     if ( _ei.debug ) {
+		       console.log("HTTP Request error occurred: ");
+		       console.log(data);
+		     }
+	    	     self.responseChunks(data);
 	    	   });
-	  self.event = window.setTimeout(function(){
-	    self.requestChunks();}, self.time);
+	    self.event = window.setTimeout(function(){
+	      self.requestChunks();}, self.time);
+	  }else{
+	    self.off(false);
+	  }
 	},
 
 	sendKill:
@@ -172,6 +176,7 @@ window.StreamCommand = (function() {
 	function() {
 	    // Not sure we want to allow undo here, it will create a mess
 	    //
+	  this.off(true);
 	}
     }
 

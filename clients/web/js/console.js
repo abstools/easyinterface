@@ -42,19 +42,24 @@ window.Console = (function() {
 	//
 	initConsole: 
 	function() {
-	    var self = this;
-	    
-	    this.consId = "CONS-"+consoleId;      // a unique id for the console
-	    this.consHolder = this.place;              // the jquery element where the console should be place
-	    this.tabCounter = 0;                  // current number of tabs in the console
-	    this.currTabId = 0;                   // the id of the currently visible tab
-	    this.winInfoById = new Array();       // an array the keeps the win (i.e tab) info by id
-	    this.winInfoByPos = new Array();      // an array the keeps the win (i.e tab) info by position
-	    this.winId = 0;
+	  var self = this;	    
 
-	    if ( this.tabs ) {
-		$(this.consHolder).find("#"+this.consId).remove();
-	    }
+	  if ( this.tabs ) {
+	    $(this.winInfoById).each(function(k,v){
+	      if(v.streamRef)
+		v.streamRef.off(true);
+	    });
+	    $(this.consHolder).find("#"+this.consId).remove();
+	    
+	  }
+
+	  this.consId = "CONS-"+consoleId;      // a unique id for the console
+	  this.consHolder = this.place;              // the jquery element where the console should be place
+	  this.tabCounter = 0;                  // current number of tabs in the console
+	  this.currTabId = 0;                   // the id of the currently visible tab
+	  this.winInfoById = new Array();       // an array the keeps the win (i.e tab) info by id
+	  this.winInfoByPos = new Array();      // an array the keeps the win (i.e tab) info by position
+	  this.winId = 0;
 	  
 	  //console panel
 	     this.tabs = $(this.consHolder).append("<div id='"+this.consId+"' class='ei-console'><ul class='ei-console-panel'></ul></div>").find("#"+this.consId);
@@ -350,24 +355,30 @@ window.Console = (function() {
 	    //
 	addStreamButton:
 	function(id,ref){
-	  this.winInfoById[id].streamButton.show();
-	  this.winInfoById[id].streamRef = ref;
+	  if(this.winInfoById[id]){
+	    this.winInfoById[id].streamButton.show();
+	    this.winInfoById[id].streamRef = ref;
+	  }
 	},
 	  //
 	disableStreamButton:
 	function(id){
-	  this.winInfoById[id].streamButton.attr("disabled", "disabled");
+	  if(this.winInfoById[id] && this.winInfoById[id].streamRef)
+	    this.winInfoById[id].streamButton.attr("disabled", "disabled");
 	},
 	  //
 	enableStreamButton:
 	function(id){
-	  this.winInfoById[id].streamButton.removeAttr("disabled");
+	  if(this.winInfoById[id] && this.winInfoById[id].streamRef)
+	    this.winInfoById[id].streamButton.removeAttr("disabled");
 	},
 	     //
 	removeStreamButton:
 	function(id){
-	  this.winInfoById[id].streamButton.hide();
-	  this.winInfoById[id].streamRef = null;
+	  if(this.winInfoById[id] && this.winInfoById[id].streamRef){
+	    this.winInfoById[id].streamButton.hide();
+	    this.winInfoById[id].streamRef = null;
+	  }
 	},
     };
 
