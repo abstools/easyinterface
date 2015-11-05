@@ -84,7 +84,6 @@ window.StreamCommand = (function() {
 	  var self = this;
 	  var ei_out = $("ei_stream",data);
 	  var empty = false;
-	  console.log("data",data);
 	  var states = $("ei_stream",data).attr("state").split(" ");
 	  $(states).each(function(k,v){
 	    if (v == "finish" || v == "nostream")
@@ -98,7 +97,6 @@ window.StreamCommand = (function() {
 	      content: $(ei_out).find("> "+_ei.outlang.syntax.content),
 	      outclass: "text"
 	    }).getDOM();
-	    console.log("nnn",newcontent);
 	    if(self.position == "prepend")
 	      $("#stream-"+self.execid+ "> .stream-output").prepend(newcontent);
 	    else if(self.position == "append")
@@ -111,16 +109,13 @@ window.StreamCommand = (function() {
 	     //
 	off:
 	function(kill){
-	  console.log("off");
 	  if(this.event != null){
 	    window.clearTimeout(this.event);
 	    if(kill){
 	      this.sendKill();
-
 	    }else{
 	      this.console.removeStreamButton(this.consoleId);
 	    }
-	    
 	  }
 	  this.event = null;
 	},
