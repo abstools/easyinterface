@@ -1,17 +1,25 @@
-# This file is a templte for ENVISAGE_CONFIG.tmpl
+# This file is a templte for `ENVISAGE_CONFIG`.
 #
-# Ideally, it should be automatically generated when you installed
-# the Collaboratory, otherwise copy it to ENVISAGE_CONFIG and change
-# the values of the variables accordingly.
+# Ideally, ENVISAGE_CONFIG should be automatically generated when you
+# install the Collaboratory, otherwise copy `ENVISAGE_CONFIG.tmpl` to
+# `ENVISAGE_CONFIG` and change the values of the variables
+# accordingly.  
 #
-# DIRECTORIES NAMES SHOULD NOT INCLUDE / at the end
-#
+# **IMPORTANT** PATHs SHOULD NOT INCLUDE / at the end
 
-# path to saco
+# Path to saco --- where you've extracted   
+#
+#   http://costa.ls.fi.upm.es/download/saco.colab.zip
+#
 EC_SACOHOME="/home/genaim/Systems/costa/costabs/dist/saco"
 
-# path to abs tools
+# Path to abs tools --- where you have checkedout
+#
+#   https://github.com/abstools/abstools
+#
 EC_ABSTOOLSHOME="/home/genaim/Systems/abstools"
 
-# path to absfrontend.jar
-EC_ABSFRONTEND="/home/genaim/Systems/abstools/frontend/dist/absfrontend.jar"
+# directories to be added to the PATH variable, e.g., path to Erlang
+# if not defined by defualt, etc.
+#
+EC_PATH="/opt/loca/bin:/home/envisage/erlang/bin"

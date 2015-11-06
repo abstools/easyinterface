@@ -1,28 +1,30 @@
 #! /bin/bash
 
+. misc/parse_params.sh
 . envisage/envisage_settings.sh
 
-streamroot=$1
-shift
-execid=$1
-shift
+streamroot=${params["streamroot"]}
+execid=${params["execid"]}
+files=${params["files"]}
+timeout=${params["timeout"]}
+
 outdir=$streamroot/erlang
 
 
 echo "<eiout>"
 echo "<eicommands>"
 
-env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $@ &> /tmp/erlangbackend.stderr
+env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> /tmp/erlangbackend.stderr
 
 if [ $? == 0 ]; then
     echo "<stream  execid='$execid' time='1000' consoletitle='Simulator (Erlang)'>"
-    echo '<content format="text">'
-    echo 'The source files were successfully compiled to ErLang!'
-    echo 'Starting the simulation'
-    echo ''
-    echo '</content>'
-    echo '</stream>'
-    envisage/simulator/erlangbackend_run.sh $streamroot $execid &> /dev/null &
+    echo "<content format='text'>"
+    echo "The source files were successfully compiled to Erlang!"
+    echo "Starting the execution of the Erlang code."
+    echo ""
+    echo "</content>"
+    echo "</stream>"
+    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout &> /dev/null &
     echo $! > $streamroot/pid
 else
     echo "<printonconsole>"
