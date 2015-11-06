@@ -134,6 +134,7 @@ pre {
 }
 
 .markerToolTip {
+  overflow:hidden;
 }
 
 .markerExpandedToolTip {
