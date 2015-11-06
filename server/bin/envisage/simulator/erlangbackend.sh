@@ -18,19 +18,17 @@ env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $fil
 
 if [ $? == 0 ]; then
     echo "<stream  execid='$execid' time='1000' consoletitle='Simulator (Erlang)'>"
-    echo '<content format="text">'
-    echo 'The source files were successfully compiled to ErLang!'
-    echo 'Starting the simulation'
-    echo ''
-    echo '</content>'
-    echo '</stream>'
+    echo "<content format='text'>"
+    echo "The source files were successfully compiled to Erlang!"
+    echo "Starting the execution of the Erlang code."
+    echo ""
+    echo "</content>"
+    echo "</stream>"
     envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout &> /dev/null &
     echo $! > $streamroot/pid
 else
     echo "<printonconsole>"
     echo "<content format='text'><![CDATA[ There are some errors!"
-    echo $@
-    echo $outdir
     cat /tmp/erlangbackend.stderr
     echo "]]></content>"
     echo "</printonconsole>"
