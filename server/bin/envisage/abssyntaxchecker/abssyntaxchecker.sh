@@ -18,9 +18,9 @@ else
     echo "<printonconsole>"
     echo "<content format='text'>There are some compilation errors! See markers in the code area!!</content>"
     echo "</printonconsole>"
-    cat /tmp/abssyntaxchecker.stderr | awk -v root=$root '{ 
+    cat /tmp/abssyntaxchecker.stderr | gawk -v root=$root '{ 
     if (match($0,/(.+):([0-9]+):([0-9]+):(.*)/,m)) {
-      dest = substr(m[1],length(root)+1)
+      dest = m[1]
       print "<addmarker dest=\47" dest "\47 outclass=\47error\47>"
       print "<lines><line from=\47" m[2] "\47/></lines>"
       print "<content format=\47text\47><![CDATA[" m[4] "]]></content>"
@@ -33,6 +33,6 @@ fi
 echo "</eicommands>"
 echo "</eiout>"
 
-\rm -f /tmp/abssyntaxchecker.stderr
+#\rm -f /tmp/abssyntaxchecker.stderr
 
 
