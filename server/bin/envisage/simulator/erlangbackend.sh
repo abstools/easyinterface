@@ -3,10 +3,10 @@
 . misc/parse_params.sh
 . envisage/envisage_settings.sh
 
-streamroot=${params["streamroot"]}
-execid=${params["execid"]}
-files=${params["files"]}
-timeout=${params["timeout"]}
+streamroot=$(getparam "streamroot")
+execid=$(getparam "execid")
+files=$(getparam "files")
+timeout=$(getparam "timeout")
 
 outdir=$streamroot/erlang
 
