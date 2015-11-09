@@ -860,12 +860,17 @@ window.FileManager = (function() {
     },
 		    //
     getIdByPath:
-    function(path){
+      function(path){
       var i = path.indexOf("/_ei_files/");
       if ( i != -1 )
 	  path = path.substr(i+10,path.length);
 
-      if(this.existsFm(path))
+     // if the first char is not /, add it
+     if ( path.charAt(0) != '/' )
+	 path = "/"+path;
+
+	  alert(path);  
+     if(this.existsFm(path))
 	return this.fmIdByPath[path];
       else
 	return -1;
