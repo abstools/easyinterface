@@ -20,7 +20,7 @@ recursiverm() {
       (leadingchas)
       echo "</folder>"
     else
-      x="`pwd`$d"
+      x="`pwd`/$d"
       (leadingchas)
       echo -n "<file name='$d' url='"
       echo -n "/absexamples/"
