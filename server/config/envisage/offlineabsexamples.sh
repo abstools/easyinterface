@@ -1,7 +1,6 @@
 #!/bin/bash
 
 root="${1%/}/"
-echo $root
 n=1
 
 leadingchas() {
