@@ -1,6 +1,7 @@
 #!/bin/bash
 
-root=$1
+root="${1%/}/"
+echo $root
 n=1
 
 leadingchas() {
@@ -23,7 +24,7 @@ recursiverm() {
       x="`pwd`$d"
       (leadingchas)
       echo -n "<file name='$d' url='"
-      echo -n "/absexamples"
+      echo -n "/absexamples/"
       echo -n ${x#$root}
       echo "' />"
     fi
