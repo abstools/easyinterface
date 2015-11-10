@@ -18,4 +18,4 @@ or by the automatic installation scripts of the Envisage
 Collaboratory. 
 
 A template for `ENVISAGE_CONFIG` is available in
-[ENVISAGE_CONFIG.tmpl](file://ENVISAGE_CONFIG.tmpl)
+[ENVISAGE_CONFIG.tmpl](ENVISAGE_CONFIG.tmpl)

@@ -15,4 +15,4 @@ To install and integrate your own applications in EasyInterface we recommend pro
 
 * Read [clients/README.md](clients/README.md) for more information on the clients available, how to install/use them, etc.
 
-Question, comments, and feedback are very welcome, please direct them to [Samir Genaim](http://samir.loopkiller.com) at [genaim@gmail.com](genaim@gmail.com)
+Questions, comments, and feedback are very welcome.
