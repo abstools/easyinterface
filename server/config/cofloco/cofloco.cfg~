@@ -1,0 +1,30 @@
+<app visible="true">
+  <appinfo>
+    <acronym>CoFloCo+llvm2Kittel</acronym>
+    <title>CoFloCo+llvm2Kittel</title>
+    <desc>
+      <short>CoFloCo+llvm2Kittel</short>
+      <long>CoFloCo using llvm2Kittel as a C frontend</long>
+    </desc>
+  </appinfo>
+  <apphelp>
+    <content format="html">
+      <p>An echo application used to test the EasyInterface server</p>
+    </content>
+  </apphelp>
+  <execinfo method="cmdline">
+    <cmdlineapp>./cofloco -ei_files _ei_parameters</cmdlineapp>
+  </execinfo>
+ 
+<parameters prefix="-" check="false">
+<flag name="tick_cost" explicit="false"  trueval="yes" falseval="no">
+  <desc>
+    <short>tick cost model</short>
+    <long>Only calls to tick(n) have cost n</long>
+  </desc>
+   <default>no</default>
+</flag>
+
+</parameters>
+</app>
+

@@ -1,0 +1,23 @@
+/* WTC Benchmarks, Last modification feb 2015*/
+Christophe Alias, Alain Darte, Paul Feautrier and Laure Gonnord 
+
+Licence : CC BY-NC-ND 3.0 FR
+
+These files contains the WTC benchmark (SAS 10)
+Web page :  	     	 http://compsys-tools.ens-lyon.fr/wtc/
+Toolchain demonstrator : http://compsys-tools.ens-lyon.fr/rank/index.php
+
+Warning : the WTC toolchain is not included in this benchmark.
+
+Download links:
+C2fsm : http://perso.ens-lyon.fr/paul.feautrier/ensl006.html
+Aspic : http://laure.gonnord.org/pro/aspic/aspic.html
+Rank : http://compsys-tools.ens-lyon.fr/rank/download/rank-1.2-binary.tgz
+
+Related papers : 
+
+Multi-dimensional Rankings, Program Termination, and Complexity Bounds of Flowchart Programs, Christophe Alias, Alain Darte, Paul Feautrier and Laure Gonnord, SAS 2010, http://dl.acm.org/citation.cfm?id=1882102
+
+Accelerated Invariant Generation for C Programs with Aspic and C2fsm, Paul Feautrier and Laure Gonnord, TAPAS 2010 http://dl.acm.org/citation.cfm?id=1869244
+
+Rank: A Tool to Check Program Termination and Computational Complexity, Christophe Alias, Alain Darte, Paul Feautrier and Laure Gonnord, ATVA 2013 http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=6571638&tag=1

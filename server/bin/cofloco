@@ -1,0 +1,43 @@
+#!/bin/bash
+
+HOME2="/home/aeflores";
+LLVM2KITTEL_DIR="$HOME2/Systems/llvm2kittel";
+KOAT2COFLOCO_DIR="$HOME2/Systems/cofloco/interfaces";
+COFLOCO_DIR="$HOME2/Systems/cofloco";
+
+RESULT_FILE="/tmp/results.xml";
+
+echo "
+<output>
+<eicommands>
+ <eicommand type=\"console\">
+   <text>">$RESULT_FILE
+   
+
+File=$1;
+shift
+Cost_model="";
+
+
+if [[ ("$#" -ge "2") && ("$1" == "-tick_cost") && ("$2" == "yes") ]]
+   then
+   Cost_model="tick_cost"
+   shift
+   shift;
+fi
+
+
+
+clang -c  $File -emit-llvm -o $File.o 2>>$RESULT_FILE
+
+$LLVM2KITTEL_DIR/llvm2kittel $File.o -complexity-tuples >$File.koat 2>>$RESULT_FILE
+
+$KOAT2COFLOCO_DIR/koat2ces.pl $File.koat $Cost_model 2>>$RESULT_FILE
+$KOAT2COFLOCO_DIR/cfg2pubs.pl $File.koat.cfg  2>>$RESULT_FILE
+
+$COFLOCO_DIR/cofloco -i $File.koat.cfg.ces  $* &>>$RESULT_FILE
+
+echo " </text>
+ </eicommand>
+</eicommands>
+</output>EOF">>$RESULT_FILE

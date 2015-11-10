@@ -204,7 +204,7 @@ pre {
 {
   position:relative;
     float: left; 
-    width:78%;
+    width:58%;
     height: 100%;
 
 }

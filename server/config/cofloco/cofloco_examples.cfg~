@@ -1,0 +1,113 @@
+<exset id="set1">
+ 
+<folder name="C4b_examples">
+<file name="t47.c" path="examples/C_examples/C4B_examples/t47.c" />
+<file name="speed_popl10_simple_single_2.c" path="examples/C_examples/C4B_examples/speed_popl10_simple_single_2.c" />
+<file name="gcd.c" path="examples/C_examples/C4B_examples/gcd.c" />
+<file name="speed_pldi09_fig4_5.c" path="examples/C_examples/C4B_examples/speed_pldi09_fig4_5.c" />
+<file name="knuth_morris_pratt.c" path="examples/C_examples/C4B_examples/knuth_morris_pratt.c" />
+<file name="t62.c" path="examples/C_examples/C4B_examples/t62.c" />
+<file name="t10.c" path="examples/C_examples/C4B_examples/t10.c" />
+<file name="t13.c" path="examples/C_examples/C4B_examples/t13.c" />
+<file name="speed_popl10_sequential_single.c" path="examples/C_examples/C4B_examples/speed_popl10_sequential_single.c" />
+<file name="t27.c" path="examples/C_examples/C4B_examples/t27.c" />
+<file name="speed_popl10_simple_multiple.c" path="examples/C_examples/C4B_examples/speed_popl10_simple_multiple.c" />
+<file name="speed_pldi10_ex3.c" path="examples/C_examples/C4B_examples/speed_pldi10_ex3.c" />
+<file name="speed_pldi09_fig4_2.c" path="examples/C_examples/C4B_examples/speed_pldi09_fig4_2.c" />
+<file name="speed_popl10_nested_single.c" path="examples/C_examples/C4B_examples/speed_popl10_nested_single.c" />
+<file name="t28.c" path="examples/C_examples/C4B_examples/t28.c" />
+<file name="t30.c" path="examples/C_examples/C4B_examples/t30.c" />
+<file name="t20.c" path="examples/C_examples/C4B_examples/t20.c" />
+<file name="speed_popl10_fig2_1.c" path="examples/C_examples/C4B_examples/speed_popl10_fig2_1.c" />
+<file name="t15.c" path="examples/C_examples/C4B_examples/t15.c" />
+<file name="speed_pldi10_ex4.c" path="examples/C_examples/C4B_examples/speed_pldi10_ex4.c" />
+<file name="t16.c" path="examples/C_examples/C4B_examples/t16.c" />
+<file name="speed_pldi09_fig1.c" path="examples/C_examples/C4B_examples/speed_pldi09_fig1.c" />
+<file name="speed_popl10_fig2_2.c" path="examples/C_examples/C4B_examples/speed_popl10_fig2_2.c" />
+<file name="t11.c" path="examples/C_examples/C4B_examples/t11.c" />
+<file name="speed_popl10_nested_multiple.c" path="examples/C_examples/C4B_examples/speed_popl10_nested_multiple.c" />
+<file name="speed_pldi09_fig4_4.c" path="examples/C_examples/C4B_examples/speed_pldi09_fig4_4.c" />
+<file name="t08.c" path="examples/C_examples/C4B_examples/t08.c" />
+<file name="t19.c" path="examples/C_examples/C4B_examples/t19.c" />
+<file name="t07.c" path="examples/C_examples/C4B_examples/t07.c" />
+<file name="speed_pldi10_ex1.c" path="examples/C_examples/C4B_examples/speed_pldi10_ex1.c" />
+<file name="speed_popl10_simple_single.c" path="examples/C_examples/C4B_examples/speed_popl10_simple_single.c" />
+</folder>
+
+
+<folder name="WTC_V2">
+<file name="perfect.c" path="examples/C_examples/WTC_V2/perfect.c" />
+<file name="speedSimpleMultipleDep.c" path="examples/C_examples/WTC_V2/speedSimpleMultipleDep.c" />
+<file name="insertsort.c" path="examples/C_examples/WTC_V2/insertsort.c" />
+<file name="sipmabubble.c" path="examples/C_examples/WTC_V2/sipmabubble.c" />
+<file name="exmini.c" path="examples/C_examples/WTC_V2/exmini.c" />
+<file name="alain.c" path="examples/C_examples/WTC_V2/alain.c" />
+<file name="catmouse.c" path="examples/C_examples/WTC_V2/catmouse.c" />
+<file name="cousot9.c" path="examples/C_examples/WTC_V2/cousot9.c" />
+<file name="serpent.c" path="examples/C_examples/WTC_V2/serpent.c" />
+<file name="unperfect.c" path="examples/C_examples/WTC_V2/unperfect.c" />
+<file name="speedDis1.c" path="examples/C_examples/WTC_V2/speedDis1.c" />
+<file name="aaron3.c" path="examples/C_examples/WTC_V2/aaron3.c" />
+<file name="easy2.c" path="examples/C_examples/WTC_V2/easy2.c" />
+<file name="terminatorbubble.c" path="examples/C_examples/WTC_V2/terminatorbubble.c" />
+<file name="easy1.c" path="examples/C_examples/WTC_V2/easy1.c" />
+<file name="loops.c" path="examples/C_examples/WTC_V2/loops.c" />
+<file name="sipmamergesort.c" path="examples/C_examples/WTC_V2/sipmamergesort.c" />
+<file name="speedpldi2.c" path="examples/C_examples/WTC_V2/speedpldi2.c" />
+<file name="gcd.c" path="examples/C_examples/WTC_V2/gcd.c" />
+<file name="real2.c" path="examples/C_examples/WTC_V2/real2.c" />
+<file name="realbubble.c" path="examples/C_examples/WTC_V2/realbubble.c" />
+<file name="wcet2.c" path="examples/C_examples/WTC_V2/wcet2.c" />
+<file name="speedFails4.c" path="examples/C_examples/WTC_V2/speedFails4.c" />
+<file name="counterex1a.c" path="examples/C_examples/WTC_V2/counterex1a.c" />
+<file name="perfect1.c" path="examples/C_examples/WTC_V2/perfect1.c" />
+<file name="speedFails1.c" path="examples/C_examples/WTC_V2/speedFails1.c" />
+<file name="speedNestedMultiple.c" path="examples/C_examples/WTC_V2/speedNestedMultiple.c" />
+<file name="speedDis2.c" path="examples/C_examples/WTC_V2/speedDis2.c" />
+<file name="ndecr.c" path="examples/C_examples/WTC_V2/ndecr.c" />
+<file name="wcet1.c" path="examples/C_examples/WTC_V2/wcet1.c" />
+<file name="random2d.c" path="examples/C_examples/WTC_V2/random2d.c" />
+<file name="aaron2.c" path="examples/C_examples/WTC_V2/aaron2.c" />
+<file name="relation1.c" path="examples/C_examples/WTC_V2/relation1.c" />
+<file name="speedSingleSingle.c" path="examples/C_examples/WTC_V2/speedSingleSingle.c" />
+<file name="speedpldi3.c" path="examples/C_examples/WTC_V2/speedpldi3.c" />
+<file name="random1d.c" path="examples/C_examples/WTC_V2/random1d.c" />
+<file name="perfectg.c" path="examples/C_examples/WTC_V2/perfectg.c" />
+<file name="terminate.c" path="examples/C_examples/WTC_V2/terminate.c" />
+<file name="wise.c" path="examples/C_examples/WTC_V2/wise.c" />
+<file name="nestedLoop.c" path="examples/C_examples/WTC_V2/nestedLoop.c" />
+<file name="rsd.c" path="examples/C_examples/WTC_V2/rsd.c" />
+<file name="sipma91.c" path="examples/C_examples/WTC_V2/sipma91.c" />
+<file name="counterex1c.c" path="examples/C_examples/WTC_V2/counterex1c.c" />
+<file name="speedSimpleMultiple.c" path="examples/C_examples/WTC_V2/speedSimpleMultiple.c" />
+<file name="heapsort.c" path="examples/C_examples/WTC_V2/heapsort.c" />
+<file name="wcet0.c" path="examples/C_examples/WTC_V2/wcet0.c" />
+<file name="speedNestedMultipleDep.c" path="examples/C_examples/WTC_V2/speedNestedMultipleDep.c" />
+<file name="while2.c" path="examples/C_examples/WTC_V2/while2.c" />
+<file name="complex.c" path="examples/C_examples/WTC_V2/complex.c" />
+<file name="realheapsort_step1.c" path="examples/C_examples/WTC_V2/realheapsort_step1.c" />
+<file name="realshellsort.c" path="examples/C_examples/WTC_V2/realshellsort.c" />
+<file name="realselect.c" path="examples/C_examples/WTC_V2/realselect.c" />
+<file name="speedFails3.c" path="examples/C_examples/WTC_V2/speedFails3.c" />
+<file name="perfect2.c" path="examples/C_examples/WTC_V2/perfect2.c" />
+<file name="sipmamergesort2.c" path="examples/C_examples/WTC_V2/sipmamergesort2.c" />
+<file name="speedpldi4.c" path="examples/C_examples/WTC_V2/speedpldi4.c" />
+<file name="speedFails2.c" path="examples/C_examples/WTC_V2/speedFails2.c" />
+<file name="fac.c" path="examples/C_examples/WTC_V2/fac.c" />
+<file name="realheapsort.c" path="examples/C_examples/WTC_V2/realheapsort.c" />
+<file name="speedSingleSingle2.c" path="examples/C_examples/WTC_V2/speedSingleSingle2.c" />
+<file name="nd_loop.c" path="examples/C_examples/WTC_V2/nd_loop.c" />
+<file name="realheapsort_step2.c" path="examples/C_examples/WTC_V2/realheapsort_step2.c" />
+<file name="aaron12.c" path="examples/C_examples/WTC_V2/aaron12.c" />
+<file name="counterex1b.c" path="examples/C_examples/WTC_V2/counterex1b.c" />
+<file name="ax.c" path="examples/C_examples/WTC_V2/ax.c" />
+</folder>
+
+<folder name="ABC">
+<file name="ex2.c" path="examples/C_examples/ABC/ex2.c" />
+<file name="ex3.c" path="examples/C_examples/ABC/ex3.c" />
+<file name="ex1.c" path="examples/C_examples/ABC/ex1.c" />
+
+</folder>
+  
+</exset>
