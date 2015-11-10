@@ -7,6 +7,7 @@ streamroot=$(getparam "streamroot")
 execid=$(getparam "execid")
 files=$(getparam "files")
 timeout=$(getparam "timeout")
+refresh=$(($(getparam "refreshrate")*1000))
 
 outdir=$streamroot/erlang
 
@@ -17,7 +18,7 @@ echo "<eicommands>"
 env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> /tmp/erlangbackend.stderr
 
 if [ $? == 0 ]; then
-    echo "<stream  execid='$execid' time='1000' consoletitle='Simulator (Erlang)'>"
+    echo "<stream  execid='$execid' time='$refresh' consoletitle='Simulator (Erlang)'>"
     echo "<content format='text'>"
     echo "The source files were successfully compiled to Erlang!"
     echo "Starting the execution of the Erlang code."
