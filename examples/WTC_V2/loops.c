@@ -1,6 +1,7 @@
-void loops(){
 
-  int n; /* n > 0 */
+
+void loops(int n){
+  /* n > 0 */
   int x, y;
   
   x = n;

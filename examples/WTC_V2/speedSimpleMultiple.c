@@ -1,6 +1,8 @@
-int speedSimpleMultiple()
+
+
+int speedSimpleMultiple(int n,int m)
 {
-  int x,n,y,m;
+  int x,y;
   x=0; y=0;
   while (x<n)
     {
@@ -10,4 +12,4 @@ int speedSimpleMultiple()
 }
 
 
-//resultats : oui c'est disjonctif
+

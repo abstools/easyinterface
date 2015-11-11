@@ -1,8 +1,8 @@
+
 //realheapsort
-void realheapsort()
+void realheapsort(int N)
 {
   float t[100], temp;
-  int N;
   int k,j,m;
   if(N > 2){
   //construction

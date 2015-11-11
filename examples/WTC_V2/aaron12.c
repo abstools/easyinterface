@@ -1,6 +1,6 @@
-int aaron12() {
-	int x,y,z;
+int nondet();
 
+int aaron12(int x,int y,int z) {
 	while (x>=y) {
 		if (nondet()) {
 			x=x+1;

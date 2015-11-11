@@ -1,7 +1,8 @@
 /*exmini*/
-int exmini ()
+
+int exmini (int i,int j,int k)
 {
-  int i,j,k,tmp;
+  int tmp;
 
   while(i<=100 && j<=k){
     tmp = i;

@@ -1,6 +1,6 @@
 
-int speedFails2(){
-  int i,x,n;
+int speedFails2(int x,int n){
+  int i;
   
   for(i=x;i!=n;++i);
   

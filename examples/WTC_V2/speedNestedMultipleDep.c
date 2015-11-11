@@ -1,6 +1,7 @@
-int speedNestedMultipleDep()
+
+int speedNestedMultipleDep(int n,int m)
 {
-  int x,n,y,m;
+  int x,y;
   x=0;
   while (x<n)
     {

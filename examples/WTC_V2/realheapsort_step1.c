@@ -1,9 +1,10 @@
+
+
 //realheapsort - contruction only
 // avec aspic -delay 5
-void realheapsort_step1()
+void realheapsort_step1(int N)
 {
   float t[100], temp;
-  int N;
   int k,j,m;
   if(N > 2){
   //construction

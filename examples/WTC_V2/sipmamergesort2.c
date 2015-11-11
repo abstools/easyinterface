@@ -1,6 +1,6 @@
-int n;
-// découpage selon up
-void sipmamergesort2(){
+
+
+void sipmamergesort2(int n){
   int i, j, k, l, t;
   int h, m, p, q, r;
   int up;              /* really boolean */

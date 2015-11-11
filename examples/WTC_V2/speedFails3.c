@@ -1,6 +1,6 @@
+int nondet();
 
-int speedFails3(){
-  int i,x,n,t;
+int speedFails3(int x,int n,int t){
   int b=nondet();
 
   while(x>=0 && x<=n)

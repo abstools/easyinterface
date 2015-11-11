@@ -1,6 +1,7 @@
-int while2(){
 
-  int i,j,N;
+int while2(int N){
+
+  int i,j;
   i=N;
   while(i>0) {
     j=N;

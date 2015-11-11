@@ -1,6 +1,5 @@
-int n;
 
-void sipmamergesort_init(){
+void sipmamergesort_init(int n){
   int i, j, k, l, t;
   int h, m, p, q, r;
   int up;              /* really boolean */

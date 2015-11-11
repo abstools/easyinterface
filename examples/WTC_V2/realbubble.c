@@ -1,7 +1,8 @@
-void realbubble()
+
+
+void realbubble(int length)
 {
   int *array;
-  int length;
   int i, j, temp;
   int test; /*use this only if unsure whether the list is already sorted or not*/
 

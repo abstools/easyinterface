@@ -1,7 +1,9 @@
+
+
 /*ndecr == decr presque*/
-int ndecr ()
+int ndecr (int n)
 {
-  int n;
+
 
   int i=n-1;
 

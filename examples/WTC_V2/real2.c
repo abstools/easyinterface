@@ -1,7 +1,8 @@
- void real2()
+ 
+
+void real2(int len)
  {
    int tab[10];
-   int len;
    int   tmp;
    int   again;
    int   i;

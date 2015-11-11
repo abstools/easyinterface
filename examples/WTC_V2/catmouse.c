@@ -1,6 +1,8 @@
-int catmouse(){
 
-  int x,n,m;
+
+int catmouse(int m,int n){
+
+  int x;
   x=0;
   
   while(x<=n)

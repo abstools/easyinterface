@@ -1,7 +1,9 @@
-void insertsort()
+
+
+
+void insertsort(int length)
 {
   int a[];
-  int length;
   int i, j, value;
 
         for(i = 1; i < length; i++) {

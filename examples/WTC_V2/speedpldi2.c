@@ -1,3 +1,5 @@
+
+
 void speedpldi2(int n, int m){
   int v1, v2;
   if(n>=0 && m>0){

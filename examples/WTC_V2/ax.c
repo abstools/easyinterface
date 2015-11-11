@@ -1,6 +1,6 @@
-int ax() {
-  int i,j,n;
 
+int ax(int i,int j,int n) {
+ 
     i=0;
     do {
       j=0;

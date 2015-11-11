@@ -1,6 +1,8 @@
-int speedSimpleMultipleDep()
+
+
+int speedSimpleMultipleDep(int n,int m)
 {
-  int x,n,y,m;
+  int x,y;
   x=0;y=0;
   while (x<n)
     {
@@ -10,4 +12,3 @@ int speedSimpleMultipleDep()
 }
 
 
-//on ne l'a pas !

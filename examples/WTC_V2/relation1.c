@@ -1,4 +1,4 @@
-int random();
+int nondet();
 
 int relation1(){
   int x,y;
@@ -6,7 +6,7 @@ int relation1(){
   x=0;
 
   do {
-    x=random();
+    x=nondet();
     y=x;
 
     if ((x-y>2) || (x-y<1)) break;

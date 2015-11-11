@@ -1,10 +1,12 @@
-int random1d() {
-  int a,x,max;
+int nondet();
+
+int random1d(int max) {
+  int a,x;
   if (max>0) {
   a=0;
   x=1;
   while (x<=max) {
-    if (random()) a=a+1; else a=a-1;
+    if (nondet()) a=a+1; else a=a-1;
     x=x+1;
   }
   }

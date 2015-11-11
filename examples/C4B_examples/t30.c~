@@ -1,6 +1,6 @@
 void start(int x, int y)
 {
-  int t=0;
+  int t;
 
   while (x>0) {
     x--;

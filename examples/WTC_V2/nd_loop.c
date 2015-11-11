@@ -1,4 +1,6 @@
-int random();
+
+
+int nondet();
 
 int nd_loop(){
   int x,y;
@@ -7,7 +9,7 @@ int nd_loop(){
 
   do {
     y=x;
-    x=random();
+    x=nondet();
 
     if ((x-y>2) || (x-y<1)) break;
   }

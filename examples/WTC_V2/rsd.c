@@ -1,8 +1,8 @@
-int random();
+int nondet();
 
-int rsd ()
+int rsd (int r)
 {
-  int r;
+
   int da,db,temp;
   int c1;
   c1=0;
@@ -10,7 +10,7 @@ int rsd ()
     da = 2*r;
     db = 2*r;
     while (da >=r) {
-      if (random()){
+      if (nondet()){
 	da --;
       }
       else{

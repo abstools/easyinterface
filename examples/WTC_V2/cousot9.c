@@ -1,6 +1,9 @@
-int cousot9(){
+int nondet();
 
-  int i,j,N;
+
+int cousot9(int j,int N){
+
+  int i;
 
   i=N;
   while(i>0) {

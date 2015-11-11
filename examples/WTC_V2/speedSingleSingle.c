@@ -1,6 +1,8 @@
-int speedSingleSingle()
+int nondet();
+
+int speedSingleSingle(int n)
 {
-  int x,n;
+  int x;
   x=0;
   while (x<n)
     {

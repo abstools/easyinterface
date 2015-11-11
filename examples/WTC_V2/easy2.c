@@ -1,7 +1,8 @@
-int easy2() {
+
+
+int easy2(int z) {
   int x=12;
   int y=0;
-  int z;
   while (z>0) {
     x=x+1;
     y=y-1;

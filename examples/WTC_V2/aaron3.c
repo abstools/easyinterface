@@ -1,5 +1,6 @@
-int aaron3() {
-  int x,y,z,tx;
+int nondet();
+
+int aaron3(int x,int y,int z,int tx) {
   while (x>=y) {
     if (nondet()) {
       z=z-1;

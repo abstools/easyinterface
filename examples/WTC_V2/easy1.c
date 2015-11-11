@@ -1,3 +1,5 @@
+
+
 int easy1() {
   int x, y;
   int z;

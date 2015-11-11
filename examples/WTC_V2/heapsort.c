@@ -1,7 +1,8 @@
-int heapsort() {
+int nondet();
+
+int heapsort(int size) {
   int i=1;
   int l,r,max;
-  int size;
   int x;
   while (size>0 && i >= 1){ 
     l=2*i;

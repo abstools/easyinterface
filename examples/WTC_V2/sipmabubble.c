@@ -1,5 +1,5 @@
-void sipmabubble(){
-  int n; /* n >= 0 */
+void sipmabubble(int n){
+  /* n >= 0 */
   int A[100];
   int tmp;
 

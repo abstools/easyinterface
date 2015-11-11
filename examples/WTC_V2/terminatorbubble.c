@@ -1,8 +1,7 @@
+int nondet();
 
-/* get inconsistent state, rankfinder fails to prove termination */
 
-int terminatorbubble() {
-  int size;
+int terminatorbubble(int size) {
   int error;
   int b;
   int j;
@@ -17,7 +16,7 @@ int terminatorbubble() {
     while (j<=b-1) {
       if (j<1 || j>size) { return 0; }
       if (j+1<1 || j+1>size) { return 0; }
-      if (brandom()){ t=j;}
+      if (nondet()){ t=j;}
       j=j+1;
     }
     if (1>t || t>=b) return 0;

@@ -1,5 +1,6 @@
-int wcet2 () {
-  int i,j;
+
+int wcet2 (int i) {
+  int j;
 
   while(i<5){
 

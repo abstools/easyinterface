@@ -1,6 +1,7 @@
-int alain()
+
+int alain(int x,int y,int z,int n1,int n2)
 {
-  int x,y,z,n1,n2;
+
   int c1, c2;
   c1 = 0;
   if(n2 <= 2*y) return;

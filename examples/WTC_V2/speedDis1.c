@@ -1,6 +1,7 @@
-int speedDis1(){
 
-  int x,y,n,m;
+
+int speedDis1(int x,int y,int n,int m){
+
 
   while (x<n)
     {

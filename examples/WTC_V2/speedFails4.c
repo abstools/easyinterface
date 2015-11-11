@@ -1,6 +1,8 @@
 
-int speedFails4(){
-  int i,x,n,t;
+
+
+int speedFails4(int x,int n){
+  int t;
   int b;
   if(b>=1) t=1; else  t=-1;
 

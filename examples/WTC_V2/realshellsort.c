@@ -1,8 +1,8 @@
+
 //realshellsort (avec -delay 3)
 void realshellsort(int array_size)
 {
   int numbers[];
-
   int i, j, increment, temp;
 
   increment = array_size / 2;

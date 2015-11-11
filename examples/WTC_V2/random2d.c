@@ -1,5 +1,6 @@
-int random2d() {
-  int N;
+int nondet();
+
+int random2d(int N) {
   int x;
   int y;
   int i;
@@ -11,7 +12,7 @@ int random2d() {
   i=0;
   while (i<N) {
     i=i+1;
-    r=random(); 
+    r=nondet(); 
     if (r>=0 && r<=3) {
     	if (r==0) x=x+1; else
     	if (r==1) x=x-1; else

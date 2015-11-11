@@ -1,10 +1,11 @@
-int counterex1b()
+int nondet();
+
+int counterex1b(int n,int x,int y)
 {
-  int n;
-  int x,y;
+
   while(x>=0){
-    while(y>=0 && random()) y--;
+    while(y>=0 && nondet()) y--;
     x--;
-    while(y<=n && random()) y++;
+    while(y<=n && nondet()) y++;
   }
 }
