@@ -1,6 +1,6 @@
 int nondet();
 
-int random1d(int max) {
+void random1d(int max) {
   int a,x;
   if (max>0) {
   a=0;

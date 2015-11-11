@@ -1,3 +1,5 @@
+#include "assert.h"
+
 void start(int x, int y)
 {
   int z;

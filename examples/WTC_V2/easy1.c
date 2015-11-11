@@ -1,6 +1,6 @@
 
 
-int easy1() {
+void easy1() {
   int x, y;
   int z;
   x=0;

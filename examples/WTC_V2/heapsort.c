@@ -11,14 +11,14 @@ int heapsort(int size) {
     if (l<=size)  
     {
       if (l<1 || l>size)  return 0;    // assume (1<=l<=size)
-      if (x=nondet()) max=l; else max=i;
+      if (x==nondet()) max=l; else max=i;
     }
     else max=i;
 
     if (r<=size)  
     {
       if (r<1 || r>size)  return 0;
-      if (x=nondet())  max=r;
+      if (x==nondet())  max=r;
     };
 
     if (i!=max)  

@@ -1,6 +1,6 @@
 int nondet();
 
-int counterex1b(int n,int x,int y)
+void counterex1b(int n,int x,int y)
 {
 
   while(x>=0){

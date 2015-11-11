@@ -1,3 +1,5 @@
+#include "assert.h"
+
 void start(int n, int m)
 {
   int i=n;

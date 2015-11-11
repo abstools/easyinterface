@@ -1,6 +1,6 @@
 
 
-int terminate(int i,int j,int k){
+void terminate(int i,int j,int k){
   int  ell;
   while(i <= 100 && j <= k){
     ell = i;

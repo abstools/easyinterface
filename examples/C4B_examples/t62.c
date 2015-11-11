@@ -1,4 +1,6 @@
-#pragma tick
+#include "assert.h"
+int nondet();
+void tick(int cost);
 
 void start(int l, int h) {
   assert(l < h);

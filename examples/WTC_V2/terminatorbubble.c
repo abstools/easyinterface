@@ -23,4 +23,5 @@ int terminatorbubble(int size) {
     b=t;
   }
   }
+  return 0;
 }

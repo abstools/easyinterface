@@ -1,5 +1,5 @@
 
-int speedFails1(int n,int n,int m){
+int speedFails1(int i,int n,int m){
   
   while(i<=n) {i=i+m;};
   

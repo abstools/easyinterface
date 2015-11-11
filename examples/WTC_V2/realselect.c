@@ -1,8 +1,7 @@
 
 
-void realselect(int array_size)
+void realselect(int array_size,int numbers[])
 {
-  int numbers[];
   int i, j;
   int min, temp;
 

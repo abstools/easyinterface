@@ -1,4 +1,5 @@
 /* Knuth-Morris-Pratt string searching */
+#include "assert.h"
 
 int srch(int t[], int n, int p[], int m, int b[])
 {

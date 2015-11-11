@@ -3,7 +3,7 @@ int nondet();
 int speedSingleSingle2(int n,int m)
 {
   int x,y;
-  if(n<0 || m <0) return;
+  if(n<0 || m <0) return 0;
   x=0;y=0;
   while (nondet())
     {

@@ -1,7 +1,6 @@
 int nondet();
 
-int relation1(){
-  int x,y;
+int relation1(int x,int y){
 
   x=0;
 

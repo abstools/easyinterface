@@ -1,5 +1,5 @@
-#pragma tick
 
+void tick(int cost);
 int nondet();
 
 void start(int n)

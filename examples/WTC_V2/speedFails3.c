@@ -17,3 +17,4 @@ int speedFails3(int x,int n,int t){
     }
   
   return 0;
+}
