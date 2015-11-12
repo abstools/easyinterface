@@ -2,7 +2,7 @@ int nondet();
 
 
 void bin_search_StepSize2 (int r, int s) {
-static int c = 4; int n; int f = 0; int d = 0;
+int c = 4; int n; int f = 0; int d = 0;
 do {
   n = nondet();
   if (c == 1 ) break;

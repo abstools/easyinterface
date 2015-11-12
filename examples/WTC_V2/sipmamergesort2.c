@@ -1,10 +1,10 @@
 
 
-void sipmamergesort2(int n){
+void sipmamergesort2(int n,int a[]){
   int i, j, k, l, t;
   int h, m, p, q, r;
   int up;              /* really boolean */
-  int a[2*n+1];
+ // int a[2*n+1];
 
   up = 1;
   p = 1;
