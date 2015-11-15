@@ -4,7 +4,7 @@ void start(int x, int n, int y, int m)
 {
   while (x<n) {
     while (y<m) {
-      if (nondet())
+      if (nondet()>0)
         break;
       y=y+1;
     }

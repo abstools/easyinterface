@@ -7,7 +7,7 @@ int wcet0 (int n) {
   i=n;
   if (n>=1) 
     do {
-      if (nondet()){
+      if (nondet()>0){
 	  j++;
 	  if(j>=n) j=0;
 	}

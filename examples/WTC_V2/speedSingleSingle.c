@@ -6,7 +6,7 @@ int speedSingleSingle(int n)
   x=0;
   while (x<n)
     {
-      if (nondet()) x++ ; else x++;  
+      if (nondet()>0) x++ ; else x++;  
     }
   return 0;
 }

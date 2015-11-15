@@ -2,7 +2,7 @@ int nondet();
 
 int aaron12(int x,int y,int z) {
 	while (x>=y) {
-		if (nondet()) {
+		if (nondet()>0) {
 			x=x+1;
 			y=y+x;
 

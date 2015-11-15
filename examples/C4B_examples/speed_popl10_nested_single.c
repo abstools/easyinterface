@@ -7,7 +7,7 @@ void start(int n)
   while (x<n) {
     x=x+1;
     while (x<n) {
-      if (nondet())
+      if (nondet()>0)
         break;
       x=x+1;
     }

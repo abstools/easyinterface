@@ -16,7 +16,7 @@ int terminatorbubble(int size) {
     while (j<=b-1) {
       if (j<1 || j>size) { return 0; }
       if (j+1<1 || j+1>size) { return 0; }
-      if (nondet()){ t=j;}
+      if (nondet()>0){ t=j;}
       j=j+1;
     }
     if (1>t || t>=b) return 0;

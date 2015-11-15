@@ -7,9 +7,9 @@ void xnu(int len)
 int beg=0;int end=0;int i=0;
  while(i < len){
  i++;
- if (nondet)
+ if (nondet()>0)
    end = i;
- if (nondet){
+ if (nondet()>0){
    int k = beg;
    while (k < end){
 	k++;tick(1);

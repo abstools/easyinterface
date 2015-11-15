@@ -11,7 +11,7 @@ void start(int n)
   while (i<n) {
     j=i+1;
     while (j<n) {
-      if (nondet()) {
+      if (nondet()>0) {
         tick(1);
         j=j-1;
         n=n-1;

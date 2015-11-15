@@ -2,7 +2,7 @@ int nondet();
 
 int aaron3(int x,int y,int z,int tx) {
   while (x>=y) {
-    if (nondet()) {
+    if (nondet()>0) {
       z=z-1;
       tx=x;
       x=nondet();

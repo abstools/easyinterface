@@ -8,7 +8,7 @@ void foo(int n, int m1,int m2) {
  assert(m2>=0);
  int y = n;
  int x;
- if(nondet())
+ if(nondet()>0)
     x = m1;
  else
   x = m2;

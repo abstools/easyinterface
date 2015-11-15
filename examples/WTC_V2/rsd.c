@@ -10,7 +10,7 @@ int rsd (int r)
     da = 2*r;
     db = 2*r;
     while (da >=r) {
-      if (nondet()){
+      if (nondet()>0){
 	da --;
       }
       else{

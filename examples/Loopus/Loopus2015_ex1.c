@@ -8,7 +8,7 @@ void foo(int n) {
  while(x > 0) {
   x = x - 1;
   r = r + 1;
-  if(nondet()) {
+  if(nondet()>0) {
    int p = r;
    while(p > 0)
      p--;
