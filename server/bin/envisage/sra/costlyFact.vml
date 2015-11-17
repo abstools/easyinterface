@@ -1,0 +1,18 @@
+/* Costly Fact*/
+Int costlyFact(Int n){
+	Fut<Int> x ; Int m ; VM z ;
+	if (n==0) { return 1 ; }
+	else { 
+		z = new VM(); 
+		x = z!costlyFact(n-1); 
+		m = x.get; 
+		release z; 
+		return m*n; 
+	}
+}
+
+
+{
+  Fut<Int> ffact = this!costlyFact(100);
+  Int a = ffact.get;
+}

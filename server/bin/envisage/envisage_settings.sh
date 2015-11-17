@@ -19,6 +19,12 @@ export PATH=${PATH}:${SACOHOME}/bin
 export ABSTOOLSHOME=${EC_ABSTOOLSHOME}
 export ABSFRONTEND=${EC_ABSTOOLSHOME}/frontend/dist/absfrontend.jar
 
+# SRA
+export SRAHOME=${EC_SRAHOME}
+
+# COFLOCO
+export COFLOCOHOME=${EC_COFLOCOHOME}
+
 # PATHs
 if [ -n "${EC_PATH:+x}" ]; then
     export PATH=${PATH}:${EC_PATH}
