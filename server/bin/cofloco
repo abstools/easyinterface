@@ -10,7 +10,7 @@ echo "<eiout>"
 echo "<eicommands>"
 echo "<printonconsole>"
 echo "<content format='text'>"
-echo "$*"
+#echo "$*"
    
 
 File=$1;
@@ -33,7 +33,7 @@ $LLVM2KITTEL_DIR/llvm2kittel $File.o -complexity-tuples >$File.koat
 $KOAT2COFLOCO_DIR/koat2ces.pl $File.koat $Cost_model 
 $KOAT2COFLOCO_DIR/cfg2pubs.pl $File.koat.cfg  
 
-$COFLOCO_DIR/cofloco -i $File.koat.cfg.ces  $* 
+$COFLOCO_DIR/cofloco -i $File.koat.cfg.ces  $* | sed 's/</\&lt;/' | sed 's/>/\&gt;/'
 
 echo "</content>"
 echo "</printonconsole>"

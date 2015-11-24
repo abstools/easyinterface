@@ -98,7 +98,7 @@ var _ei = {
       }
   },
   debug: true,
-  file_ext: ".abs",
+  file_ext: ".c",
   pprefix: "-",
   outline: {
     server: "",
