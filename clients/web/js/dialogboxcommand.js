@@ -7,8 +7,8 @@ window.DialogBoxCommand = (function() {
 
 	var outclass = c.attr( _ei.outlang.syntax.outclass ) || ei_info.outclass;
 	var boxtitle  = c.attr( _ei.outlang.syntax.boxtitle ) || "Dialog Box";
-	var boxwidth  = parseInt(c.attr( _ei.outlang.syntax.boxwidth )) || 200;
-	var boxheight  = parseInt(c.attr( _ei.outlang.syntax.boxheight )) || 200;
+	var boxwidth  = parseInt(c.attr( _ei.outlang.syntax.boxwidth )) || 500;
+	var boxheight  = parseInt(c.attr( _ei.outlang.syntax.boxheight )) || 250;
 
 	var content   = c.find("> " + _ei.outlang.syntax.content );
 	return new DialogBoxCommand({
