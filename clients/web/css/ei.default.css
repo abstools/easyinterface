@@ -1,21 +1,21 @@
- {
-    font: 10pt "Trebuchet MS", sans-serif;
+{
+  font: 10pt "Trebuchet MS", sans-serif;
 }
 
 .easyinterface {
-    background: white;
-    margin: auto;
-    border:1px solid #a1a1a1;
-    min-height: 600px;
-    min-width: 750px;
-    width: 95%;
-    height: 95%;
-    padding: 7px 7px;
-    box-shadow: 5px 5px 2px #888888;
--moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
+  background: white;
+  margin: auto;
+  border:1px solid #a1a1a1;
+  min-height: 600px;
+  min-width: 750px;
+  width: 95%;
+  height: 95%;
+  padding: 7px 7px;
+  box-shadow: 5px 5px 2px #888888;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .ei-paramwidget-checkbox, .ei-paramwidget-combo,.ei-paramwidget-text {
@@ -93,38 +93,38 @@
 
 
 .highlightline { 
-    background-color: yellow;
+  background-color: yellow;
 }
 
 .highlightline-info, .outclass-info { 
-    background-color: yellow !important;
+  background-color: yellow !important;
 }
 
 .highlightline-warning, .outclass-warning { 
-    background-color: #00FFFF !important;
+  background-color: #00FFFF !important;
 }
 
 .highlightline-error, .outclass-error { 
-    background-color: #FF3030 !important;
+  background-color: #FF3030 !important;
 }
 
 .bb { 
-    background-color: red;
+  background-color: red;
 }
 
 .infoGutter {
-    background-color: #EEEEEE;
-    width: 15px;
+  background-color: #EEEEEE;
+  width: 15px;
 }
 
 .actionGutter {
-    background-color: #DDDDDD;
-    width: 15px;
+  background-color: #DDDDDD;
+  width: 15px;
 }
 
 .preformatted {
-    font-family: monospace;
-    white-space: pre;
+  font-family: monospace;
+  white-space: pre;
 }
 pre {
   margin-top: 0px;
@@ -138,63 +138,63 @@ pre {
 }
 
 .markerExpandedToolTip {
-    font-family: monospace;
-    white-space: pre;
-    overflow: auto;
+  font-family: monospace;
+  white-space: pre;
+  overflow: auto;
 }
 
 
 .applyingToolDialog {
-    text-align: center;
+  text-align: center;
 }
 
 .applyingToolDialogProgBar {
-    text-align: center;
-    margin: 20pt;
+  text-align: center;
+  margin: 20pt;
 }
 
 #entries
 {
-    border:1px solid #a1a1a1;
-    border-radius:5px;
+  border:1px solid #a1a1a1;
+  border-radius:5px;
 }
 
 
 
 
 #parameters,#helps {
-    overflow: auto;
+  overflow: auto;
 }
 
 
 /* the tool bar */
 
 .ei-toolbar {
-    height: 35px;
-    padding: 2px 3px;
-    margin: 0px;
+  height: 35px;
+  padding: 2px 3px;
+  margin: 0px;
 }
 
 /* the file manager area */
 
 .ei-file-code-outline {
-    position:relative;
-    margin: 2pt 0pt 2pt 0pt; 
-    height:60%
+  position:relative;
+  margin: 2pt 0pt 2pt 0pt; 
+  height:60%
 }
 
 .ei-filemanager-holder {
-    position:relative;
-    overflow: auto;
-    border: 1px solid #a6c9e2;
-    border-radius:5px;
-    float: left; 
-    width: 20%;
-    height: 100%;
--moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
+  position:relative;
+  overflow: auto;
+  border: 1px solid #a6c9e2;
+  border-radius:5px;
+  float: left; 
+  width: 20%;
+  height: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 
@@ -203,55 +203,55 @@ pre {
 .ei-codearea-holder
 {
   position:relative;
-    float: left; 
-    width:58%;
-    height: 100%;
+  float: left; 
+  width:58%;
+  height: 100%;
 
 }
 
 .ei-codearea {
-    float: left; 
-    width: 98.5%;
-    height: 98%;
-    overflow: hidden;
+  float: left; 
+  width: 98.5%;
+  height: 98%;
+  overflow: hidden;
 }
 
 .ei-codearea-panel {
 }
 
 .ei-codearea-content {
-    overflow: auto;
-    height: 88%;
-    padding: 0px;
+  overflow: auto;
+  height: 88%;
+  padding: 0px;
 }
 
 .ei-codearea-content-expanded {
-    overflow: auto;
+  overflow: auto;
   height: 100%;
-    padding: 0px;
-    border: 0px;
+  padding: 0px;
+  border: 0px;
 }
 
 .CodeMirror {
-    padding: 0px;
-    margin: 0px;
-    /*padding: 2pt 2pt;*/
+  padding: 0px;
+  margin: 0px;
+  /*padding: 2pt 2pt;*/
   height: 100%;
 }
 
 /* the outline area */
 .ei-outline-holder {
   position:relative;
-    overflow: auto;
-    border:1px solid #a6c9e2;
-    border-radius:5px;
-    float: left; 
-    width: 20%;
-    height: 100%;
--moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -ms-box-sizing: border-box;
-    box-sizing: border-box;
+  overflow: auto;
+  border:1px solid #a6c9e2;
+  border-radius:5px;
+  float: left; 
+  width: 20%;
+  height: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 
@@ -259,51 +259,58 @@ pre {
 /* the console area */
 
 .ei-console-holder {
-    float: bottom;
-    width: 100%;
-    height: 32%;
-
-    overflow: auto;
+  position: relative;
+  float: bottom;
+  width: 100%;
+  height: 32%;
+  overflow: auto;
 }
 
 .ei-console {
-    /* border: 1px solid red; */
-    width: 99.7%;
-    overflow: hidden;
-    padding: 0pt;
-    height: 90%;
-    margin: 0pt 0pt 0pt 0pt;
+  position: absolute;
+  width: 99.7%;
+  overflow: hidden;
+  padding: 0pt;
+  height: 98%;
+  margin: 0pt;
 }
 
 
 .ei-console-panel {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 39px;
 }
 
 .ei-console-content {
-    overflow: auto;
-    height: 65%;
-  padding-bottom: 0em !important;
+  position:absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  top: 39px;
+  overflow: auto;
 }
 
 .ei-console-content-expanded {
-    overflow: auto;
-    height: 100%; 
-    width: 100%;
-    border: 0pt;
-    padding: 0pt;
-    margin: 0pt;
+  overflow: auto;
+  height: 100%; 
+  width: 100%;
+  border: 0pt;
+  padding: 0pt;
+  margin: 0pt;
 }
 
 .ei-console-add-button {
-    padding: 0pt; 
-    float: right;
-    height: 40px;
+  padding: 0pt; 
+  float: right;
+  height: 40px;
 }
 
 .ei-console-close-button {
-    padding: 0pt; 
-    float: right;
-    height: 40px;
+  padding: 0pt; 
+  float: right;
+  height: 40px;
 }
 .ei-console-stream-button {
   float: right;
@@ -314,57 +321,57 @@ pre {
 }
 
 .lint-error, .outclass-error {
-    font-family: arial;
-    font-size: 70%;
-    background: none repeat scroll 0% 0% #FA0;
-    color: #A00;
-    padding: 2px 5px 3px;
+  font-family: arial;
+  font-size: 70%;
+  background: none repeat scroll 0% 0% #FA0;
+  color: #A00;
+  padding: 2px 5px 3px;
 }
 .lint-error-icon {
-    color: #FFF;
-    background-color: #F00;
-    font-weight: bold;
-    border-radius: 50%;
-    padding: 0px 3px;
-    margin-right: 7px;
+  color: #FFF;
+  background-color: #F00;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 0px 3px;
+  margin-right: 7px;
 }
 
 .lint-info {
-    font-family: arial;
-    font-size: 70%;
-    background: none repeat scroll 0% 0% #0BF;
-    color: #04A;
-    padding: 2px 5px 3px;
+  font-family: arial;
+  font-size: 70%;
+  background: none repeat scroll 0% 0% #0BF;
+  color: #04A;
+  padding: 2px 5px 3px;
 }
 .lint-info-icon {
-    color: #FFF;
-    background-color: #04A;
-    font-weight: bold;
-    border-radius: 50%;
-    padding: 0px 3px;
-    margin-right: 7px;
+  color: #FFF;
+  background-color: #04A;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 0px 3px;
+  margin-right: 7px;
 }
 .lint-warning {
-    font-family: arial;
-    font-size: 70%;
-    background: none repeat scroll 0% 0% #FFA;
-    color: #F40;
-    padding: 2px 5px 3px;
+  font-family: arial;
+  font-size: 70%;
+  background: none repeat scroll 0% 0% #FFA;
+  color: #F40;
+  padding: 2px 5px 3px;
 }
 .lint-warning-icon {
-    color: #FFF;
-    background-color: #F40;
-    font-weight: bold;
-    border-radius: 50%;
-    padding: 0px 3px;
-    margin-right: 7px;
+  color: #FFF;
+  background-color: #F40;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 0px 3px;
+  margin-right: 7px;
 }
 /** Github Form **/
 #remoteOptions{
   height: 98%;
   overflow:auto;
 }
- 
+
 #formGithub > label{
   float:left;
   width: 100px;
@@ -380,11 +387,11 @@ pre {
 
 
 .abc {
-    background: #dfeffc;
-    color: 0000aa;
-    height: 30px;
-    font-weight: bold;
-    margin: 0px 0px 0px 0px;
+  background: #dfeffc;
+  color: 0000aa;
+  height: 30px;
+  font-weight: bold;
+  margin: 0px 0px 0px 0px;
 }
 
 
