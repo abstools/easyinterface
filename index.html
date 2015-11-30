@@ -1,105 +1,20 @@
 <html>
 <head>
-<title>EasyInterface</title>
+<title>CoFloCo web interface</title>
 
-<style>
-body {
-	font-family:"Trebuchet MS", Arial, Verdana;
-	font-size:1em;
-	color:#555555;
-	background-color:#FFFFFF;
-	text-align:left;
+<script type="text/javascript">
+<!--
+function redirect(){
+window.location = "clients/web"
 }
-
-a {
-	color:#4D87CE;
-	font-weight:bold;
-	text-decoration:none;
-}
-
-a:hover {
-	color:#2a65ad;
-}
-
-.title {
-	color: #3B3B3B;
-	letter-spacing: -1px;
-	font-size: 2.1em;
-        font-weight: bold;
-	text-align: center;	
-}
-
-h1 {
-	color: #3B3B3B;
-	font-size: 1.3em;
-        font-weight: bold;
-}
-
-</style>
-
-<script src="clients/web/lib/jquery-ui/js/jquery.js"></script>
-
-<script>
-
-$( function() {
-
-// ping
-$.post("server/eiserver.php",
-  {
-    eirequest: { "command" : "ping" },
-  })
-  .done( function(data) {
-      $("#ping").html(data);
-  })
-  .error( function(data) {
-      $("#eiserver").html(data);
-  });
-
-// execute echo
-$.post("server/eiserver.php",
-  {
-    eirequest: { "command" : "execute", "app_id" : "echo", "parameters" : {"msg" : ["echo says Hola!"]} },
-  })
-.done( function(data) {
-      $("#echo").html(data);
-  })
-  .error( function(data) {
-      $("#echo").html(data);
-  });
-
-
-
-});
-
+//-->
 </script>
 </head>
 
 
-<body style="background-color: white;">
-
-<div class="title">Welcome to EasyInterface</div>
-<hr />
-
-<h1>Testing EasyInterface Server</h1>
-
-<p>
-The following tests will be performed, if you do not get a corresponding success message shorly then something is wrong in your EasyInterface installation and you should refer to <a href="INSTALL.md">INSTALL.md</a>.
-</p>
-
-<table>
-  <tr><td>Test I:</td><td>Pinging the server:</td><td style="color:red;" id="ping">?</td></tr>
-  <tr><td>Test II:</td><td>Asking the server to execute the <em>echo</em> app.:</td><td style="color:red;" id="echo">?</td></tr>
-</table>
-
-<p>
+<body onLoad="redirect()">
 If the test were successful you can start using
-the <a href="clients/web">web client</a>. For other clients
-see <a href="clients/README.md">clients/README.md</a>. It is also
-recommended to read Chapter 2 of the <a href="docs/manual.pdf">User
-Manual</a>, which explains how to integrate your applications in
-EasyInterface.
-</p>
-
+the <a href="clients/web">web client</a>.
 </body>
 
 </html>
