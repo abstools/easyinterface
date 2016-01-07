@@ -1,0 +1,23 @@
+#!/bin/bash
+
+HOME2="/home/aeflores";
+COFLOCO_DIR="$HOME2/Systems/cofloco";
+
+
+echo "<eiout>"
+echo "<eicommands>"
+echo "<printonconsole>"
+echo "<content format='text'>"
+#echo "$*"
+   
+
+File=$1;
+shift
+
+
+$COFLOCO_DIR/cofloco -i $File  $* | sed 's/</\&lt;/' | sed 's/>/\&gt;/'
+
+echo "</content>"
+echo "</printonconsole>"
+echo "</eicommands>"
+echo "</eiout>"
