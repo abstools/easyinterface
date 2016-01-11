@@ -36,7 +36,7 @@ window.ChangeContentCommand = (function() {
       });
       
       this.ccaction = options.ccaction;
-      this.content = new DocContent({ 
+      this.content = new DocContent({ //cambiar esto
 	    content: options.content,
 	    outclass: options.outclass
 	}).getDOM();
