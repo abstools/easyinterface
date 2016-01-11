@@ -30,7 +30,7 @@ var _ei = {
 	  color            : "color",              // attr
 	  elements         : "elements",           // tag
 	  selector         : "selector",           // tag
-	  selectorvalue    : "value",
+	  selectorvalue    : "value",              // attr
 
 	  //
 	  outclass       : "outclass",     // attr
@@ -88,6 +88,24 @@ var _ei = {
 	  boxtitle       : "boxtitle", // attr
 	  boxwidth       : "boxwidth", // attr
 	  boxheight      : "boxheigh", // attr
+
+	  // TIMELINE command
+	  timeline       : "timeline", // tag
+	  tlwidget       : "widget", //  attr
+	  tltitle        : "title",  //  attr
+	  tlauto         : "auto",   //  attr
+
+	  tlstep         : "step",  // tag
+	  tlclean        : "autoclean", // attr
+
+	  // ASKURL command
+	  askurl         : "askUrl", //  tag
+	  audelay        : "delay",  // attr
+	  autries        : "tries",  // attr
+
+	  // CHANGECONTENT command
+	  changecontent  : "changecontent", // tag
+	  ccaction       : "action", //attr
 
 	  // ONCODELINECLICK action
 	  oncodelineclick: "oncodelineclick",
