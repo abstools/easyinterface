@@ -10,17 +10,22 @@ var _ei = {
     },
     example: {
       details    : "exset_details"
-    }
+    },
+    stream: {
+      get        : "get_stream",
+      kill       : "kill_stream"
+    },
   },
   outlang: {
       syntax: {
 	  eicommands       : "eicommands",         // tag
 	  eiactions        : "eiactions",          // tag
 	  eiout            : "eiout",              // tag
+	  eistream         : "ei_stream",        // tag
 	  eierror          : "ei_error",           // tag
-	  eiappout         : "ei_app_output",      // tag
+	  eiappout         : "ei_output",          // tag
 	  eiserverout      : "ei_server_output",   // tag
-	  eiserverresponse : "ei_server_response", // tag
+	  eiserverresponse : "ei_response",        // tag
 	  dest             : "dest",               // attr
 	  color            : "color",              // attr
 	  elements         : "elements",           // tag
@@ -48,6 +53,14 @@ var _ei = {
 	  printonconsole : "printonconsole", // tag
 	  consoleid      : "consoleid",      // attr
 	  consoletitle   : "consoletitle",   // attr
+
+	  // STREAM command
+	  stream         : "stream",         // tag
+	  //consoleid      : "consoleid",      // attr
+	  //consoletitle   : "consoletitle",   // attr
+	  time           : "time",           // attr
+	  execid         : "execid",         // attr
+	  streamposition : "position",       // attr
 
 	  // ADDMARKER command
 	  addmarker      : "addmarker",     // tag

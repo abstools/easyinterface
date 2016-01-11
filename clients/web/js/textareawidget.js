@@ -6,18 +6,19 @@ window.TextAreaWidget = ( function() {
 	this.widgetInfo = widgetInfo;
 	this.id = widgetInfo.id;
 
-	this.env = $("<div class='ei-paramwidget-combo'></div>");
+	this.env = $("<div class='ei-paramwidget-text'></div>");
 
 	this.env.append("<div class='params-left-col'></div>"+
 			"<div class='params-mid-col'>"+
 			"<div class='desc'>"+widgetInfo.desc.short+"</div>"+
 			"<div class='selector'></div>"+
 			"</div>");
+
 	if(widgetInfo.multiple){
-	    self.env.find("div.selector").append("<textarea rows='5' name='textfield'>"+widgetInfo.default_value+"</textarea>");
+	    self.env.find("div.selector").append("<textarea rows='5' class='textfield' >"+widgetInfo.default_value+"</textarea>");
 	    self.textfield = self.env.find("textarea");
 	}else{
-	    self.env.find("div.selector").append("<input type='text' name='textfield' value='"+widgetInfo.default_value+"'/>");
+	    self.env.find("div.selector").append("<input type='text' class='textfield' value='"+widgetInfo.default_value+"'/>");
 	    self.textfield = self.env.find("input");
 	}
 
@@ -58,7 +59,7 @@ window.TextAreaWidget = ( function() {
 	restoreDefault:
 	function() {
 	    var self = this;
-	    this.env.find("input").val(self.widgetInfo.default_value);
+	    this.textfield.val(self.widgetInfo.default_value);
 	}
     }
 

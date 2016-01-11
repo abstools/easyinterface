@@ -21,7 +21,6 @@ window.FileManager = (function() {
     this.paste=false;
     this.githubs = new Array(); // 0-> for general conect (without user)
     this.githubId = 1; //next id to github conections.
-    this.conectgithubBase = false; // github conection app, without user.
     this.initFileManager();
     this.initialize();
     
@@ -113,7 +112,7 @@ window.FileManager = (function() {
 	    "delete_node" : false,
 	    "remove" : false,
 	    "icon": {image:"./lib/jstree/themes/classic/folderL.png"},
-	    "valid_children":["fileLock","folderLock","folderRepo"]
+	    "valid_children":["fileLock","folderLock","folderRepo","fileRepo"]
 	  },
 	  "fileRepo":{
 	    "icon": {image:"./lib/jstree/themes/classic/fileR.png"},
@@ -146,6 +145,10 @@ window.FileManager = (function() {
 	       * dnd, drag and drop
 	       */
 	      "plugins": ["types","core","unique","dnd","themes","json_data","ui","crrm","contextmenu","sort"],
+	      "ui":{
+		"select_limit" : -1,
+		"selected_parent_close" : "select_parent",
+	      },
 	      "themes": {theme: "classic"},
 	      "dnd":{"drag_copy":"on"},
 	      "types": fmType,
@@ -159,318 +162,116 @@ window.FileManager = (function() {
 	      },
 	      "contextmenu": { 
 		"items":  function(node) {
-		  switch ( node.attr('rel') ) {
-		    case "folder":
-		      return {
-			"CreateFile": {
-			  "label": "New file",
-			  "action": function (obj) {
-			    var fmId = obj.attr('fmId');
-			    var x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","");	    
-			    self.openFile( x );
-			  }
-			},
-			"CreateFolder": {
-			  "label": "New folder",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    var fmId = obj.attr('fmId');
-			    var x = self.addFolder(null,self.fmObj[ fmId ].node.attr('fmId'),"");
-			    
-			  }
-			},
-			"RemoteFile": {
-			  "label": "Add Remote File...",
-			  "action": function (obj) {
-			    var fmId = obj.attr('fmId');
-			    self.requestRemote(self,fmId);
-			    /*var x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","","Repo");	    
-			       self.openFile( x );*/
-			  }
-			},
-			"Rename": {
-			  "label": "Rename Folder",
-			  "separator_before":true,
-			  "action": function (obj) {
-			    this.rename(obj);
-			  }
-			},
-			"Delete": {
-			  "label": "Delete Folder",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Copy": {
-			  "label": "Copy Folder",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			    
-			  }
-			},
-			"Cut": {
-			  "label": "Cut Folder",
-			  "action": function (obj) {
-			    this.cut(obj);
-			    self.copy=false;
-			  }
-			},
-			"Paste": {
-			  "label": "Paste",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    self.paste=true;
-			    this.paste(obj);
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-		    case "folderLock":
-		      return {
-			"Copy": {
-			  "label": "Copy Folder",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-
-		    case "file":
-		      return {
-			"Rename": {
-			  "label": "Rename File",
-			  "separator_before":true,
-			  "action": function (obj) {
-			    this.rename(obj);
-			    
-			  }
-			},
-			"Delete": {
-			  "label": "Delete File",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Copy": {
-			  "label": "Copy File",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			  }
-			},
-			"Cut": {
-			  "label": "Cut File",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    this.cut(obj);
-			    self.copy=false;
-
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  },
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-		    case "folderRepo":
-		      return {
-			"Copy": {
-			  "label": "Copy Folder",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			    
-			  }
-			},
-			"Delete": {
-			  "label": "Delete Folder",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-
-		      };
-		    case "fileRepo":
-		      return {
-			"Rename": {
-			  "label": "Rename File",
-			  "separator_before":true,
-			  "action": function (obj) {
-			    this.rename(obj);
-			    
-			  }
-			},
-			"Copy": {
-			  "label": "Copy File",
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			    
-			  }
-			},
-			"Delete": {
-			  "label": "Delete File",
-			  "action": function (obj) {
-			    this.remove(obj);
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-			  }
-			}
-		      };
-		    case "fileLock":
-		      return {
-			"Copy": {
-			  "label": "Copy File",
-			  "separator_after":true,
-			  "action": function (obj) {
-			    this.copy(obj);
-			    self.copy=true;
-			  }
-			},
-			"Apply": {
-			  "label": "Apply here",
-			  "separator_before": true,
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.tools.apply(ids);
-			  }
-			},
-			"Outline": {
-			  "label": "Refresh Outline here",
-			  "action": function (obj) {
-			    var ids=new Array();
-			    if(obj.length==1)
-			      ids[0]=$(obj).attr("fmid");
-			    else
-			      ids=$(obj).attr("fmid");
-			    self.outline.refresh(ids);
-
-			  }
-			}
-
-		      };
-
-		      break;
-		    default: 
-		      return null;
+		  if(! this.is_selected(node)){
+		    this.deselect_all();
+		    this.select_node(node);
 		  }
-		}
-	      }})
+		  var items = {	
+
+		    "Apply": {
+		      "label": "Apply here",
+		      "action": function (obj) {
+			self.tools.apply(self.getSelectedId());
+		      }
+		    },
+		    "Outline": {
+		      "label": "Refresh Outline here",
+		      "separator_after":true,
+		      "action": function (obj) {
+			self.outline.refresh(self.getSelectedId());
+		      }
+		    },
+		    "CreateFile": {
+		      "label": "New file",
+		      "separator_before": true,
+		      "action": function (obj) {
+			var fmId = obj.attr('fmId');
+			var x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","");	    
+			self.openFile( x );
+		      }
+		    },
+		    "CreateFolder": {
+		      "label": "New folder",
+		      "separator_after":true,
+		      "action": function (obj) {
+			var fmId = obj.attr('fmId');
+			var x = self.addFolder(null,self.fmObj[ fmId ].node.attr('fmId'),"");
+		      }
+		    },
+		    "RemoteFile": {
+		      "label": "Add Remote File...",
+		      "separator_before": true,
+		      "action": function (obj) {
+			var fmId = obj.attr('fmId');
+			self.requestRemote(self,fmId);
+		      }
+		    },
+		    "Rename": {
+		      "label": "Rename",
+		      "separator_before":true,
+		      "action": function (obj) {
+			this.rename(obj);
+		      }
+		    },
+		    "Delete": {
+		      "label": "Delete",
+		      "action": function (obj) {
+			this.remove(obj);
+		      }
+		    },
+		    "Copy": {
+		      "label": "Copy",
+		      "action": function (obj) {
+			this.copy(obj);
+			self.copy=true;	
+		      }
+		    },
+		    "Cut": {
+		      "label": "Cut",
+		      "action": function (obj) {
+			this.cut(obj);
+			self.copy=false;
+		      }
+		    },
+		    "Paste": {
+		      "label": "Paste",
+		      "separator_after":true,
+		      "action": function (obj) {
+			self.paste=true;
+			this.paste(obj);
+		      }
+		    }
+		  };
+
+		  switch ( node.attr('rel') ) {
+
+		    case "folderLock":
+		    case "fileLock":
+		      delete items.CreateFile;
+		      delete items.CreateFolder;
+		      delete items.RemoteFile;
+		      delete items.Rename;
+		      delete items.Delete;
+		      delete items.Cut;
+		      delete items.Paste;
+		      break;
+		    case "fileRepo":
+		      delete items.CreateFile;
+		      delete items.CreateFolder;
+		    case "folderRepo":
+		      delete items.RemoteFile;
+		      delete items.Cut;
+		      delete items.Paste;
+		      break;
+		    case "file":
+		      delete items.CreateFile;
+		      delete items.CreateFolder;
+		      delete items.RemoteFile;
+		      delete items.Paste;
+		      break;
+		  };
+		  return items;
+	      }}})
 	    .bind("delete_node.jstree",function(e, data){
 	      var id = $(data.rslt.obj).attr("fmId");
 	      var parentId = $(data.rslt.parent).attr("fmId");
@@ -545,7 +346,7 @@ window.FileManager = (function() {
 		  
 		  self.fmIdByPath[newpath] =  self.fmIdByPath[oldpath];
 		  delete self.fmIdByPath[oldpath];
-		  if(newfmInfo.attr.rel == "folder"){
+		  if(newfmInfo.attr.rel == "folder" || newfmInfo.attr.rel == "folderRepo"){
 		    $(newfmInfo.attr.members).each(function(k,v){
 		      var tempfmInfo = self.fmObj[v].info;
 		      var newtemppath = self.calculatePath(tempfmInfo);
@@ -553,11 +354,17 @@ window.FileManager = (function() {
 		      self.fmIdByPath[newtemppath] =  self.fmIdByPath[oldtemppath];
 		      delete self.fmIdByPath[oldtemppath];
 		    });
+		  }else if(self.fmObj[ fmId ].info.attr.open){
+		    self.codearea.updateTitle(fmId,newname);
+		    if($("#mdfile-"+fmId).length){
+		      var parent = $("#mdfile-"+fmId).parent();
+		      $(".ui-dialog-title",parent).html(newname);
+		    }
 		  }
 		}else{
 		  $( "<div>Sorry, but '"+newname
 		    +"' already exists in this folder, please choose a different name</div>" ).dialog({
-		      title: "Error: Fuilename already in use",
+		      title: "Error: Filename already in use",
 		      resizable: false,
 		      height:140,
 		      modal: true
@@ -580,7 +387,7 @@ window.FileManager = (function() {
       var ttype = self.fmObj[id].info.attr.rel;
       if(ttype == "folderLock" || ttype == "fileLock")
 	return true;
-      if(ttype == "folder"){
+      if(ttype == "folder" || ttype == "folderRepo"){
 	var childs = self.fmObj[id].info.attr.members;
 	var sizeChilds = childs.length;
 	for( var i = 0; i < sizeChilds; i++){
@@ -814,7 +621,7 @@ window.FileManager = (function() {
 	var parentMembers = this.fmObj[ parentId ].info.attr.members;
 	parentMembers[ parentMembers.length ] = fmInfo.attr.fmId;
       }
-      
+
       this.fmIdByPath[path] = fmInfo.attr.fmId;
       return fmInfo.attr.fmId;
     
@@ -840,11 +647,14 @@ window.FileManager = (function() {
 
     //
     openFile: 
-    function( fileId ) {
+    function( fileId, force ) {
       if( fileId < 0 ) return;
       var fmInfo = this.fmObj[ fileId ].info;
-      
-      if ( fmInfo.attr.open ) {
+      var extension = /^.+\.([^.]+)$/.exec(fmInfo.attr.label);
+      extension = (extension == null) ? "": extension[1];
+      if ( extension == "md" && !force){
+	this.openMD(fmInfo);
+      }	else if ( fmInfo.attr.open ) {
 	this.codearea.showTab(fmInfo.attr.fmId);
       } else {
 	this.loadFile( fmInfo.attr.fmId );
@@ -852,6 +662,50 @@ window.FileManager = (function() {
 	fmInfo.attr.open = true;
       }
       
+    },
+
+		    //
+    openMD:
+    function (fmInfo){
+      var self = this;
+      if(fmInfo.attr.open){
+	//get new content from codearea
+	fmInfo.attr.content = self.codearea.getTabContent(fmInfo.attr.fmId);
+      }else{
+	self.loadFile(fmInfo.attr.fmId);
+      }
+      var htmlMD = markdown.toHTML(fmInfo.attr.content);
+      if($("#mdfile-"+fmInfo.attr.fmId).length){
+	$(".dialog-div","#mdfile-"+fmInfo.attr.fmId+"").html(htmlMD);
+	$("#mdfile-"+fmInfo.attr.fmId).dialog("open");
+	return;
+      }
+      var owner = $("<div id='mdfile-"+fmInfo.attr.fmId+"' class='dialog-div'></div>");
+      $(owner).append($("<div class='dialog-div'></div>"));
+      $(".dialog-div",owner).html(htmlMD);
+      //create dialog box with markdown
+      $(owner).dialog({
+	title: fmInfo.attr.label,
+	resizable: true,
+	height:400,
+	width: 600,
+	modal: false,
+	buttons: {
+	  "Close": function() {
+	    $( this ).dialog( "close" );
+	  },
+	  "Edit": function(){
+	    self.openFile(fmInfo.attr.fmId,true);
+	  },
+	  "Refresh": function(){
+	    if(self.fmObj[ fmInfo.attr.fmId ].info.attr.open){
+	      fmInfo.attr.content = self.codearea.getTabContent(fmInfo.attr.fmId);
+	      var htmlMD2 = markdown.toHTML(fmInfo.attr.content);
+	      $(".dialog-div","#mdfile-"+fmInfo.attr.fmId+"").html(htmlMD2);
+	    }
+	  }
+	}
+      });
     },
 
 		    //
@@ -885,10 +739,11 @@ window.FileManager = (function() {
 	});
       }else if(fmInfo.attr.urlGitHub && !fmInfo.attr.urlLoaded ){
 	var gh = fmInfo.attr.githubId;
-	var respons = this.githubs[gh].getBlob(fmInfo.attr.url, function(err,data){
-	  if(err)
+	var response = this.githubs[gh].getBlob(fmInfo.attr.url, function(err,data){
+	  if(err){
 	    fmInfo.attr.content = "Error: "+err;
-	  else{
+	    console.log(err);
+	  }else{
 	    fmInfo.attr.content =""+data;
 	    fmInfo.attr.urlLoaded = true;
 	  }
@@ -898,13 +753,14 @@ window.FileManager = (function() {
 
 		    //
     openFolder:
-    function(folderId){
+    function(folderId,sync){
       var self = this;
       var fmInfo = self.fmObj[folderId].info;
       if(fmInfo.attr.urlGitHub && !fmInfo.attr.urlLoaded){
 	var gh = fmInfo.attr.githubId;
-	self.githubs[gh].getTree(fmInfo.attr.url, function(err, tree) {
-	  self.buildGithubTree(gh,tree,folderId);
+	self.githubs[gh].getTree(fmInfo.attr.url,sync, function(err, tree) {
+	  fmInfo.attr.urlLoaded = true;
+	  self.buildGithubTree(gh,tree,"",folderId,fmInfo.attr.branch,sync);
 	  
 	});
       }
@@ -917,6 +773,7 @@ window.FileManager = (function() {
       if(this.fmObj[id].info.attr.rel == "folder" 
 	|| this.fmObj[id].info.attr.rel == "folderLock"
 	|| this.fmObj[id].info.attr.rel == "folderRepo"){
+	  this.openFolder(id,true);
 	  var fmInfo = this.fmObj[id].info;
 	  var size = fmInfo.attr.members.length;
 	  arr.type="folder";
@@ -943,13 +800,17 @@ window.FileManager = (function() {
       var recursive = function(Ids,files){
 	//Ids = [{id:0,child:[{},{}],type:"file",len:0,complete:bool}];
 	for(var i=0;i<Ids.length;i++) {
-	  if(Ids[i].type == "file"){
-	    files[files.length] = {
-	      id: Ids[i].id,
-	      type: "file",
-	      name: (self.calculatePathById(Ids[i].id)).substr(1),
-	      content: self.getFileContent(Ids[i].id)
-	    };  
+	  if(Ids[i].type == "file" ){
+	    var name = (self.calculatePathById(Ids[i].id)).substr(1);
+	    var extension = /^.+\.([^.]+)$/.exec(name);
+	    extension = (extension == null) ? "": extension[1];
+	    if(extension != "md")
+	      files[files.length] = {
+		id: Ids[i].id,
+		type: "text",
+		name: name,
+		content: self.getFileContent(Ids[i].id)
+	      };  
 	  }else{
 	    //files[files.length] = {
 	    //  id: Ids[i].id,
@@ -968,13 +829,9 @@ window.FileManager = (function() {
 		    //
     getSelectedId:
     function(){
-      var tmp = this.jstree.jstree('get_selected');
-      var arr = new Array();
-      if(tmp.length>0){
-	tmp.each(function(){
-	  arr[arr.length] = 	parseInt($(this).attr('fmId'));
-	});
-      }
+      var arr = $.map(this.jstree.jstree('get_selected'),function(I,k){
+ 	return parseInt($(I).attr('fmId'));
+      });
       return arr;
     },
 
@@ -1003,8 +860,17 @@ window.FileManager = (function() {
     },
 		    //
     getIdByPath:
-    function(path){
-      if(this.existsFm(path))
+      function(path){
+      var i = path.indexOf("/_ei_files/");
+      if ( i != -1 )
+	  path = path.substr(i+10,path.length);
+
+     // if the first char is not /, add it
+     if ( path.charAt(0) != '/' )
+	 path = "/"+path;
+
+	  alert(path);  
+     if(this.existsFm(path))
 	return this.fmIdByPath[path];
       else
 	return -1;
@@ -1033,9 +899,10 @@ window.FileManager = (function() {
     },
 		    //
     joinGithubWithfm:
-    function(fmId,gh,url){
+    function(fmId,gh,branch,url){
       this.fmObj[fmId].info.attr.githubId = gh;
       this.fmObj[fmId].info.attr.urlGitHub = true;
+      this.fmObj[fmId].info.attr.branch = branch;
       if(url != ""){
 	this.fmObj[fmId].info.attr.url = url;
 	this.fmObj[fmId].info.attr.loaded = false;
@@ -1045,6 +912,10 @@ window.FileManager = (function() {
     requestRemote:
     function(fm,fmId){
       var self = this;
+      if($("#remoteFileSelector").length){
+	$("#remoteFileSelector").dialog("open");
+	return;
+      }
       var owner = $('<div id="remoteFileSelector"></div>');
       var tabs = $('<div id="remoteOptions"></div>');
       var Roptions = ["Computer","GitHub"];
@@ -1068,23 +939,28 @@ window.FileManager = (function() {
 	buttons: {
 	  "Close": function() {
 	    $( this ).dialog( "close" );
-	    $(this).remove();
 	  }
 	}
       });
     },
 		    //
     buildGithubTree:
-    function(repoId,tree,parentId,close){
+    function(repoId,tree,dir,parentId,branch,close){
       var self = this;
       //construir arbol en el filemanager
       $(tree).each(function(k,v){
 	switch(v.type){
 	  case "blob":
-	    self.joinGithubWithfm(self.addFile(v.path,parentId , "", v.sha , "Repo"),repoId,"");
+	    self.joinGithubWithfm(self.addFile(v.path,parentId , "", v.sha , "Repo"),repoId,branch,"");
+	    break;
+	  case "file":
+	    self.joinGithubWithfm(self.addFile(v.name,parentId , "", v.sha , "Repo"),repoId,branch,"");
 	    break;
 	  case "tree":
-	    self.joinGithubWithfm(self.addFolder(v.path,parentId ,  "Repo"),repoId,v.sha);
+	    self.joinGithubWithfm(self.addFolder(v.path,parentId ,  "Repo"),repoId,branch,v.sha);
+	    break;
+	  case "dir":
+	    self.joinGithubWithfm(self.addFolder(v.name,parentId ,  "Repo"),repoId,branch,v.sha);
 	    break;
 	  default:
 	    console.log("unknow github type.",v.type);
@@ -1097,37 +973,61 @@ window.FileManager = (function() {
     },
 		    //
     addGithub:
-    function(user,repo,branch,pId){
+    function(user,repo,branch,dir,pId){
       var self = this;
-      if(!self.conectgithubBase){
-	self.githubs[0] = new Github({
-	  token: "a6666d5d051c07d51ccc12dced6eebb809f13d5a",
-	  auth: "oauth"
-	});
-	self.conectgithubBase = true;
-      }
-      self.buildRepo(self.githubs[0],user,repo,branch,pId,true);
+
+      self.githubs[0] = new Github({
+	    username: "",
+	    password: "",
+            auth: "basic"
+      });
+      self.buildRepo(self.githubs[0],user,repo,branch,dir,pId,true);
       //request close!
 
     },
 		    //
     buildRepo:
-    function(git,userGH,repoGH,branch,parentId,close){
+    function(git,ownerGH,repoGH,branch,dir,parentId,close){
       var self = this;
-      var repoId = ""+userGH+"@"+repoGH;
-      if(!self.githubs[repoId])
-	self.githubs[repoId] = git.getRepo(userGH,repoGH);
-      
+      var repoId = ownerGH+"_"+repoGH;
+      if(!self.githubs[repoId]){
+	try{
+	  var auxy = git.getRepo(ownerGH,repoGH);
+	}catch(err){
+	  return;
+	}
+	self.githubs[repoId] = auxy;
+      }
       var repo = self.githubs[repoId];
-
       if(!branch || branch == "")
 	branch = 'master';
-      repo.getTree(branch, function(err, tree) {
-	if(!err){
-	  parentId = self.addFolder(repoId,parentId,"Repo");
-	  self.buildGithubTree(repoId,tree,parentId,close);  
-	}
-      });
+      if(dir!=""){
+	if(dir[0]=="/")
+	  dir = dir.substring(1);
+	if(dir[dir.length-1]=="/")
+	  dir = dir.substring(0,dir.length-1);
+	repo.contents(branch,dir, function(err,content){
+	  if(!err){
+	    var isTree = $.isArray(content);
+	    var tmp = dir.split("/");
+	    if(isTree){
+	      var tree = content;
+	      parentId = self.addFolder(tmp[tmp.length-1],parentId,"Repo");
+	      self.buildGithubTree(repoId,tree,dir,parentId,branch,close);  
+	    }else{
+	      
+	      self.joinGithubWithfm(self.addFile(content.name,parentId , "", content.sha , "Repo"),repoId,branch,"")
+	    }
+	  }
+	});
+      }else{
+	repo.getTree(branch,false, function(err, tree) {
+	  if(!err){
+	    parentId = self.addFolder(repoId,parentId,"Repo");
+	    self.buildGithubTree(repoId,tree,dir,parentId,branch,close);  
+	  }
+	});
+      }
     },
 		    //
     getFormRemoteFiles:
@@ -1161,63 +1061,57 @@ window.FileManager = (function() {
 	  $("#addRFiles-"+site,div).click(function(event){ handleButtonAdd(event);});
 	  break;
 	case "GitHub":
-	  var formu = $('<div id="addGitFiles"></div>');
-//	  $(formu).append($('<h4>Public</h4>'));
-	  $(formu).append($('<label>Owner: </label>'));
-	  $(formu).append($('<input type="text" id="userGH" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Repository: </label>'));
-	  $(formu).append($('<input type="text" id="repoGH" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Branch: </label>'));
-	  $(formu).append($('<input type="text" id="branchGH" value="master"/>'));
-	  $(formu).append($('<br/>'));
-	  var AddButton = $('<button id="public-'+site+'">Public Repository</button>');
+	  var formu = $('<div id="formGithub">'+
+			'<label><b>Owner*: </b></label>'+
+			'<input type="text" id="ownerGH"/>'+
+			'<br/>'+
+			'<label><b>Repository*: </b></label>'+
+			'<input type="text" id="repoGH"/>'+
+			'<br/>'+
+			'<label>Directory: </label>'+
+			'<input type="text" id="dirGH"/>'+
+			'<br/>'+
+			'<label>Branch: </label>'+
+	  '<input type="text" id="branchGH" value="master"/>'+
+			'<br/></div>');
+
+
+	  var AddButton = $('<button id="connect-'+site+'">Connect</button>');
 	  $(AddButton).button();
 	  $(formu).append(AddButton);
-	  //UNCOMMENT TO SHOW PRIVATE REPOSITORIES!!!!
-	  /*	  
-	  $(formu).append($('<h4>Private</h4>'));
-	  $(formu).append($('<label>User: </label>'));
-	  $(formu).append($('<input type="text" id="userGH2" />'));
-	  $(formu).append($('<br/>'));
-	  $(formu).append($('<label>Password: </label>'));
-	  $(formu).append($('<input type="password" id="passGH2" />'));
-	  $(formu).append($('<br/>'));
-	  var AddButton2 = $('<button id="private-'+site+'">User Repositories</button>');
-	  $(AddButton2).button();
-	  $(formu).append(AddButton2);
-	     //*/
+	  $(formu).append('<br/><small>User and password are only for private repositories</small>'+
+			  '<br/><label>User: </label>'+
+			  '<input type="text" id="userGH"/>'+
+			  '<br/>'+
+			  '<label>Password: </label>'+
+			  '<input type="password" id="passGH"/>');
 	  $(div).append(formu);
-	  
-	  $("#public-"+site,div).click(function(event){ 
- 	    if(!self.conectgithubBase){
-	      self.githubs[0] = new Github({
-		token: "a6666d5d051c07d51ccc12dced6eebb809f13d5a",
-		auth: "oauth"
-	      });
-	      self.conectgithubBase = true;
+	  $("input#userGH",div).focusout(function(event){
+	    if($("#ownerGH").val() == ""){
+	      $("#ownerGH").val($("#userGH").val());
 	    }
-	    var userGH = $("#userGH").val();
-	    var repoGH = $("#repoGH").val();
-	    if (userGH =="" || repoGH =="")
-	      return;
-	    var branchGH = $("#branchGH").val();
-	    self.buildRepo(self.githubs[0],userGH,repoGH,branchGH,fm.fmObj[fmId].node.attr("fmId"));
-
 	  });
-
-	  $("#private-"+site,div).click(function(event){ 
-	    if($("#passGH2").val() == "")
+	  $("#connect-"+site,div).click(function(event){ 
+	    var userGH = $("#userGH").val();
+	    var ownerGH = $("#ownerGH").val();
+	    var repoGH = $("#repoGH").val();
+	    var branchGH = $("#branchGH").val();
+	    var dirGH = $("#dirGH").val();
+	    var github_connector = null;
+	    if (ownerGH =="" || repoGH =="")
 	      return;
-	    var userGH = $("#userGH2").val();
-	    if (userGH =="")
-	      return;
-	    var github = new Github({
+	    
+	    github_connector = new Github({
 	      username: userGH,
-	      password: $("#passGH2").val(),
+	      password: $("#passGH").val(),
 	      auth: "basic"
-	    });
+            });
+
+	    self.buildRepo(github_connector,ownerGH,repoGH,branchGH,dirGH,fm.fmObj[fmId].node.attr("fmId"));
+	  });
+/*
+	  $("#private-"+site,div).click(function(event){ 
+	    self.buildRepo(github,userGH_,repoGH_,branchGH_,fm.fmObj[fmId].node.attr("fmId"));
 	    var user = github.getUser();
 	    user.repos(function(err, repos) {
 	      if (err){
@@ -1230,7 +1124,7 @@ window.FileManager = (function() {
 		if(v.owner != userGH){
 		  if(!self.conectgithubBase){
 		    self.githubs[0] = new Github({
-		      token: "a6666d5d051c07d51ccc12dced6eebb809f13d5a",
+		      token: github_Token,
 		      auth: "oauth"
 		    });
 		    self.conectgithubBase = true;
@@ -1241,7 +1135,7 @@ window.FileManager = (function() {
 	      });
 	    });
 	  });
-
+*/
 	  
 	  break;
 	default:

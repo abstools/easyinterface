@@ -42,19 +42,24 @@ window.Console = (function() {
 	//
 	initConsole: 
 	function() {
-	    var self = this;
-	    
-	    this.consId = "CONS-"+consoleId;      // a unique id for the console
-	    this.consHolder = this.place;              // the jquery element where the console should be place
-	    this.tabCounter = 0;                  // current number of tabs in the console
-	    this.currTabId = 0;                   // the id of the currently visible tab
-	    this.winInfoById = new Array();       // an array the keeps the win (i.e tab) info by id
-	    this.winInfoByPos = new Array();      // an array the keeps the win (i.e tab) info by position
-	    this.winId = 0;
+	  var self = this;	    
 
-	    if ( this.tabs ) {
-		$(this.consHolder).find("#"+this.consId).remove();
-	    }
+	  if ( this.tabs ) {
+	    $(this.winInfoById).each(function(k,v){
+	      if(v.streamRef)
+		v.streamRef.off(true);
+	    });
+	    $(this.consHolder).find("#"+this.consId).remove();
+	    
+	  }
+
+	  this.consId = "CONS-"+consoleId;      // a unique id for the console
+	  this.consHolder = this.place;              // the jquery element where the console should be place
+	  this.tabCounter = 0;                  // current number of tabs in the console
+	  this.currTabId = 0;                   // the id of the currently visible tab
+	  this.winInfoById = new Array();       // an array the keeps the win (i.e tab) info by id
+	  this.winInfoByPos = new Array();      // an array the keeps the win (i.e tab) info by position
+	  this.winId = 0;
 	  
 	  //console panel
 	     this.tabs = $(this.consHolder).append("<div id='"+this.consId+"' class='ei-console'><ul class='ei-console-panel'></ul></div>").find("#"+this.consId);
@@ -111,7 +116,7 @@ window.Console = (function() {
 		}
 	    });
 	    this.marker = $("");
-
+	  
 	    this.tabs.delegate( "span.ui-icon-close", "click", 
 				function() {
 				    var winId = self.winTag_to_winId( $( this ).closest( "li" ).attr( "aria-controls" ) );
@@ -159,18 +164,31 @@ window.Console = (function() {
 	    // create the panel
 	    var panel = $("<li id='tablabel-"+winTag+
 			  "'><a href='#"+winTag+"'>"+title+
-			  "</a><span style='display:inline-block;' class='ui-icon ui-icon-extlink'></span>"+
+			  "</a>"+
+			  "<span style='display:inline-block;' class='ui-icon ui-icon-extlink'></span>"+
 			  "<span style='display:inline-block;' class='ui-icon ui-icon-close'></span></li>");
 	    this.tabs.find( ".ui-tabs-nav" ).append( panel );
 	    
 	    // create the tab content
-	    var content = $("<div id='" + winTag + "' class='ei-console-content'> </div>");
+	    var content = $("<div id='" + winTag + "' class='ei-console-content'></div>");
+	    var streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
+	    $(streamBttn).button({ 
+	  	    icons: { primary: "ui-icon-stop"}, 
+	  	    text: "stream" 
+	  	}).click( function() { 
+		  self.disableStreamButton(id);
+		  self.winInfoById[id].streamRef.off(true);
+	  	});
+	  $(streamBttn).hide();
+	    $(content).append(streamBttn);
+
 	    this.tabs.append( content );
 	    var currWinInfo = {
 	        id: id, 
 		pos: this.tabCounter, 
 	        label: title,
 	        visible: true,
+		streamButton: streamBttn,
 		panel: panel,
 		content: content
 	    };
@@ -332,8 +350,36 @@ window.Console = (function() {
 	currWinId:
 	function() {
 	    return this.currTabId;
-	}
-	
+	},
+
+	    //
+	addStreamButton:
+	function(id,ref){
+	  if(this.winInfoById[id]){
+	    this.winInfoById[id].streamButton.show();
+	    this.winInfoById[id].streamRef = ref;
+	  }
+	},
+	  //
+	disableStreamButton:
+	function(id){
+	  if(this.winInfoById[id] && this.winInfoById[id].streamRef)
+	    this.winInfoById[id].streamButton.attr("disabled", "disabled");
+	},
+	  //
+	enableStreamButton:
+	function(id){
+	  if(this.winInfoById[id] && this.winInfoById[id].streamRef)
+	    this.winInfoById[id].streamButton.removeAttr("disabled");
+	},
+	     //
+	removeStreamButton:
+	function(id){
+	  if(this.winInfoById[id] && this.winInfoById[id].streamRef){
+	    this.winInfoById[id].streamButton.hide();
+	    this.winInfoById[id].streamRef = null;
+	  }
+	},
     };
 
     return Console;

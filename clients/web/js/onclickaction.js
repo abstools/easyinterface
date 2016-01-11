@@ -18,7 +18,8 @@ window.OnClickAction = (function() {
 	    outputmanager: ei_info.outputmanager,
 	    outclass: outclass,
 	    autoclean: autoclean,
-	    dest: dest
+	    dest: dest,
+	    server: ei_info.server
        });
     };
 
@@ -48,7 +49,8 @@ window.OnClickAction = (function() {
 		    filemanager: options.filemanager,
 		    codearea : options.codearea,
 		    console  : options.console,
-		    defaultConsoleId: options.defaultConsoleId
+		    defaultConsoleId: options.defaultConsoleId,
+		    server: options.server
 		});
 	    });
 	});

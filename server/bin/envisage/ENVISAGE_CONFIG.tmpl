@@ -1,14 +1,33 @@
-# This file is a templte for ENVISAGE_CONFIG.tmpl
+# This file is a templte for `ENVISAGE_CONFIG`.
 #
-# Ideally, it should be automatically generated when you installed
-# the Collaboratory, otherwise copy it to ENVISAGE_CONFIG and change
-# the values of the variables accordingly.
+# Ideally, ENVISAGE_CONFIG should be automatically generated when you
+# install the Collaboratory, otherwise copy `ENVISAGE_CONFIG.tmpl` to
+# `ENVISAGE_CONFIG` and change the values of the variables
+# accordingly.  
+#
+# **IMPORTANT** PATHs SHOULD NOT INCLUDE / at the end
 
-# path to saco
-EC_SACOHOME="/Users/genaim/Systems/costa/costabs/"
+# Path to saco --- where you've extracted   
+#
+#   http://costa.ls.fi.upm.es/download/saco.colab.zip
+#
+EC_SACOHOME="/home/genaim/Systems/costa/costabs/dist/saco"
 
-# path to abs tools
-EC_ABSTOOLSHOME="/Users/genaim/Systems/abstools/"
+# Path to abs tools --- where you have checkedout
+#
+#   https://github.com/abstools/abstools
+#
+EC_ABSTOOLSHOME="/home/genaim/Systems/abstools"
 
-# path to absfrontend.jar
-EC_ABSFRONTEND="/Users/genaim/Systems/abstools/frontend/dist"
+# Path to SRA (where lib/resourceAnalysis-1.0.jar is)
+#
+EC_SRAHOME="/home/genaim/Systems/sra"
+
+# Path to COFLOCO (where bin/cofloco is)
+#
+EC_COFLOCOHOME="/home/genaim/Systems/cofloco"
+
+# directories to be added to the PATH variable, e.g., path to Erlang
+# if not defined by defualt, etc.
+#
+EC_PATH="/opt/loca/bin:/home/envisage/erlang/bin"

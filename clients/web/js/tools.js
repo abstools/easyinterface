@@ -106,13 +106,13 @@ window.Tools = (function() {
 	    },
 				 function(out) {
 				   dialogBox.dialog("close");
-				   self.outputmanager.output(out);
+				   self.outputmanager.output(out,toolInfo.server);
 				 },
 	    function(out){
 	      dialogBox.dialog("close");
 	      var err_str= "<ei_response><eiout version='-1'><eicommands><printconsole consoleid='ERROR' consolename='ERROR'><content>ERROR</content></printconsole></eicommands></eiout></ei_response>";
 	      var err = $.parseXML(err_str);
-	      self.outputmanager.output(err);
+	      self.outputmanager.output(err,toolInfo.server);
 	      //ADD NOTIFY ERROR
 	      console.log("ERROR",out);
 	    });

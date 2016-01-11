@@ -114,29 +114,46 @@ window.Parameters = (function() {
 
 	    //more than one default value?
 	    var defaultValue;
-	    if(param.find("> default").attr("value"))
-		defaultValue = param.find("> default").attr("value");
-	    else
-		defaultValue = param.find("> default").text();
+	  if(type == "textfield")
+	    defaultValue = param.find("> initialtext").text();
+	  else if(param.find("> default").attr("value"))
+	    defaultValue = param.find("> default").attr("value");
+	  else
+	    defaultValue = param.find("> default").text();
 
 	    switch ( widget ) {
 	    case "checkbox":
-	
+		var trueval = "true";
+		var falseval = "false";
+		if(param.attr("explicit")=="true"){
+		  trueval= (param.attr("trueval"))?param.attr("trueval"):"true";
+		  falseval= (param.attr("falseval"))?param.attr("falseval"):"false";
+		}
+		var options = new Array(trueval,falseval);
 		this.addCheckWidget(sectionId,
 				     {
 					 id: name, 
 					 desc: desc,
+					 options: options,
 					 multiple: false,
 					 default_value: defaultValue
 				     });
 		break;
 	    //
 	    case "checkboxMultiple":
+		var trueval = "true";
+		var falseval = "false";
+		if(param.attr("explicit")=="true"){
+		  trueval= (param.attr("trueval"))?param.attr("trueval"):"true";
+		  falseval= (param.attr("falseval"))?param.attr("falseval"):"false";
+		}
+		var options = new Array(trueval,falseval);
 	
 		this.addCheckWidget(sectionId,
 				     {
 					 id: name, 
 					 desc: desc,
+					 options: options,
 					 multiple: true,
 					 default_value: defaultValue
 				     });
@@ -203,20 +220,10 @@ window.Parameters = (function() {
 				       });
 		break;
 		//
-	    case "radio":
-	
-		this.addRadioWidget(sectionId,
-				     {
-					 id: name, 
-					 desc: desc,
-					 default_value: defaultValue
-				     });
-		break;
-		//
 	    case "textfield":
 		this.addTextfieldWidget(sectionId,
 					{
-					    multiple: false,
+					    multiple: (param.attr("multiline") =="true")?true:false,
 					    id:name,
 					    desc: desc,
 					    default_value: defaultValue
@@ -237,23 +244,22 @@ window.Parameters = (function() {
 
 	},
 
-	// paramInfo: id, default_value, desc
+	// paramInfo: id, options,multiple,default_value, desc
 	//
 	addCheckWidget:
 	function(sectionId, paramInfo) {
 	    var sectionInfo = this.sectionInfoById[sectionId];
-	    
 	    var callBackWrapper = undefined;
 	    if ( paramInfo.callback ) 
 		callBackWrapper = function(name,value) { 
-		    paramInfo.callback( {value: value? "true":"false"} ); }
+		    paramInfo.callback( {value: value? paramInfo.options[0]:paramInfo.options[1]} ); }
 
 	    var widget = new CheckBoxWidget( 
 		{ id: paramInfo.id,
 		  options: [
 	              { 
-			  value: "true", 
-			  selected: (paramInfo.default_value == "true"), 
+			  value: paramInfo.options[0], 
+			  selected: (paramInfo.default_value == paramInfo.options[0]), 
 			  desc: paramInfo.desc ,
 			  isBoolean: true
 		      }

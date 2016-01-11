@@ -1,0 +1,1076 @@
+{% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
+}
+\chapter{\ei Server}
+\label{ch:server}
+
+This chapter describes the server side of the \ei framework, that we
+refer to as the \ei server (or simply the server).
+%
+As explained in Section~\ref{ch:overview:arch:server}, the goal of
+this server is to provide a uniform way to access local applications
+and examples (i.e., those installed on the machine where the server
+runs).
+
+
+The \ei server achieves the above goal by:
+%
+(1) providing a way to describe, using XML based configuration files,
+how to execute a local application and which parameters it takes, as
+well as define sets of related examples; and
+%
+(2) providing a JSON based protocol that can be used to request
+information on those applications and examples, execute applications,
+etc.
+%
+Section~\ref{ch:server:config} describes the syntax of the server
+configuration file; and Section~\ref{ch:server:protocol} describes the
+protocol that can be used to communicate with the server.
+%
+This chapter does not cover issues related to installation, for such
+documentation see
+\texttt{\href{http://github.com/abstools/easyinterface}{INSTALL.md}}.
+
+
+\section{Configuring the \ei Server}
+\label{ch:server:config}
+
+This section describes how to configure the \ei server.
+%
+Section~\ref{ch:server:config:file} explains where the configuration
+file should be placed, and Section~\ref{ch:server:config:xml}
+describes the (valid) content of this file.
+%
+Before proceeding to the next sections, it is very recommended to read
+Chapter~\ref{ch:quickguide} to get a general idea on how the
+configuration file looks like, etc.
+
+
+\subsection{Name and Path of the Configuration File}
+\label{ch:server:config:file}
+
+By default the server looks for the configuration file
+\texttt{server/config/eiserver.cfg}, and if no such file exists it
+uses \texttt{server/config/eiserver.default.cfg}.
+%
+The default installation comes with a predefined
+\texttt{sever/config/eiserver.default.cfg} that includes some demo
+applications and corresponding examples. It is very recommended not
+make substantial changes to \texttt{eiserver.default.cfg}, and instead
+create your own \texttt{eiserver.cfg}. This way you can always have a
+correct configuration file at hand from which you can copy, etc.
+
+\subsection{The Syntax of the Configuration File}
+\label{ch:server:config:xml}
+
+The content of the configuration file should adhere to the
+\xmlstructref{server}{eiserver} XML structure that is described below.
+%
+Inside this tag you can define applications, examples, etc. The best
+way to understand how to do so is follow the links in the definition
+of \xmlstructref{server}{eiserver}.
+
+\subsubsection*{General Comments about XML Structures} 
+
+For the purpose of better organization of the configuration files, we
+provide a way to split them into several files and import one file
+into another one. Any XML structure
+
+\medskip
+\begin{lstlisting}
+<tagname ...>
+  ....
+</tagname>
+\end{lstlisting}
+
+\medskip
+\noindent
+can be also written as
+
+\medskip
+\begin{lstlisting}
+<tagname src=$\xmlstructref{server}{cfgfilename}$/>
+\end{lstlisting}
+
+\medskip
+\noindent
+where the file \xmlstructref{server}{cfgfilename} includes the actual
+XML structure (of the first form above). It will be automatically
+imported when needed. However, if the XML structure (the first form)
+has an attribute \lst{id} then it must appear as an attribute in the
+second form as well.
+
+\subsubsection*{The Main XML Tag of the Configuration File}
+
+%% EISERVER
+\bigskip
+\xmlstruct
+{server}
+{eiserver}
+{%
+This XML tag is the root of the configurations file.
+%
+The \xmlstructref{server}{settings} section is used for setting some
+global parameters; \xmlstructref{server}{examples} defines which sets
+of examples are available on the server; and the
+\xmlstructref{server}{apps} section defines which applications are
+available on the server.
+%
+}
+
+
+
+\subsubsection*{General Settings}
+
+%% SETTINGS
+\bigskip
+\xmlstruct
+{server}
+{settings}
+{%
+%
+  This tag does not include anything yet. It is reserved for future
+  use, where we plan to put general settings.
+%
+}
+
+\subsubsection*{Examples Settings}
+
+%% EXAMPLES
+\bigskip
+\xmlstruct
+{server}
+{examples}
+{%
+%
+  This tag is used to declare sets of examples that are available in
+  the server, where each such set is defined by one
+  \xmlstructref{server}{exset}.
+%
+}
+
+
+%% EXSET
+\bigskip
+\xmlstruct
+{server}
+{exset}
+{%
+%
+  This tag declare a set of examples, which are defined a collection
+  of \xmlstructref{server}{exelement} (a file, a directory, or a link to a
+  github repository).
+%
+  The attribute \xmlstructattr{id} is a unique identifier that is used
+  to refer to this set when communicating with the server.
+%
+}
+
+
+%% EXAMPLE element
+\bigskip
+\xmlstruct
+{server}
+{exelement}
+{%
+%
+  An example element, which can be a file \xmlstructref{server}{file}, a
+  folder \xmlstructref{server}{folder}, or a link to a github repository
+  \xmlstructref{server}{github}.
+%
+}
+
+
+
+%% File
+\bigskip
+\xmlstruct
+{server}
+{file}
+{%
+%
+  This tags declares a file, where the \xmlstructattr{name} attribute
+  is its name and \xmlstructattr{url} is a link to its content. Note
+  that \xmlstructattr{name} is not necessarily the same as the one in
+  \xmlstructattr{url}.
+%
+}
+
+
+%% Folder
+\bigskip
+\xmlstruct
+{server}
+{folder}
+{%
+%
+  This tags declares a folder with \xmlstructattr{name} as its
+  name. The content of this tag is a list of
+  \xmlstructref{server}{exelement} tags, which in turn declare the
+  inner files, folders, etc.
+%
+}
+
+
+
+%% GitHub
+\bigskip
+\xmlstruct
+{server}
+{github}
+{%
+%
+  Declares a reference to the public github repository
+  \xmlstructattr{repo} which is owned by the user
+  \xmlstructattr{owner}. Optionally one can also refer to a specific
+  \xmlstructattr{branch}, which \texttt{master} by default, and to a
+  specific path \xmlstructattr{githubpath} (a directory or a single
+  file) which is a the root directory by default.
+%
+}
+
+
+\subsubsection*{Applications Settings}
+
+%% APPS
+\bigskip
+\xmlstruct
+{server}
+{apps}
+{%
+%
+  This tag declares a list of applications (to be added to the
+  server). Each such application is defined by one \xmlstructref{server}{app}
+  environment.  
+%
+} 
+
+
+%% APP
+\bigskip
+\xmlstruct
+{server}
+{app}
+{%
+%
+  This tag defines an application, where the meaning of the different
+  parts is as follows:
+%
+  \begin{itemize}
+
+  \item \xmlstructattr{id} is a unique identifier used to refer to
+    this application when communicating with the server.
+
+  \item \xmlstructattr{visible} indicates if this application should
+    be listed when the list of available applications is requested ---
+    by default it is \texttt{true}. 
+    %
+    Note that even if an application is not visible, it can be used
+    like any other application by those who know its
+    \xmlstructattr{id}.
+
+  \item \xmlstructref{server}{appinfo} provides some general information about
+    the application, e.g., title, logo, etc.
+
+  \item \xmlstructref{server}{apphelp} provides enough information on how the
+    application can be used, etc. It is mainly used in the help
+    sections of the different clients.
+
+  \item \xmlstructref{server}{execinfo} defines how the application can be
+    executed (e.g., from a command-line).
+
+  \item \xmlstructref{server}{parameters} defines the set parameters accepted
+    by the application.
+
+  \end{itemize}
+%
+}
+
+
+
+%% APPINFO
+\bigskip
+\xmlstruct
+{server}
+{appinfo}
+{%
+%
+  This tag provides general information about an application:
+%
+  \begin{itemize}
+  \item \xmlstructref{server}{acronym} is an acronym for the application,
+    e.g., COSTA;
+  \item \xmlstructref{server}{title} is the full name of the application;
+  \item \xmlstructref{server}{logo} is an image corresponding to the logo of
+    the application; and
+  \item \xmlstructref{server}{desc} is a description of the tool.
+  \end{itemize}
+%
+}
+
+
+
+%% ACRONYM
+\bigskip
+\xmlstruct
+{server}
+{acronym}
+{%
+%
+  Plain text to be used as an acronym, e.g., COSTA.
+%
+}
+
+
+
+%% TITLE
+\bigskip
+\xmlstruct
+{server}
+{title}
+{%
+%
+  Plain text describing a title, e.g., for an application. It is
+  typically more informative than an acronym (see
+  \xmlstructref{server}{acronym}).
+%
+}
+
+
+
+%% LOGO
+\bigskip
+\xmlstruct
+{server}
+{logo}
+{%
+%
+  A link to an image --- in some standard format, .e.g.,
+  \xmlstructvalue{png}, \xmlstructvalue{jpg} or \xmlstructvalue{gif}
+  --- to be used by clients as a logo (e.g., for an application).
+%
+}
+
+
+
+%% DESC
+\bigskip
+\xmlstruct
+{server}
+{desc}
+{%
+%
+  This is a description of some entities, e.g., of an application, a
+  parameter, a parameter option, etc. It consists of two parts, the
+  first one is a short description, and the second is a detailed
+  description. In both cases it should be plain text. Clients will
+  select one of them depending on the intended use.
+%
+}
+{}%
+
+
+%% APPHELP
+\bigskip
+\xmlstruct
+{server}
+{apphelp}
+{%
+%
+  A (formatted) text that provides enough information on how an
+  application can be used, etc. It can be provided in several formats,
+  e.g., html or plain text, by using several
+  \xmlstructref{server}{content} tags. Clients are supposed to pick
+  the appropriate format if more than one is available. It is
+  recommended to always include a content in plain text since it can
+  be viewed in any client.
+%
+}
+
+
+
+%% CONTENT
+\bigskip
+\xmlstruct
+{server}
+{content}
+{%
+%
+  A text given in a specific \xmlstructattr{format}, e.g.,
+  \xmlstructvalue{"text"}, \xmlstructvalue{"html"}, etc. If the
+  attribute \xmlstructattr{format} is not provided, then it is assumed
+  to be \xmlstructvalue{"text"} format (plain text).
+%
+}
+
+
+%% EXECINFO
+\bigskip
+\xmlstruct
+{server}
+{execinfo}
+{%
+%
+  Provides information on how to execute an application. Currently it
+  includes only the command-line template
+  \xmlstructref{server}{cmdlineapp}.
+%
+}
+
+
+%% CMDLINEAPP
+\noindent
+\xmlstruct
+{server}
+{cmdlineapp}
+{%
+%
+  Describes how to run an application from a command-line, where
+  \xmlstructref{server}{cmdtemplate} is a template describing the
+  command-line. It is best explained by an example. Consider the
+  following template example
+
+  \bigskip
+  ~~~
+  \fbox{\small\texttt{/path-to/app \xmlstructtemplate{_ei_files} -m \xmlstructtemplate{_ei_outline}  \xmlstructtemplate{_ei_parameters}}}
+  
+  \bigskip
+  \noindent
+  In this template, anything that starts with \xmlstructtemplate{_ei}
+  is a template parameter that will be replaced by some corresponding
+  value, and \texttt{/path-to/app} is the application
+  executable.
+  % 
+  When the server receives a request for executing the corresponding
+  application, the request includes several data that should passed to
+  the application. For example, the following are typical data that
+  should be passed to an application:
+  %
+  \begin{enumerate}
+  \item files to be processed (e.g., program to be analyzed);
+  \item entities selected from the program outline (e.g., methods); and
+  \item values for the different parameters.
+  \end{enumerate}
+  %
+  The server passes this data to the application by replacing the
+  template parameters with corresponding data as follows:
+  % 
+  \begin{enumerate}
+  \item the files are stored locally (e.g., in \texttt{/tmp}), and
+    \xmlstructtemplate{_ei_files} is replaced by a list file names
+    (each with an absolute path, separated by a space);
+  \item \xmlstructtemplate{_ei_outline} is replaced by a list of
+    selected entities (e.g., method names); and
+  \item \xmlstructtemplate{_ei_parameters} is replaced by the list of
+    parameters generated from those provided in the request.
+  \end{enumerate}
+  % 
+  This result in, for example, the following instance of the template:
+
+  \bigskip
+  \hspace{0.7cm}
+  \fbox{\texttt{/path-to/app \xmlstructtemplate{/tmp/ei_FAJw1B/a.c /tmp/ei_FAJw1B/b.c} -m \xmlstructtemplate{a.main} \xmlstructtemplate{-v 1 -d 3 -a}}}
+
+  \bigskip 
+  \noindent
+  which is then executed and its output is redirected to the
+  client. The server does some security checks to guarantee that the
+  command-line is not harmful. % TODO refer to the security section when available
+
+  \bigskip 
+  \noindent
+  The following is a list of template parameters that can be used:
+
+%%
+  \begin{itemize}
+  \item \xmlstructtemplate{_ei_files} is replaced by a list of file
+    names (separated by space) in the local file system;
+
+  \item \xmlstructtemplate{_ei_root} is replaced by the local
+    temporary directory name, where all files have been saved;
+
+  \item \xmlstructtemplate{_ei_stream} is replaced by the local
+    temporary directory name, where stream aplications have to save
+    all files; 
+%%
+  \item \xmlstructtemplate{_ei_outline} is replaced by a list of
+    selected entities (separated by space);
+%%
+  \item \xmlstructtemplate{_ei_parameters} is replaced by a
+    corresponding list of parameters (see \xmlstructref{server}{parameters});
+%%
+  \item \xmlstructtemplate{_ei_sessionid} is replaced by a session
+    identifier, this makes it possible to track the information of a
+    user along several request;
+%%
+  \item \xmlstructtemplate{_ei_clientid} is replaced by the client
+    identifier, i.e., \texttt{webclient}, \texttt{eclipse}, etc.,
+    which makes it possible to provide output depending on the
+    client. See Chapter~\ref{ch:clients} for a list of clients and
+    their corresponding identifiers.
+%
+  \item \xmlstructtemplate{_ei_execid} is replaced by a execution
+    identifier, this makes it possible to track the information of a
+    concrete execution, especially for stream applications;
+  \end{itemize}
+%
+}
+
+
+\subsubsection{Application Parameters}
+
+%% PARAMETERS
+\bigskip 
+\xmlstruct
+{server}
+{parameters} 
+{%
+%
+  Defines a list of parameters that are accepted by a corresponding
+  application. Each parameter is defined by one
+  \xmlstructref{server}{param} environment.
+  %
+  The \xmlstructattr{prefix} attribute is used to specify a string
+  that will be attached to each parameter name when passed to the
+  application.
+  % 
+  For example, if \xmlstructattr{prefix}=\xmlstructvalue{"{-}{-}"} and
+  there is a parameter called 'level' with value X, then '{-}{-}level
+  X' will be passed to the application.  The default value of
+  \xmlstructattr{prefix} is \xmlstructvalue{"-"}. It can also be set
+  to an empty string if there is no need for a prefix.
+  %
+  The \xmlstructattr{check} attribute is used to indicate if the
+  server should verify that the values of the parameters are valid
+  (w.r.t. the specified values). The default value of
+  \xmlstructattr{check} is \xmlstructvalue{"true"}.
+  %
+  The attributes \xmlstructattr{prefix} and \xmlstructattr{check} are
+  inherited by each parameter \xmlstructref{server}{param}, which in turn can
+  override then as well.
+%
+}
+{}%
+
+%% PARAM
+\bigskip
+\xmlstruct
+{server}
+{param}
+{%
+%
+  Defines a parameter accepted by a corresponding application. There
+  are several types of parameters supported:
+\begin{itemize}
+\item \xmlstructref{server}{selectone} defines a parameter that takes one
+  value from a predefined set;
+\item \xmlstructref{server}{selectmany} defines a parameter that takes several
+  values from a predefined set;
+\item \xmlstructref{server}{flag} defines a Boolean parameter; and
+\item \xmlstructref{server}{textfield} defines a parameter that takes a
+  free-text value.
+\end{itemize}
+%
+}
+
+
+%% SELECTONE
+\bigskip
+\xmlstruct
+{server}
+{selectone}
+{%
+%
+  Defines a parameter that takes a \emph{single} value out of a given
+  list:
+
+  \begin{itemize}
+  \item \xmlstructattr{name} is the name of the parameter, it must be
+    unique among all parameters of an application;
+
+  \item \xmlstructattr{prefix} and \xmlstructattr{check} can be used
+    to override the corresponding attributes of
+    \xmlstructref{server}{parameters};
+
+  \item \xmlstructref{server}{desc} provides a description of this parameter;
+
+  \item \xmlstructref{server}{option}+ is a list of possible values for
+    this parameter;
+
+  \item \xmlstructref{server}{defaultvalue} specifies the default value. If
+    not specified then the first \xmlstructref{server}{option} is considered
+    as the default one; and
+
+  \item \xmlstructattr{widgetid} specifies the preferred layout when
+    used in a client with a graphical interface (e.g., combo-box,
+    radio button, etc.). This is client dependent, see
+    Chapter~\ref{ch:clients} for more information.
+
+  \end{itemize}
+%
+}
+
+
+%% SELECTMANY
+\bigskip
+\xmlstruct
+{server}
+{selectmany}
+{%
+%
+  Defines a parameter that takes \emph{several} values out of a given
+  list. The meaning of the attributes and inner environments is as in
+  \xmlstructref{server}{selectone}, except that in this case we can specify
+  several  \xmlstructref{server}{defaultvalue}.
+%
+}
+
+
+%% FLAG
+\bigskip
+\xmlstruct
+{server}
+{flag}
+{%
+%
+  Defines a parameter that can take \texttt{true} or \texttt{false}
+  values. The meaning of the attributes and inner environments is as
+  in \xmlstructref{server}{selectone}.  The attribute
+  \xmlstructattr{explicit} is used to specify how this parameter
+  should be passed to the application. For example, assume the
+  parameter name is \texttt{f}, then:
+  % 
+  \begin{itemize}
+  %  
+  \item when \xmlstructattr{explicit} is \xmlstructvalue{false}, the
+    parameter is passed as ``\texttt{-f}'' if its value is
+    \texttt{true} and not passed at all if its value is
+    \texttt{false}.
+
+  \item when \xmlstructattr{explicit} is \xmlstructvalue{true} the
+    parameter is explicitly passed to the application, i.e., using
+    ``\texttt{-f X}'' where \texttt{X} is the selected value. The
+    posible values are \xmlstructvalue{true} and
+    \xmlstructvalue{false}. However, they you can redefine them
+    overwritten (only when \xmlstructattr{explicit} is
+    \xmlstructvalue{true}) using the attributes
+    \xmlstructattr{trueval} and \xmlstructattr{falseval}.
+  % 
+  \end{itemize}
+%
+  The default value of \xmlstructattr{explicit} is
+  \xmlstructvalue{false}.
+%
+}
+
+
+%% TEXTFIELD
+\bigskip
+\xmlstruct
+{server}
+{textfield}
+{%
+%
+  Defines a parameter that can take free-text value.  The
+  \lst{initialtext} tag includes a text to be shown in the
+  corresponding text-area by default.  The meaning of the attributes
+  is as follows:
+%
+\begin{itemize}
+%
+\item \xmlstructattr{multiline} is used to specify if the free-text
+  should be single- or multi-line. By default its values is
+  \xmlstructvalue{false}, i.e., single-line.
+%
+\item \xmlstructattr{passinfile} is used to indicate that the actual
+  value should be saved into a file, and what is passed to the
+  application is the file name instead of the actual text. 
+  % 
+  This should be used for safety, when there is a risk that the
+  free-text can be harmful to the command-line (although the server
+  does some checks to avoid this).
+%
+\end{itemize}
+%
+The meaning of the other attributes and inner environments is as in
+\xmlstructref{server}{selectone}.
+%
+}
+
+
+%% OPTION
+\bigskip
+\xmlstruct
+{server}
+{option}
+{%
+Defines an option (i.e., a possible value) for a parameter.
+}
+
+
+%% Default value
+\bigskip
+\xmlstruct
+{server}
+{defaultvalue}
+{%
+Defines a default value for a parameter.
+}
+
+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{textformat}
+
+( \lst{"text"} | \lst{"html"} | \lst{"svg"})
+
+\bigskip
+\noindent
+\xmlstructdef{server}{paramvalue}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{paramname}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{bool}
+
+( \lst{"true"} | \lst{"false"} )
+
+\bigskip
+\noindent
+\xmlstructdef{server}{appid}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{exsetid}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{widgetid}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{url}
+
+A valid \texttt{http} or \texttt{https} URL.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{paramprefix}
+
+Can be any string that matches [a-z,A-Z,0-9,-,\_]+, typically
+\lst{"-"} or \lst{"--"}.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{text}
+
+Free text.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{githubpath}
+
+A path to a file or a directory in a github repository (relative to
+the root of the repository).
+
+\bigskip
+\noindent
+\xmlstructdef{server}{githubbranch}
+
+A valid branch name for a github repository.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{githubuser}
+
+A valid github username.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{githubrepo}
+
+A valid github repository.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{foldername}
+
+[a-z,A-Z,0-9,-,.,\_]+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{filename}
+
+[a-z,A-Z,0-9,-,.,\_]+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{cfgfilename}
+
+A path to a configuration file. Should be relative to
+\texttt{server/config}.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{cmdtemplate}
+
+The explanation is given in \xmlstructref{server}{cmdlineapp}.
+
+\section{Communicating with the \ei Server}
+\label{ch:server:protocol}
+
+This section describes the protocol to be used for communicating with
+the \ei server. If you are not developing an \ei client, then this
+section is not relevant for you.
+
+The \ei server is a collection of PHP scripts running on top of an
+HTTP server. Communicating with the server is done through HTTP POST
+requests. 
+%
+In particular, the request should include an attribute called
+``\texttt{eirequest}'' (the actual value of ``\texttt{eirequest}'' is
+a JSON record that we will described in the next sections). The
+following is an example of how one can communicate with the server
+using jQuery:
+
+\bigskip
+\begin{lstlisting}
+var req = ...; // the actual JSON record of the request
+$\$$.post("http://localhost/ei/server/eiserver.php",
+{
+  eirequest: req
+},
+function(data) { 
+  // do something with data
+});
+\end{lstlisting}
+
+\bigskip
+\noindent
+The response of the server is an XML of the following form:
+
+\bigskip
+\begin{lstlisting}
+<ei_response>
+  <ei_server_output> ... </ei_server_output>
+  <ei_output> ... </ei_output>
+  <ei_error> ... </ei_error>
+</ei_response>
+\end{lstlisting}
+
+\bigskip
+\noindent
+Where
+%
+\begin{itemize}
+%
+\item \lst{ei_server_output} includes messages printed by the
+  server. These messages are not the response to the request, but
+  rather debugging messages that can be useful when developing
+  clients, debugging the server, etc. Most users should ignore this
+  environment.
+%
+\item \lst{ei_output} includes the response to the request, i.e., if
+  we request to execute an application the output of that application
+  goes inside this tag.
+%
+\item \lst{ei_error} includes error messages that are related to the
+  request.
+%
+\end{itemize}
+%
+Typically, \lst{ei_output} and \lst{ei_error} are mutually exclusive,
+i.e., only one can appear in the response. 
+
+\bigskip 
+%
+In the next section we describe the format of the request to (1)
+obtain information on the available applications; (2) execute an
+application; and (3) retrieve example sets.
+
+\subsection{Retrieve Information on Available Applications}
+
+To retrieve information on a given application, or all visible
+applications on the server, use the following request:
+
+\bigskip
+\begin{lstlisting}
+{
+  command: CMD,
+  app_id: ID
+}
+\end{lstlisting}
+
+\bigskip
+\noindent
+where (1) \texttt{CMD} can be \texttt{app\_info},
+\texttt{app\_parameters}, or \texttt{app\_details}; and (2)
+\texttt{ID} is either the special value \texttt{\_ei\_all} (i.e., all
+applications) or an application identifier as specified in
+\xmlstructref{server}{app}.
+%
+A successful request will return (inside the \lst{ei_output} tag) the
+XML structure \xmlstructref{server}{apps} (that is defined in the
+configuration file) after filtering out some information as we explain
+next.
+%
+First any application that does not match \texttt{ID} is removed (if
+\texttt{ID} is \texttt{\_ei\_all} then only non-visible applications
+are removed). Then, for the remaining applications:
+%
+\begin{itemize}
+%
+\item if \texttt{CMD} equals \texttt{app\_info}, it returns only the
+  \xmlstructref{server}{appinfo} of each application;
+%
+\item if \texttt{CMD} equals \texttt{app\_parameters}, it returns only the
+  \xmlstructref{server}{parameters} of each application; and
+%
+\item if \texttt{CMD} equals \texttt{app\_details}, it returns
+  everything except \xmlstructref{server}{execinfo} of each
+  application.
+%
+\end{itemize}
+%
+Note that \xmlstructref{server}{execinfo} is never returned as it
+reveals information on how to execute an application locally.
+
+
+
+\subsection{Execute an Application}
+
+Next we describe, by mean of an example, the form of a request for
+executing an application. Suppose we are interested in executing an
+application with identifier \texttt{myapp} where, in addition, we
+would like to pass it some values for the parameters, files to
+process, outline entities, and the identifier of the client who is
+making the request. Such a request has the following form:
+
+\bigskip
+\begin{lstlisting}
+{
+  command: (*"execute"*),
+  app_id: (*"myapp"*),
+  (*parameters*): {
+    (*"l"*): (*[ "true" ]*),
+    (*"f"*): (*[ "false" ]*),
+    (*"s"*): (*[ "yes" ]*),
+    (*"x"*): (*[ "1", "2" ]*), 
+    (*"\_ei\_clientid"*): (*"webclient"*),
+    (*"\_ei\_outline"*): (* [ "ent1", "ent2", ... ]*),
+    (*"\_ei\_files"*): [
+                  {
+                    (*path*): (*"dir1"*),
+                    (*type*): (*"dir"*),
+                  },
+                  {
+                    (*path*): (*"dir2/file1.c"*),
+                    (*type*): (*"text"*),
+                    (*content*): (*"This is the content of dir2/file1.c"*)
+                  },
+                  {
+                    (*path*): (*"dir2/file2.c"*),
+                    (*type*): (*"text"*),
+                    (*content*): (*"This is the content of dir2/file2.c"*)
+                  },
+                  {
+                    (*path*): (*"dir3/file1.c"*),
+                    (*type*): (*"text"*),
+                    (*content*): (*"This is the content of dir3/file1.c"*)
+                  }
+                ]
+  }
+}
+\end{lstlisting}
+
+\bigskip
+\noindent
+Let us explain the different parts of this request: 
+%
+\begin{itemize}
+%
+\item \texttt{command} must have the value \texttt{``execute''};
+%
+\item \texttt{app\_id} should refer to the identifier of the
+  application that we want to execute (it can be visible or not);
+%
+\item \texttt{parameters} is a JSON record that includes all the
+  information, e.g., application parameters and files, that we want to
+  pass over, as we explain below.
+\end{itemize}
+%
+Before explaining the details of the parameters record, it is
+recommend that you refresh your memory with the details of the
+command-line template as described
+in~\xmlstructref{server}{cmdlineapp}. The parameters record includes
+the following information:
+%
+\begin{itemize}
+%
+\item \emph{Application parameters:} any field (of the JSON record)
+  whose name does not start with \texttt{\_ei} is a parameter that is
+  supposed to be defined in the \xmlstructref{server}{parameters}
+  environment of the corresponding application. The value of such
+  field is a list of elements that represent the value of the
+  parameter. If the parameter is supposed to take a single value then
+  the list must have a single element.
+%
+\item \emph{Files}: the field \texttt{\_ei\_files} represent the files
+  that we want to pass to the application. Its value is an array of
+  JSON records where each record represent a text file or a directory
+  (binary files are not supported yet). The \texttt{path} field of the
+  record refers to the file or directory name, it is relative to the
+  root of the temporary directory where the server saves these
+  files. The \texttt{type} field indicates the type of the file. In
+  the case of text files, the field \texttt{content} represent the
+  actual content of the file.
+%
+\item \emph{Outline entities}: the filed \texttt{\_ei\_outline} is a
+  list of elements representing the selected entities from the
+  outline.
+%
+\item \emph{Client identifier}: the field \texttt{\_ei\_clientid}
+  indicates the identifier of the client who has performed the
+  request.
+%
+\end{itemize}
+
+
+
+\subsection{Retrieve Example Sets}
+
+To retrieve the example sets use the following request:
+
+\bigskip
+\begin{lstlisting}
+{
+  command: "exset_details",
+  app_id: ID
+}
+\end{lstlisting}
+
+\bigskip
+\noindent
+where \texttt{ID} is either the special value \texttt{\_ei\_all}
+(i.e., all example sets) or an examples set identifier as specified in
+\xmlstructref{server}{exset}.
+%
+A successful request will return (inside the \lst{ei_output} tag) the
+XML structure \xmlstructref{server}{examples} (that is defined in the
+configuration file) after filtering out those example sets that do not
+match the value of \texttt{ID}, i.e, if \texttt{ID} is
+\texttt{\_ei\_all} then it returns all example sets, otherwise only
+the indicated one.

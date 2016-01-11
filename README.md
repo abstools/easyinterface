@@ -9,10 +9,10 @@ To install and integrate your own applications in EasyInterface we recommend pro
 
 * First read the quick installation guide [INSTALL.md](INSTALL.md), this will help you in quickly getting the EasyInterface server running.
 
-* Read Chapter 2 of the user manual [doc/manual.pdf](doc/manual.pdf), where develops a simple application is developed and integrated step by step. Moreover, it provides a quick introduction to the **EasyInterface Output Language** and refers to the relevant chapters for more information.
+* Read Chapter 2 of the user manual [doc/manual.pdf](doc/manual.pdf), where a simple application is developed and integrated step by step. Moreover, it provides a quick introduction to the **EasyInterface Output Language** and refers to the relevant chapters for more information.
 
 * Read [ENVISAGE.md](ENVISAGE.md) if you are interested in using EasyInterface as a frontend for the tools developed in the [Envisage Project](http://www.envisage-project.eu).
 
 * Read [clients/README.md](clients/README.md) for more information on the clients available, how to install/use them, etc.
 
-Question, comments, and feedback are very welcome, please direct them to [Samir Genaim](http://samir.loopkiller.com) at [genaim@gmail.com](genaim@gmail.com)
+Questions, comments, and feedback are very welcome.

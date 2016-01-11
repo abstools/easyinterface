@@ -106,11 +106,9 @@ window.EasyInterface = (function() {
 		}
 	    } ).click(function() { 
 		var ids = [self.codearea.getCurrentTabId()];
-		alert(ids);
 		self.outline.refresh( ids ); 
 	    } );
-
-
+      this.initResizeEffect(); 
 	   
 
     }
@@ -252,6 +250,7 @@ window.EasyInterface = (function() {
 	    //
 	    var paramInfo_show_svg_in_new_window = {
 		id: "show_svg_in_new_window",
+		options: new Array("true","false"),
 		default_value: _ei.general_settings.show_svg_in_new_window,
 		desc: { "short": "Output SVG content in new tab",
 			"long": "When selected, any SVG content will be display in a new tab in the console area"},
@@ -463,10 +462,19 @@ window.EasyInterface = (function() {
 			var user = $(this).attr("owner");
 			var repo = $(this).attr("repo");
 			var branch = $(this).attr("branch");
-			self.filemanager.addGithub(user,repo,branch,parentId);
+			var dir = $(this).attr("path");
+			self.filemanager.addGithub(user,repo,branch,dir,parentId);
 			break;
 		    }
 		});
+	},
+	initResizeEffect:
+	function() {
+	  var self = this;
+	  var RE = new ResizeEffect();
+	  RE.addHorizontalEffect("filemanager","codearea");
+	  RE.addHorizontalEffect("codearea","outline");
+	  RE.addVerticalEffect("up","console");
 	}
 
     }

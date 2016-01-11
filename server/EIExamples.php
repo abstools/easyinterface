@@ -20,17 +20,7 @@ class EIExamples {
     $out = '<examples>';
     foreach ($exset_ids as $id ) {
       $exset = EIConfig::get_exsetXML( $id );
-      /*if ( $exset->info ) 
-	$info = $exset->info->asXML();
-      else
-	$info = "<info></info>";
-
-      if ( $exset->content ) 
-	$content = $exset->content->asXML();
-      else
-	$content = "<content></content>";
-      */
-      $out .= $exset->asXML();//'<exset id=\'' . $id . '\'>' . $info . $content . '</exset>';
+      $out .= $exset->asXML();
     }
     $out .= '</examples>';
 
