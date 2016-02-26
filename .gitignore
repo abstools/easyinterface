@@ -1,0 +1,4 @@
+# documentation
+*.pdf
+clients/web/webclilente.cfg
+server/bin/default/absfrontend.jarserver/bin/envisage/ENVISAGE_CONFIG
