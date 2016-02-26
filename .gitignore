@@ -2,9 +2,9 @@
 *.pdf
 
 # custom config
-$GIT_DIR/clients/web/webclilente.cfg
-$GIT_DIR/server/bin/default/absfrontend.jar
-$GIT_DIR/server/bin/envisage/ENVISAGE_CONFIG
+clients/web/webclient.cfg
+**/absfrontend.jar
+**/ENVISAGE_CONFIG
 
 # emacs files
 *~
