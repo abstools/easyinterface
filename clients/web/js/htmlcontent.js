@@ -20,7 +20,7 @@ window.HTMLContent = (function() {
 
    function HTMLContent(options) {	   // TODO: now we simply put the content env into the doc,
        this.content = $("<div></div>");    //       consider taking only one div env
-       this.content.append( $(options.content).prop('outerHTML') );
+       this.content.append( $(options.content).text());//prop('outerHTML') );
    }
 
 
