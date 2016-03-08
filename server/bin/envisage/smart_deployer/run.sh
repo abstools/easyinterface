@@ -1,12 +1,10 @@
 #! /bin/bash
 
 . envisage/envisage_settings.sh
-
 . default/parse_params.sh
-export CLASSPATH=$ABSFRONTEND:$CLASSPATH
+export CLASSPATH=/vagrant/frontend/dist/absfrontend.jar:$CLASSPATH
 
 abs=""
-
 for f in $files 
 do
 	ext=${f##*.}
@@ -15,14 +13,13 @@ do
 	fi;
 done
 
-echo "<eiout>"
-echo "<eicommands>"
 
 if [ !  -z  $abs  ]; then
-	cd /home/vagrant/smart_deployer/abs_deployer
-	python abs_deployer $abs
+	python /home/vagrant/smart_deployer/abs_deployer/abs_deployer.py $abs
 
 else
+	echo "<eiout>"
+	echo "<eicommands>"
 	echo "<dialogbox outclass='error' boxtitle='Error!'>"
 	echo " <content format='html'>"
 	echo
@@ -31,9 +28,9 @@ else
 	echo "</ul>"
 	echo "</content>"
 	echo "</dialogbox>"
+	echo "</eicommands>"
+	echo "</eiout>"
 fi
 
-echo "</eicommands>"
-echo "</eiout>"
 
 
