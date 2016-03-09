@@ -1,10 +1,8 @@
 #! /bin/bash
 
 . envisage/envisage_settings.sh
-
 . default/parse_params.sh
 
-export CLASSPATH=/vagrant/frontend/dist/absfrontend.jar:$CLASSPATH
 
 abs=""
 spec=""
@@ -24,7 +22,7 @@ done
 
 
 if [ !  -z  $abs  ] && [ !  -z $spec ] && [ !  -z $json ]; then
-	python /home/vagrant/main_generator/abs_deployer/abs_deployer.py $abs $spec $json
+	python $MAINGENHOME/abs_deployer/abs_deployer.py $abs $spec $json
 
 else
 	echo "<eiout>"

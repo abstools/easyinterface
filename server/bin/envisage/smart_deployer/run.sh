@@ -2,7 +2,6 @@
 
 . envisage/envisage_settings.sh
 . default/parse_params.sh
-export CLASSPATH=/vagrant/frontend/dist/absfrontend.jar:$CLASSPATH
 
 abs=""
 for f in $files 
