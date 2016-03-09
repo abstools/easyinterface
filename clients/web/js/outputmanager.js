@@ -91,8 +91,8 @@ window.OutputManager = (function() {
 		               "<"+_ei.outlang.syntax.eiout+" version='1'>"+
 		                 "<"+_ei.outlang.syntax.eicommands+">"+
            		            "<"+_ei.outlang.syntax.printonconsole+">"+
-	        	              "<"+_ei.outlang.syntax.content+" format='text'>"+
-		                        $(output).find(_ei.outlang.syntax.eiappout).text() +
+	        	              "<"+_ei.outlang.syntax.content+" format='text'>"+	
+	                                 "<![CDATA["+$(output).find(_ei.outlang.syntax.eiappout).text()+"]]>" +
 		                      "</"+_ei.outlang.syntax.content+">"+
 		                    "</"+_ei.outlang.syntax.printonconsole+">"+
 		                 "</"+_ei.outlang.syntax.eicommands+">"+

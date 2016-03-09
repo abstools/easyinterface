@@ -49,13 +49,24 @@ window.CmdEngine = (function() {
 		   {
 		       eirequest: eirequest
 		   }).done(function(data) {
-		     try{
-		       data = jQuery.parseXML(data);
-		       if ( _ei.debug ) console.log(data);
-	    	       callback(data);
-		     }catch(e){
-		       errorcb(e);
-		     }
+		       try {
+			   data = jQuery.parseXML(data);
+			   if ( _ei.debug ) console.log(data);
+	    		   callback(data);
+		       } catch(e) {
+			   var n = data.indexOf("<"+_ei.outlang.syntax.eiappout+">");
+			   var m = data.indexOf("</"+_ei.outlang.syntax.eiappout+">");
+			   if ( n != -1 && m != -1 ) {
+			       data = data.replace("<"+_ei.outlang.syntax.eiappout+">","<"+_ei.outlang.syntax.eiappout+"><![CDATA[");
+			       data = data.replace("</"+_ei.outlang.syntax.eiappout+">","]]></"+_ei.outlang.syntax.eiappout+">");
+			   }
+			   try {
+			       data = jQuery.parseXML(data);
+			       callback(data);
+			   } catch(e1) {
+  			     errorcb(e1);
+			   }
+		       }
 	    	   }).error(function(data) {
 		       if ( _ei.debug ) {
 			   console.log("HTTP Request error occurred: ");
