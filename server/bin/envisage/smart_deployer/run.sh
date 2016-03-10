@@ -14,7 +14,7 @@ done
 
 
 if [ !  -z  $abs  ]; then
-	python /home/vagrant/smart_deployer/abs_deployer/abs_deployer.py $abs
+	python $SMARTDEPLOYERHOME/abs_deployer/abs_deployer.py $abs
 
 else
 	echo "<eiout>"
