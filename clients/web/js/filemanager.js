@@ -724,6 +724,7 @@ window.FileManager = (function() {
 	  cache: false,
 	  url : fmInfo.attr.url,
 	  type:'GET',
+          converters: {"* text": window.String, "text html": window.String, "text json": window.String, "text xml": window.String},
 	  error: function(XMLHttpRequest, textStatus, errorThrown) { 
 	    fmInfo.attr.content = "ERROR: Cannot load "+fmInfo.attr.url;
 	  },
@@ -732,6 +733,7 @@ window.FileManager = (function() {
 	    //if(ap.find("ei_error").length){
 	    //  fmInfo.attr.content = ap.find("ei_error").text();
 	    //}else{
+	      alert(data);
 	      fmInfo.attr.content = data;
 	      fmInfo.attr.urlLoaded = true;
 	    //}
