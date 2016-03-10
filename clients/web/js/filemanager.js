@@ -733,7 +733,6 @@ window.FileManager = (function() {
 	    //if(ap.find("ei_error").length){
 	    //  fmInfo.attr.content = ap.find("ei_error").text();
 	    //}else{
-	      alert(data);
 	      fmInfo.attr.content = data;
 	      fmInfo.attr.urlLoaded = true;
 	    //}
