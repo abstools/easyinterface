@@ -48,7 +48,8 @@ var _ei = {
 	  htmlcontent    : "html",         // attr
 	  svgcontent     : "svg",          // attr
 	  textcontent    : "text",         // attr
-	  
+	  dygraphcontent : "dygraph",      // attr
+
 	  // PRINTONCONSOLE command
 	  printonconsole : "printonconsole", // tag
 	  consoleid      : "consoleid",      // attr

@@ -15,6 +15,16 @@ window.Set = (function() {
 	},
 
 	//
+	addArray:
+	function(arr) {
+	  var self = this;
+	    $.each(arr,function(i,e){
+	      self.value[ self.value.length ] = e;
+	    });
+	},
+
+
+	//
 	union:
 	function(s) {
 	     for(var i=0; i<s.value.length; i++)
@@ -28,6 +38,16 @@ window.Set = (function() {
 	},
 
 	//
+	unique:
+	function() {
+	  var result = [];
+	  $.each(this.value, function(i, e) {
+            if ($.inArray(e, result) == -1) result.push(e);
+	  });
+	  this.value = result;
+	},
+
+	//
 	size:
 	function() {
 	    return this.value.length;
@@ -38,6 +58,14 @@ window.Set = (function() {
 	function( action ) {
 	    for(var i=0; i<this.value.length; i++) {
 		action(this.value[i]);
+	    }
+	},
+
+	//
+	orderIterate:
+	function( action ) {
+	    for(var i=0; i<this.value.length; i++) {
+		action(i,this.value[i]);
 	    }
 	},
 
