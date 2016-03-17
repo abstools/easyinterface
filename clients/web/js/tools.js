@@ -81,10 +81,13 @@ window.Tools = (function() {
 	    var toolInfo = this.tools[ toolId ];
 
 	    var files = self.filemanager.getEiFiles(fileIds);
-
-	  //get the outline Info	    
-	    var entriesInfo = self.outline.getSelected();
-
+	    var entriesInfo;
+	  if(_ei.outline.active){
+	    //get the outline Info	    
+	    entriesInfo = self.outline.getSelected();
+	  }else{
+	    entriesInfo = new Array();
+	  }
 
 	    // get the current value of all parameters
 	    var parametersInfo = this.parameters.getParams(toolId);

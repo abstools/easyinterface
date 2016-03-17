@@ -489,14 +489,8 @@ window.EasyInterface = (function() {
 	  this.outlineButtonHolder.remove();
 	  var sizeO = parseInt(this.outlineHolder.css("width").slice(0, -2));
 	  var sizeC = parseInt(this.codeareaHolder.css("width").slice(0, -2));
-	  console.log("out",sizeO,"con",sizeC);
 	  this.outlineHolder.remove();
 	  this.codeareaHolder.css("width",sizeC+sizeO);
-	  sizeO = this.outlineHolder.css("width");
-	  sizeC = this.codeareaHolder.css("width");
-	  console.log("out",sizeO,"con",sizeC);
-
-
 	}
 
     }
