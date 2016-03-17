@@ -11,6 +11,9 @@ var loadConfig = function(){
 
     if(!data.outlineserver)
       _ei_data.outlineserver = eiserverURI;
+
+    if(!data.outline)
+      _ei_data.outline = "on";
   }
 
   $.ajax({

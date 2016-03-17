@@ -100,7 +100,8 @@ window.Outline = (function() {
 	function() {
 	    var self = this;
 	    var selected = new Array();
-
+	  if(!_ei.outline.active)
+	    return selected;
 	    var x = this.jstree.jstree("get_checked", this.treeHolder, true);
 	    x.each(function() {
 		    var olId = $(this).attr("olId");
@@ -202,7 +203,8 @@ window.Outline = (function() {
 
 	refresh:
 	function(fileIds) {
-	    
+	  if(!_ei.outline.active)
+	    return;
 	    var self = this;
 
 	    var files = self.filemanager.getEiFiles(fileIds);

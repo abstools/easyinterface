@@ -117,6 +117,7 @@ var _ei = {
       }
   },
   debug: true,
+  outline: true,
   file_ext: ".abs",
   pprefix: "-",
   outline: {
