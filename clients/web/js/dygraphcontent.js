@@ -24,18 +24,12 @@ window.DygraphContent = (function() {
      self.DygraphN = DygraphNumber;
      DygraphNumber++;
      self.content = $("<div></div>");
-     console.log($(options.content).text());
      self.jsonData = $.parseJSON($(options.content).text());
      self.groups = new Set();
      self.labels = new Set();
      parseInput(self);
-     console.log(self);
      buildHolder(self);
-     //buildGraphs(self);
      buildControl(self);
-
-
-      // this.content.append( $(options.content).text());//prop('outerHTML') );
    }
 
   function parseInput(self){
@@ -50,8 +44,8 @@ window.DygraphContent = (function() {
     self.labels.unique();
     self.g2k = {};
     self.l2k = {};
-    self.groups.orderIterate(function(k,v){self.g2k[v] = "gph"+self.DygraphN+"C"+k;});
-    self.labels.orderIterate(function(k,v){self.l2k[v] = "gph"+self.DygraphN+"L"+k;});
+    self.groups.orderIterate(function(k,v){self.g2k["gph"+self.DygraphN+"C"+k]=v;});
+    self.labels.orderIterate(function(k,v){self.l2k["gph"+self.DygraphN+"L"+k]=v;});
 
 
   }
@@ -107,6 +101,8 @@ window.DygraphContent = (function() {
 	  var dest = "list"+N+"Activ"+type;
 	  var ret = this.switchOpt(source,dest);
 	  // TODO: show graphs
+	  for(var t=0;t<ret.length;t++)
+	    this.searchGraphs(type,ret[t],1);
 	},
 	     subOpt:
 	function(N,type){
@@ -114,6 +110,8 @@ window.DygraphContent = (function() {
 	  var source = "list"+N+"Activ"+type;
 	  var ret = this.switchOpt(source,dest);
 	  // TODO: hide graphs
+	  for(var t=0;t<ret.length;t++)
+	    this.searchGraphs(type,ret[t],-1);
 	},
 	     switchOpt:
 	function(from, to){
@@ -122,8 +120,38 @@ window.DygraphContent = (function() {
 	    $(this).appendTo("#"+to);
             selectedValues.push($(this).val()); 
 	  });
-	  console.log(selectedValues);
 	  return selectedValues;
+	},
+	     searchGraphs:
+	function(type,token,hide){
+	  var self = this;
+	  var find;
+	  var arr;
+	  var cnt;
+	  switch(type){
+	    case "L":
+	      find = self.l2k[token];
+	      arr = "labels";
+	      cnt = "nl";
+	      break;
+	    case "C":
+	      find = self.g2k[token];
+	      arr = "groups";
+	      cnt = "ng";
+	      break;
+	  }
+	  for(var g in self.graphs){
+	    for(var grps in self.graphs[g][arr]){
+	      if(self.graphs[g][arr][grps] == find){
+		self.graphs[g][cnt] += hide;
+		if(self.graphs[g]["nl"]>0 && self.graphs[g]["ng"]>0){
+		  $("#"+self.graphs[g]["id"]).show();
+		}else{
+		  $("#"+self.graphs[g]["id"]).hide();
+		}
+	      }
+	    }
+	  }
 	},
 	     generateOptions:
 	function(arr){
@@ -131,7 +159,7 @@ window.DygraphContent = (function() {
 	  var index;
 	  for (index in arr){
 	  //for (index = 0; index < arr.length; ++index) {
-	    options += "<option value='"+arr[index]+"'>"+index+"</option>";
+	    options += "<option value='"+index+"'>"+arr[index]+"</option>";
 	  }
 	  return options;
 	},
@@ -148,10 +176,15 @@ window.DygraphContent = (function() {
 	    var g = new Dygraph(
 	      document.getElementById("graph"+self.DygraphN+"_"+i+""),
               self.jsonData["graphs"][i].values,
-              options));
-	    
-//	    self.graphs[i]["groups"] = self.jsonData
-
+              options
+	    );
+	    self.graphs[i]={};
+	    self.graphs[i]["id"] = "graph"+self.DygraphN+"_"+i+"";
+	    self.graphs[i]["groups"] = self.jsonData["graphs"][i]["groups"];
+	    self.graphs[i]["ng"] = 0;//self.jsonData["graphs"][i]["groups"].length;
+	    self.graphs[i]["labels"] = self.jsonData["graphs"][i]["labels"];
+	    self.graphs[i]["nl"] = 0;//self.jsonData["graphs"][i]["labels"].length;
+	    $("#graph"+self.DygraphN+"_"+i+"").hide();
 	  }
 	}
 
