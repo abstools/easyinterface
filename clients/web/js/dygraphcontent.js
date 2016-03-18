@@ -167,12 +167,16 @@ window.DygraphContent = (function() {
 	function (self){
 	  var self = this;
 	  self.graphs = new Array();
-	  var options = {};
+
 	  for(var i = 0; i < self.jsonData["graphs"].length; i++){
+	  var options = {};
 	    options['title'] = self.jsonData["graphs"][i].name;
 	    if(self.jsonData["graphs"][i]["g-desc"])
 	      options['labels'] = self.jsonData["graphs"][i]["g-desc"];
-
+	    if(self.jsonData["graphs"][i]["y-axes"])
+	      options['ylabel'] = self.jsonData["graphs"][i]["y-axes"];
+	    if(self.jsonData["graphs"][i]["x-axes"])
+	      options['xlabel'] = self.jsonData["graphs"][i]["x-axes"];
 	    var g = new Dygraph(
 	      document.getElementById("graph"+self.DygraphN+"_"+i+""),
               self.jsonData["graphs"][i].values,
@@ -181,9 +185,9 @@ window.DygraphContent = (function() {
 	    self.graphs[i]={};
 	    self.graphs[i]["id"] = "graph"+self.DygraphN+"_"+i+"";
 	    self.graphs[i]["groups"] = self.jsonData["graphs"][i]["groups"];
-	    self.graphs[i]["ng"] = 0;//self.jsonData["graphs"][i]["groups"].length;
+	    self.graphs[i]["ng"] = 0;
 	    self.graphs[i]["labels"] = self.jsonData["graphs"][i]["labels"];
-	    self.graphs[i]["nl"] = 0;//self.jsonData["graphs"][i]["labels"].length;
+	    self.graphs[i]["nl"] = 0;
 	    $("#graph"+self.DygraphN+"_"+i+"").hide();
 	  }
 	}
