@@ -105,7 +105,6 @@ window.Outline = (function() {
 	return selected;
       var x = this.jstree.jstree("get_checked", this.treeHolder, true);
       x.each(function() {
-	console.log(self.olObj);
 	var olId = $(this).attr("olId");
 	var type = self.olObj[ olId ].info.attr.rel;
 	switch (type){
