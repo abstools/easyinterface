@@ -107,20 +107,22 @@ window.CodeArea = (function() {
 
 
 	    // create the tab content
-        var content = $("<div style='padding: 1px' class='ei-codearea-content' id='" + tabTag + "'><div id='"+tabTag+"-ed'></div></div>");
+        var content = $("<div style='padding: 1px' class='ei-codearea-content' id='" + tabTag + "'><textarea id='"+tabTag+"-ed'></textarea></div>");
         this.tabs.append( content );                                            
 
 	    // var content = $("<div style='padding: 1px;' class='ei-codearea-content' id='" + tabTag + "'></div>");
 	    // content.append("<div class='ei-codearea-content' id='"+tabTag+"-ed'></div>");
 	    // this.tabs.append( content );
 	    // create a CodeMirror for this tab
-	    var ed = CodeMirror( content.find("#"+tabTag+"-ed").get(0), { 
+	    var ed = CodeMirror.fromTextArea( content.find("#"+tabTag+"-ed").get(0), { 
  	        lineNumbers: true, 
  		mode: "text/abs",//x-java", 
  		value: tabContent,
 		gutters: ["actionGutter","CodeMirror-linenumbers","infoGutter"],
+		scrollbarStyle: "overlay",
 		highlightSelectionMatches: {showToken: /\w/}
  	    });
+
 
 	    var currTabInfo = {
 	        id: id, 
