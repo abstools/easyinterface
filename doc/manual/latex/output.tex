@@ -476,7 +476,16 @@ A set of CSS properties.
   A text given in a specific \xmlstructattr{format}, e.g.,
   \xmlstructvalue{"text"}, \xmlstructvalue{"html"}, etc. If the
   attribute \xmlstructattr{format} is not provided, then it is assumed
-  to be \xmlstructvalue{"text"} format (plain text).
+  to be \xmlstructvalue{"text"} format (plain text).\\
+%
+  If the application has stream results, the attributes
+  \xmlstructattr{streamid}, \xmlstructattr{streamext} and
+  \xmlstructattr{streamaction} refers this content to be updated with
+  the application files which has extension \xmlstructattr{streamext}
+  (or \lst{"ei"} if it is undefined) and had been generate by the
+  application with id  \xmlstructattr{streamid}. This content update
+  will be done how \xmlstructattr{streamaction} indicate and every
+  \xmlstructattr{streamtimeout} seconds until the application ends. 
 %
 }
 
@@ -552,7 +561,7 @@ Free text.
 \noindent
 \xmlstructdef{eiout}{textformat}
 
-( \lst{"text"} | \lst{"html"} | \lst{"svg"})
+( \lst{"text"} | \lst{"html"} | \lst{"svg"} | \lst{"dygraph"})
 
 \bigskip
 \noindent
@@ -570,5 +579,5 @@ A valid value for a corresponding CSS property.
 \noindent
 \xmlstructdef{eiout}{position}
 
- ( ``prepend'' | ``append'' | ``replace'' )
+ ( \lst{"prepend"} | \lst{"append"} | \lst{"replace"} )
 
