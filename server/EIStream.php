@@ -2,7 +2,7 @@
 
 class EIStream {
 
-  static function get($exec_id) {
+  static function get($exec_id,$ext) {
     $p = EIStream::path($exec_id);
     if(!EIStream::isStream($exec_id)){
       return "<ei_stream state='nostream' />";
@@ -11,7 +11,8 @@ class EIStream {
       $state = "finish";
     else
       $state = "running";
-    exec("ls ".$p."*.ei", $files);
+    echo $ext;
+    exec("ls ".$p."*.".$ext, $files); // TODO: security on extension
     sort($files, SORT_NATURAL );
 
     $output_f = "";
@@ -36,7 +37,7 @@ class EIStream {
       $state .= " nonewfiles";
     else{
       $output .= "<content><![CDATA[\n";
-      $output .= htmlspecialchars ($output_f);
+      $output .= $output_f;
       $output .= "]]></content>\n";
     }
     return "<ei_stream state='".$state."' >\n".$output."</ei_stream>";

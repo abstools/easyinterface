@@ -12,10 +12,16 @@ window.DygraphContent = (function() {
 	if ( tag != _ei.outlang.syntax.content || format != _ei.outlang.syntax.dygraphcontent ) return null;
 
 	var outclass = c.attr(_ei.outlang.syntax.outclass) || ei_info.outclass;
-
+        var stData = {};
+        stData.execid = c.attr(_ei.outlang.syntax.streamid) || null;
+        stData.extension = c.attr(_ei.outlang.syntax.streamext) || "ei";
+        stData.action = c.attr(_ei.outlang.syntax.streamaction) || "prepend";
+        stData.time = c.attr(_ei.outlang.syntax.streamtime) || 500;
+        stData.isStream = (stData.execid != null);
 	return new DygraphContent({
 	    content: c,
-	    outclass: outclass
+	    outclass: outclass,
+	    stData: stData
 	});
     }
 
@@ -23,40 +29,89 @@ window.DygraphContent = (function() {
      var self = this;
      self.DygraphN = DygraphNumber;
      DygraphNumber++;
-     self.content = $("<div></div>");
-     self.jsonData = $.parseJSON($(options.content).text());
+     self.stData = options.stData;
+     self.numgh = 0;
+     self.content = $('<div id="'+self.getTag()+'"><div class="data"><div id="wrapGraphs'+self.DygraphN+'"><br/></div></div></div>');
+//     self.content = $("<div></div>");
+     self.jsonData = buildJSON(options.content);
      self.groups = new Set();
      self.labels = new Set();
-     parseInput(self);
-     buildHolder(self);
+     self.g2k = {};
+     self.l2k = {};
+     self.graphs = new Array();
+
+     parseInput(self,self.jsonData);
+     buildHolder(self,self.jsonData);
      buildControl(self);
+
+     self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
+     $(self.streamBttn).button({ 
+       icons: { primary: "ui-icon-stop"}, 
+       text: "stream" 
+     }).click( function() { 
+       self.disableStreamButton();
+       console.log("call from dygraph button");
+       self.doc.off(self.stData.execid,true);
+     });
+     $(self.streamBttn).hide();
+
+     if(self.isStream())
+       self.content.prepend(self.streamBttn);
    }
 
-  function parseInput(self){
-    // Get all Groups and Labels
-    $.each(self.jsonData["graphs"], function(i,gh) {
-      if("groups" in gh)
-	self.groups.addArray(gh["groups"]);
-      if("labels" in gh)
-	self.labels.addArray(gh["labels"]);  
-    });
-    self.groups.unique();
-    self.labels.unique();
-    self.g2k = {};
-    self.l2k = {};
-    self.groups.orderIterate(function(k,v){self.g2k["gph"+self.DygraphN+"C"+k]=v;});
-    self.labels.orderIterate(function(k,v){self.l2k["gph"+self.DygraphN+"L"+k]=v;});
-
-
+  function buildJSON(content){
+    var jsonArr = JSON.parse("{}");;
+    var text = $(content).text();
+    var previous = 0;
+    var pos = text.indexOf("}");
+    var sub = text;
+    var count = 0;
+    try{
+      while(pos != -1){
+	pos++;
+	var sub = text.substring(previous,pos);
+	var js = JSON.parse(sub);
+	jsonArr[count] = js;
+	count++;
+	text = text.substring(pos);
+	pos = text.indexOf("}");
+     }
+    }catch(e){
+      console.log("JSON parse errors\n", text);
+    }
+    return jsonArr;
   }
 
-  function buildHolder(self){
-    var wrap = $("<div id='wrapGraphs"+self.DygraphN+"'></div>");
-    for(var i = 0; i < self.jsonData["graphs"].length; i++){
-      var div = $("<div id='graph"+self.DygraphN+"_"+i+"'></div>");
-      $(wrap).append(div);
-    }
-    self.content.append(wrap);
+  function parseInput(self,jsonData){
+    self.gadded = [];
+    self.ladded = [];
+    self.nadded = {"g":[],"l":[]};
+    // Get all Groups and Labels
+    var aux;
+    $.each(jsonData, function(i,gh) {
+      if("groups" in gh){
+	aux = self.groups.addArrayIfNoExists(gh["groups"]);
+	$.each(aux,function(i,v){self.gadded.push(v);});
+      }
+      if("labels" in gh){
+	aux = self.labels.addArrayIfNoExists(gh["labels"]);    
+	$.each(aux,function(i,v){self.ladded.push(v);});
+      }
+    });
+    var size_d = function(dict){var c=0; for(var e in dict)c++; return c;};
+    var lindx = size_d(self.l2k);
+    var gindx = size_d(self.g2k);
+    $.each(self.gadded,function(i,v){self.g2k["gph"+self.DygraphN+"C"+gindx]=v;self.nadded.g["gph"+self.DygraphN+"C"+gindx]=v;gindx++;});
+    $.each(self.ladded,function(i,v){self.l2k["gph"+self.DygraphN+"L"+lindx]=v;self.nadded.l["gph"+self.DygraphN+"L"+lindx]=v;lindx++;});
+  }
+
+  function buildHolder(self,jsonData){
+    var idx = self.numgh;
+    $.each(jsonData,function(i,B){
+      var div = $("<div id='graph"+self.DygraphN+"_"+idx+"'></div>");
+      $(self.content).find("#wrapGraphs"+self.DygraphN).append(div);
+      idx++;
+    });
   }
   
 
@@ -64,25 +119,26 @@ window.DygraphContent = (function() {
     var html = '<div id="control'+self.DygraphN+'" style="width:100%;height:100px;">'+
 	       '<select id="list'+self.DygraphN+'C" multiple style="width:15%;height:100%;">'+
 	       '<option disabled="disabled">Inactive Groups</option>';
-    html = html+self.generateOptions(self.g2k);
     html = html+'</select>&nbsp;'+
 	   '<button id="btn'+self.DygraphN+'Cadd">&gt;&gt;</button>&nbsp;'+
 	   '<button id="btn'+self.DygraphN+'Csub">&lt;&lt;</button>&nbsp;'+
 	   '<select id="list'+self.DygraphN+'ActivC" multiple style="width:15%;height:100%;">'+
-	   '<option disabled="disabled">Active Groups</option>'+
+	   '<option disabled="disabled">Active Groups</option>';
+    html = html+self.generateOptions(self.g2k)+
+
 	   '</select>&nbsp;&nbsp;&nbsp;&nbsp;'+
 	   '<select id="list'+self.DygraphN+'L" multiple style="width:15%;height:100%;">'+
 	   '<option disabled="disabled">Inactive Labels</option>';
-    html = html+self.generateOptions(self.l2k);
     html = html +'</select>&nbsp;'+
 	   '<button id="btn'+self.DygraphN+'Ladd">&gt;&gt;</button>&nbsp;'+
 	   '<button id="btn'+self.DygraphN+'Lsub">&lt;&lt;</button>&nbsp;'+
 	   '<select id="list'+self.DygraphN+'ActivL" multiple style="width:15%;height:100%;">'+
-	   '<option disabled="disabled">Active Labels</option>'+
+	   '<option disabled="disabled">Active Labels</option>';
+    html = html+self.generateOptions(self.l2k)+
 	   '</select></div>';
-    self.content.prepend($(html));
-    $("#btn"+self.DygraphN+"Cadd",self.content).click(function(){self.addOpt(self.DygraphN,'C');});
-    $("#btn"+self.DygraphN+"Csub",self.content).click(function(){self.subOpt(self.DygraphN,'C');});
+     $(self.content).find(".data").prepend($(html));
+     $(self.content).find("#btn"+self.DygraphN+"Cadd").click(function(){self.addOpt(self.DygraphN,'C');});
+    $(self.content).find("#btn"+self.DygraphN+"Csub").click(function(){self.subOpt(self.DygraphN,'C');});
     $("#btn"+self.DygraphN+"Ladd",self.content).click(function(){self.addOpt(self.DygraphN,'L');});
     $("#btn"+self.DygraphN+"Lsub",self.content).click(function(){self.subOpt(self.DygraphN,'L');});
   }
@@ -92,15 +148,18 @@ window.DygraphContent = (function() {
         "getDOM":
         function() {
 	  var self = this;
-	  setTimeout(function(){ self.buildGraphs(self); }, 300);
+	  setTimeout(function(){ self.buildGraphs(self,self.jsonData); }, 3000);
 	  return this.content;
+	},
+	     getTag:
+	function(){
+	  return "dygraphcontent"+this.DygraphN;
 	},
 	     addOpt:
 	function(N,type){
 	  var source = "list"+N+""+type;
 	  var dest = "list"+N+"Activ"+type;
 	  var ret = this.switchOpt(source,dest);
-	  // TODO: show graphs
 	  for(var t=0;t<ret.length;t++)
 	    this.searchGraphs(type,ret[t],1);
 	},
@@ -109,7 +168,6 @@ window.DygraphContent = (function() {
 	  var dest = "list"+N+""+type;
 	  var source = "list"+N+"Activ"+type;
 	  var ret = this.switchOpt(source,dest);
-	  // TODO: hide graphs
 	  for(var t=0;t<ret.length;t++)
 	    this.searchGraphs(type,ret[t],-1);
 	},
@@ -158,39 +216,131 @@ window.DygraphContent = (function() {
 	  var options = "";
 	  var index;
 	  for (index in arr){
-	  //for (index = 0; index < arr.length; ++index) {
 	    options += "<option value='"+index+"'>"+arr[index]+"</option>";
 	  }
 	  return options;
 	},
 	     buildGraphs:
-	function (self){
+	function (self,jsonData){
 	  var self = this;
-	  self.graphs = new Array();
+	  var i =  self.numgh;
+	  $.each(jsonData, function(idx,g){
+	    var options = {};
+	    options['title'] = g.name;
+	    if(g["g-desc"])
+	      options['labels'] = g["g-desc"];
+	    if(g["y-axes"])
+	      options['ylabel'] = g["y-axes"];
+	    if(g["x-axes"])
+	      options['xlabel'] = g["x-axes"];
 
-	  for(var i = 0; i < self.jsonData["graphs"].length; i++){
-	  var options = {};
-	    options['title'] = self.jsonData["graphs"][i].name;
-	    if(self.jsonData["graphs"][i]["g-desc"])
-	      options['labels'] = self.jsonData["graphs"][i]["g-desc"];
-	    if(self.jsonData["graphs"][i]["y-axes"])
-	      options['ylabel'] = self.jsonData["graphs"][i]["y-axes"];
-	    if(self.jsonData["graphs"][i]["x-axes"])
-	      options['xlabel'] = self.jsonData["graphs"][i]["x-axes"];
-	    var g = new Dygraph(
-	      document.getElementById("graph"+self.DygraphN+"_"+i+""),
-              self.jsonData["graphs"][i].values,
+	    var divid = "graph"+self.DygraphN+"_"+i+"";
+	    var ghp = new Dygraph(
+	      document.getElementById(divid),//div,
+              g.values,
               options
 	    );
+	      
 	    self.graphs[i]={};
 	    self.graphs[i]["id"] = "graph"+self.DygraphN+"_"+i+"";
-	    self.graphs[i]["groups"] = self.jsonData["graphs"][i]["groups"];
-	    self.graphs[i]["ng"] = 0;
-	    self.graphs[i]["labels"] = self.jsonData["graphs"][i]["labels"];
-	    self.graphs[i]["nl"] = 0;
-	    $("#graph"+self.DygraphN+"_"+i+"").hide();
-	  }
-	}
+	    self.graphs[i]["groups"] = g["groups"];
+	    self.graphs[i]["ng"] = g["groups"].length;
+	    self.graphs[i]["labels"] = g["labels"];
+	    self.graphs[i]["nl"] = g["labels"].length;
+	    i++;
+	  });
+	  self.numgh = i;
+	},
+
+
+	// MODIFY CONTENT
+        replace:
+	function(newcontent){
+	  var self = this;
+
+	},
+
+        prepend:
+	function(newcontent){
+	  var self = this;
+	  self.addNewContent(newcontent);
+	},
+
+        append:
+	function(newcontent){
+	  var self = this;
+	  self.addNewContent(newcontent);
+	},
+
+	addNewContent:
+	function(newcontent){
+	  var self = this;
+	  var newJson = buildJSON(newcontent);
+	  parseInput(self,newJson);
+	  buildHolder(self,newJson);
+	  self.updateControl();
+	  self.buildGraphs(self,newJson);
+	  
+	},
+
+	updateControl:
+	function(){
+	  // I supossed the data to be update is in self.gadded and self.ladded
+	  // TODO: If a group or a label is unactive 
+	  //       I have to hide the new graph and decrease nl and ng counters
+	  var self = this;
+	  $('#list'+self.DygraphN+'ActivC').append(self.generateOptions(self.nadded.g));
+	  $('#list'+self.DygraphN+'ActivL').append(self.generateOptions(self.nadded.l));
+
+	},
+
+	// STREAM INFO
+        "isStream":
+	function(){
+	  return this.stData.isStream;
+	},
+
+        getStreamData:
+	function(){
+	  return this.stData;
+	},
+
+	// STREAM BUTTON
+       activeStreamButton:
+       function(doc){
+	 if(!this.isStream())
+	    return;
+	 this.streamBttn.show();
+	 this.doc = doc;
+	 this.enableStreamButton();
+       },
+       removeStreamButton:
+       function(){
+	  if(!this.isStream())
+	    return;
+	 this.streamBttn.hide();
+	 this.stData.isStream = false;
+	 return;
+	 //self.contentArray[num].content.removeStreamButton();
+       },
+
+       enableStreamButton:
+       function(){
+	  if(!this.isStream())
+	    return;
+	 this.streamBttn.removeAttr("disabled");
+	 return;
+	 //self.contentArray[num].content.enableStreamButton();
+       },
+
+       disableStreamButton:
+       function(){
+	  if(!this.isStream())
+	    return;
+	 this.streamBttn.attr("disabled","disabled");
+	 return;
+	 //self.contentArray[num].content.disableStreamButton();
+       }
 
    }
     

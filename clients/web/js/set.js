@@ -25,6 +25,20 @@ window.Set = (function() {
 
 
 	//
+	addArrayIfNoExists:
+	function(arr) {
+	  var self = this;
+	  var result = [];
+	    $.each(arr,function(i,e){
+	      if($.inArray(e, self.value) == -1){
+		self.value[ self.value.length ] = e;
+		result[result.length ] = e;;
+	      }
+	    });
+	  return result;
+	},
+
+	//
 	union:
 	function(s) {
 	     for(var i=0; i<s.value.length; i++)
