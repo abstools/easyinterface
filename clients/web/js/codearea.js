@@ -93,7 +93,7 @@ window.CodeArea = (function() {
 	//
 	createTab: 
 	function(label,id,tabContent) {
-
+	  console.log(label,id,tabContent);
 	    var tabTag = this.tabId_to_tabTag(id);
 	    
 	    // TBD --- later verify that there is no other Tab with the
@@ -117,11 +117,12 @@ window.CodeArea = (function() {
 	    var ed = CodeMirror.fromTextArea( content.find("#"+tabTag+"-ed").get(0), { 
  	        lineNumbers: true, 
  		mode: "text/abs",//x-java", 
- 		value: tabContent,
+ 		//value: tabContent, // this line is to add content to the codemirror when is not from a text area
 		gutters: ["actionGutter","CodeMirror-linenumbers","infoGutter"],
 		scrollbarStyle: "overlay",
 		highlightSelectionMatches: {showToken: /\w/}
  	    });
+	  ed.setValue(tabContent); // this line is to add content to the codemirror when is a textarea
 
 
 	    var currTabInfo = {
