@@ -206,6 +206,14 @@ window.FileManager = (function() {
 			self.requestRemote(self,fmId);
 		      }
 		    },
+		    "Commit": {
+		      "label": "Commit & Push",
+		      "separator_after": true,
+		      "action": function (obj) {
+			var fmId = obj.attr('fmId');
+			self.requestCommit(self,fmId);
+		      }
+		    },
 		    "Rename": {
 		      "label": "Rename",
 		      "separator_before":true,
@@ -250,6 +258,7 @@ window.FileManager = (function() {
 		      delete items.CreateFile;
 		      delete items.CreateFolder;
 		      delete items.RemoteFile;
+		      delete items.Commit;
 		      delete items.Rename;
 		      delete items.Delete;
 		      delete items.Cut;
@@ -267,7 +276,11 @@ window.FileManager = (function() {
 		      delete items.CreateFile;
 		      delete items.CreateFolder;
 		      delete items.RemoteFile;
+		      delete items.Commit;
 		      delete items.Paste;
+		      break;
+		    case "folder":
+		      delete items.Commit;
 		      break;
 		  };
 		  if(!_ei.outline.active)
@@ -872,7 +885,6 @@ window.FileManager = (function() {
      if ( path.charAt(0) != '/' )
 	 path = "/"+path;
 
-	  alert(path);  
      if(this.existsFm(path))
 	return this.fmIdByPath[path];
       else
@@ -911,6 +923,14 @@ window.FileManager = (function() {
 	this.fmObj[fmId].info.attr.loaded = false;
       }
     },
+
+		    //
+    requestCommit:
+    function(fm,fmId){
+      var self = this;
+      
+    },
+
 		    //
     requestRemote:
     function(fm,fmId){

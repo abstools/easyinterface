@@ -113,7 +113,7 @@ window.EasyInterface = (function() {
 	this.removeOutline();
       }
       this.initResizeEffect(); 
-	   
+      setTimeout(function(){ self.parseURI(); }, 500);
 
     }
 
@@ -491,7 +491,44 @@ window.EasyInterface = (function() {
 	  var sizeC = parseInt(this.codeareaHolder.css("width").slice(0, -2));
 	  this.outlineHolder.remove();
 	  this.codeareaHolder.css("width",sizeC+sizeO);
-	}
+	},
+	parseURI:
+	function(){
+	  var self = this;
+	  var data = self.parseQuery(window.location.search.substr(1));
+	  $.each(data,function(v,arr){
+	    console.log(v,arr);
+	    switch(v){
+	      case "file":
+		$.each(arr,function(k,n){
+		  var fmid = self.filemanager.getIdByPath(n);
+		  console.log(k,n,fmid);
+		  self.filemanager.openFile(fmid);
+		});
+		break;
+	    }
+
+	  });
+
+	},
+	parseQuery:
+	function(str){
+          if(typeof str != "string" || str.length == 0) return {};
+          var s = str.split("&");
+          var s_length = s.length;
+          var bit, query = {}, first, second;
+          for(var i = 0; i < s_length; i++)
+          {
+            bit = s[i].split("=");
+            first = decodeURIComponent(bit[0]);
+            if(first.length == 0) continue;
+            second = decodeURIComponent(bit[1]);
+            if(typeof query[first] == "undefined") query[first] = [second];
+            else if(query[first] instanceof Array) query[first].push(second);
+            else query[first] = [query[first], second]; 
+          }
+          return query;
+        }
 
     }
 
