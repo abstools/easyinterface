@@ -93,7 +93,6 @@ window.CodeArea = (function() {
 	//
 	createTab: 
 	function(label,id,tabContent) {
-	  console.log(label,id,tabContent);
 	    var tabTag = this.tabId_to_tabTag(id);
 	    
 	    // TBD --- later verify that there is no other Tab with the

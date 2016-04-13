@@ -497,12 +497,10 @@ window.EasyInterface = (function() {
 	  var self = this;
 	  var data = self.parseQuery(window.location.search.substr(1));
 	  $.each(data,function(v,arr){
-	    console.log(v,arr);
 	    switch(v){
 	      case "file":
 		$.each(arr,function(k,n){
 		  var fmid = self.filemanager.getIdByPath(n);
-		  console.log(k,n,fmid);
 		  self.filemanager.openFile(fmid);
 		});
 		break;
