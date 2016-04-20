@@ -32,8 +32,11 @@ window.ComboWidget = ( function() {
 
 	    if ( widgetInfo.options[i].value == widgetInfo.default_value ) {
 		option.attr("selected","selected");
+		this.select.prepend( option );
+	    }else{
+		this.select.append( option );
 	    }
-	    this.select.append( option );
+	    
 	}
 
 	if ( widgetInfo.desc.long ) { 
@@ -69,10 +72,6 @@ window.ComboWidget = ( function() {
 	function() {
 	    var widgetValue = new Array();
 	    widgetValue = this.select.val();
-/*	    if(this.widgetInfo.multiple){
-		widgetValue = this.select.val();
-	    }
-*/
 	    return widgetValue;
 	},
 	restoreDefault:
