@@ -51,10 +51,8 @@ window.DocContent = (function() {
 	   
 	   for( var i=0 ; i<this.ContentCollection.length; i++ ) {
 	       cobj = this.ContentCollection[i].parse(c, options);
-	       if ( cobj != null ){  // we have succeeded to parse 'c' 
-		   console.log(c,options,cobj);
-		   return cobj;
-	       }
+	       if ( cobj != null )  // we have succeeded to parse 'c' 
+		 return cobj;
 	   }
 
 	   console.log("Error while parsing content environment:");
