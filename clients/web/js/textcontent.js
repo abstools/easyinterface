@@ -31,7 +31,7 @@ window.TextContent = (function() {
      self.text = $(options.content).text();
        self.text = self.text.replace(">","&gt;");
        self.text = self.text.replace("<","&lt;");
-    $("#"+self.getTag()+" > .data",self.content).append( "<div class='preformatted'><pre>"+self.text+"</pre></div>" );
+    $(self.content).find(".data").append( "<div class='preformatted'><pre>"+self.text+"</pre></div>" );
 
      self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
      $(self.streamBttn).button({ 
@@ -70,7 +70,7 @@ window.TextContent = (function() {
 	  self.text = $(newcontent).text();
 	  self.text = self.text.replace(/\>/g,"&gt;");
 	  self.text = self.text.replace(/\</g,"&lt;");
-	  $("#"+self.getTag()+" > .data",self.content).html( "<div class='preformatted'><pre>"+self.text+"</pre></div>" );
+	  $(self.content).find(".data").html( "<div class='preformatted'><pre>"+self.text+"</pre></div>" );
 	  $("#"+self.getTag()+" > .data").html( "<div class='preformatted'><pre>"+self.text+"</pre></div>" );
 	},
 

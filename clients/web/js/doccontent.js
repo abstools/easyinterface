@@ -22,7 +22,7 @@ window.DocContent = (function() {
 
        this.content = $("<div></div>");
        options.content.each( function() {
-
+	   
 	   var c = self.parseContent( $(this), {
 	     outclass : options.outclass
 	   });
@@ -51,8 +51,10 @@ window.DocContent = (function() {
 	   
 	   for( var i=0 ; i<this.ContentCollection.length; i++ ) {
 	       cobj = this.ContentCollection[i].parse(c, options);
-	       if ( cobj != null )  // we have succeeded to parse 'c' 
-		 return cobj;
+	       if ( cobj != null ){  // we have succeeded to parse 'c' 
+		   console.log(c,options,cobj);
+		   return cobj;
+	       }
 	   }
 
 	   console.log("Error while parsing content environment:");

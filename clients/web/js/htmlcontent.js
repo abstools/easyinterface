@@ -32,7 +32,7 @@ window.HTMLContent = (function() {
      HTMLcount++;
 
      self.content = $('<div id="'+self.getTag()+'"><div class="data"></div></div>');
-     $("#"+self.getTag()+" > .data",self.content).append( $(options.content).text());//prop('outerHTML') );
+     $(self.content).find(".data").append( $(options.content).text());//prop('outerHTML') );
 
      self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
      $(self.streamBttn).button({ 
@@ -65,21 +65,21 @@ window.HTMLContent = (function() {
         replace:
 	function(newcontent){
 	  var self = this;
-	  $("#"+self.getTag()+" > .data",self.content).html($(newcontent).text());
+	  $(self.content).find(".data").html($(newcontent).text());
 	  $("#"+self.getTag()+" > .data").html($(newcontent).text());
 	},
 
         prepend:
 	function(newcontent){
 	  var self = this;
-	  $("#"+self.getTag()+" > .data",self.content).prepend($(newcontent).text());
+	  $(self.content).find(".data").prepend($(newcontent).text());
 	  $("#"+self.getTag()+" > .data").prepend($(newcontent).text());
 	},
 
         append:
 	function(newcontent){
 	  var self = this;
-	  $("#"+self.getTag()+" > .data",self.content).append($(newcontent).text());
+	  $(self.content).find(".data").append($(newcontent).text());
 	  $("#"+self.getTag()+" > .data").append($(newcontent).text());
 	},
 

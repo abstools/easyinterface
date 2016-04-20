@@ -139,8 +139,8 @@ window.DygraphContent = (function() {
      $(self.content).find(".data").prepend($(html));
      $(self.content).find("#btn"+self.DygraphN+"Cadd").click(function(){self.addOpt(self.DygraphN,'C');});
     $(self.content).find("#btn"+self.DygraphN+"Csub").click(function(){self.subOpt(self.DygraphN,'C');});
-    $("#btn"+self.DygraphN+"Ladd",self.content).click(function(){self.addOpt(self.DygraphN,'L');});
-    $("#btn"+self.DygraphN+"Lsub",self.content).click(function(){self.subOpt(self.DygraphN,'L');});
+    $(self.content).find("#btn"+self.DygraphN+"Ladd").click(function(){self.addOpt(self.DygraphN,'L');});
+    $(self.content).find("#btn"+self.DygraphN+"Lsub").click(function(){self.subOpt(self.DygraphN,'L');});
   }
 
   DygraphContent.prototype = {
