@@ -113,7 +113,9 @@ window.EasyInterface = (function() {
 	this.removeOutline();
       }
       this.initResizeEffect(); 
-      setTimeout(function(){ self.parseURI(); }, 500);
+	setTimeout(function(){ self.parseURI() }, 2000);
+			
+
 
     }
 
@@ -440,6 +442,7 @@ window.EasyInterface = (function() {
 			alert(ex.find("ei_error").text());
 		    else
 			self.initExamples_aux(ex.find("examples"), serverNum,null);	
+		    
 		});
 	  }
 }
@@ -500,8 +503,10 @@ window.EasyInterface = (function() {
 	    switch(v){
 	      case "file":
 		$.each(arr,function(k,n){
-		  var fmid = self.filemanager.getIdByPath(n);
-		  self.filemanager.openFile(fmid);
+		    self.filemanager.openPath(n);
+		    var fmid = self.filemanager.getIdByPath(n);
+		    if(fmid!=-1)
+			self.filemanager.openFile(fmid);
 		});
 		break;
 	    }

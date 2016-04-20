@@ -782,6 +782,23 @@ window.FileManager = (function() {
       }
     },
 
+      
+      openPath:
+      function(path){
+	  var base = "/";
+	  var folders = path.split("/");
+	  var top = folders.length -1;
+	  if(path[path.length-1]=="/")
+	      top++;
+	  for(var i = 1; i < top; i++){
+	      base += folders[i]+"/";
+
+	      var fmid = this.getIdByPath(base);
+	      if (fmid == -1) break;
+	      this.openFolder(fmid,true);
+	  }
+      },
+
     //
     getFolderFileIds:
     function(id,parents) {
