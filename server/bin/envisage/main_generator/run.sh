@@ -3,6 +3,8 @@
 . envisage/envisage_settings.sh
 . default/parse_params.sh
 
+# use minizinc 1.6 that is assumed to be stored in $MAINGENHOME/minizinc-1.6/bin
+PATH=$MAINGENHOME/minizinc-1.6/bin:$PATH
 
 abs=""
 spec=""
