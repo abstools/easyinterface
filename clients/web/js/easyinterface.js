@@ -65,6 +65,7 @@ window.EasyInterface = (function() {
 	this.initConsoleWidget();
 	this.initToolSelectorWidget();
 	this.initOutputManager();
+      if(_ei.outline.active)
 	this.initOutlineWidget();
 	this.initTools();
 	this.filemanager.setProperties(this.outline,this.tools);
@@ -98,7 +99,7 @@ window.EasyInterface = (function() {
 		    primary: "ui-icon-tag"
 		}
 	    } ).click(function() { self.outputmanager.clearAllAnnotations(); });
-
+      if(_ei.outline.active){
 	this.outlineButtonHolder.button( 
 	    {
 		icons: {
@@ -108,6 +109,9 @@ window.EasyInterface = (function() {
 		var ids = [self.codearea.getCurrentTabId()];
 		self.outline.refresh( ids ); 
 	    } );
+      }else{
+	this.removeOutline();
+      }
       this.initResizeEffect(); 
 	   
 
@@ -131,8 +135,11 @@ window.EasyInterface = (function() {
 	    this.cfgFile = options.cfgFile || defaultSettingFile;
 	    _ei.serverPath = options.apps || serverPath;
 	  _ei.exampleServerPath = options.examples || examplesPath;
-	  _ei.outline.app = options.outlineapp || "outline";
-	  _ei.outline.server = options.outlineserver || _ei.serverPath[0].server;
+	  _ei.outline.active = (options.outline=="on")? true : false;
+	  if(_ei.outline.active){
+	    _ei.outline.app = options.outlineapp || "outline";
+	    _ei.outline.server = options.outlineserver || _ei.serverPath[0].server;
+	  }
 
 	},
 
@@ -473,8 +480,17 @@ window.EasyInterface = (function() {
 	  var self = this;
 	  var RE = new ResizeEffect();
 	  RE.addHorizontalEffect("filemanager","codearea");
-	  RE.addHorizontalEffect("codearea","outline");
+	  if(_ei.outline.active)
+	    RE.addHorizontalEffect("codearea","outline");
 	  RE.addVerticalEffect("up","console");
+	},
+	removeOutline:
+	function(){
+	  this.outlineButtonHolder.remove();
+	  var sizeO = parseInt(this.outlineHolder.css("width").slice(0, -2));
+	  var sizeC = parseInt(this.codeareaHolder.css("width").slice(0, -2));
+	  this.outlineHolder.remove();
+	  this.codeareaHolder.css("width",sizeC+sizeO);
 	}
 
     }

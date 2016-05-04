@@ -35,7 +35,7 @@ window.CmdEngine = (function() {
 		jsonParams["parameters"]["_ei_files"] =  cmdInfo.files;
 
 	    // add the outline entries
-	    if ( cmdInfo.entries ) {
+	    if (_ei.outline.active && cmdInfo.entries ) {
 		jsonParams["parameters"]["_ei_outline"] =  cmdInfo.entries;
 	    }
 

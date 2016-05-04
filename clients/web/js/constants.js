@@ -30,7 +30,7 @@ var _ei = {
 	  color            : "color",              // attr
 	  elements         : "elements",           // tag
 	  selector         : "selector",           // tag
-	  selectorvalue    : "value",
+	  selectorvalue    : "value",              // attr
 
 	  //
 	  outclass       : "outclass",     // attr
@@ -48,7 +48,8 @@ var _ei = {
 	  htmlcontent    : "html",         // attr
 	  svgcontent     : "svg",          // attr
 	  textcontent    : "text",         // attr
-	  
+	  dygraphcontent : "dygraph",      // attr
+
 	  // PRINTONCONSOLE command
 	  printonconsole : "printonconsole", // tag
 	  consoleid      : "consoleid",      // attr
@@ -89,6 +90,24 @@ var _ei = {
 	  boxwidth       : "boxwidth", // attr
 	  boxheight      : "boxheigh", // attr
 
+	  // TIMELINE command
+	  timeline       : "timeline", // tag
+	  tlwidget       : "widget", //  attr
+	  tltitle        : "title",  //  attr
+	  tlauto         : "auto",   //  attr
+
+	  tlstep         : "step",  // tag
+	  tlclean        : "autoclean", // attr
+
+	  // ASKURL command
+	  askurl         : "askUrl", //  tag
+	  audelay        : "delay",  // attr
+	  autries        : "tries",  // attr
+
+	  // CHANGECONTENT command
+	  changecontent  : "changecontent", // tag
+	  ccaction       : "action", //attr
+
 	  // ONCODELINECLICK action
 	  oncodelineclick: "oncodelineclick",
 	  actionautoclean: "autoclean",
@@ -98,6 +117,7 @@ var _ei = {
       }
   },
   debug: true,
+  outline: true,
   file_ext: ".abs",
   pprefix: "-",
   outline: {

@@ -7,6 +7,7 @@ window.OutputManager = (function() {
 	    AddMarkerCommand, 
 	    HighlightLinesCommand, 
 	    SetCSSCommand, 
+	    ChangeContentCommand,
 	    AddInLineMarkerCommand, 
 	    DialogBoxCommand,
 	    WriteFileCommand,
@@ -15,6 +16,7 @@ window.OutputManager = (function() {
 
 	this.ActionsCollection =  [
 	    CodeLineAction,
+	    TimeLineAction,
 	    OnClickAction
 	];
 

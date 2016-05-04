@@ -383,6 +383,23 @@ pre {
   height: 14px;
 }
 
+/** Timeline Command **/
+
+.tl-button{
+  position: relative;
+float: right;
+  background-color: #16A;
+  color: #FFF;
+  font-weight: bold;
+  width: 20px;
+}
+
+.timeline{
+  position: relative;
+  float:rigth;
+  width: 90%;
+}
+
 /** Misc **/
 
 
@@ -400,3 +417,5 @@ pre {
   height: 33.8px;
   margin-left: 3.2px;
 }
+
+

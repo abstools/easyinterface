@@ -270,6 +270,8 @@ window.FileManager = (function() {
 		      delete items.Paste;
 		      break;
 		  };
+		  if(!_ei.outline.active)
+		    delete items.Outline;
 		  return items;
 	      }}})
 	    .bind("delete_node.jstree",function(e, data){

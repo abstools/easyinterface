@@ -13,7 +13,8 @@ window.DocContent = (function() {
        this.ContentCollection =	[ 
 	    HTMLContent, 
 	    SVGContent,
-	    TextContent
+	    TextContent,
+	    DygraphContent
 	];
 
        this.content = $("<div></div>");

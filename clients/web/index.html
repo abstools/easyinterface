@@ -30,6 +30,9 @@
   <!-- Markdown -->
   <script src="./lib/markdown/markdown.js"></script>
 
+  <!-- Dygraph -->
+  <script src="./lib/dygraph/dygraph-combined.js"></script>
+
   <!-- jsTree stuff -->
   <script type="text/javascript" src="./lib/jstree/jquery.jstree.js"></script>
   <link type="text/css" rel="stylesheet" href="./lib/jstree/_docs/syntax/!style.css"/>
@@ -65,6 +68,7 @@
   <script src="./js/htmlcontent.js"></script>
   <script src="./js/svgcontent.js"></script>
   <script src="./js/textcontent.js"></script>
+  <script src="./js/dygraphcontent.js"></script>
   <script src="./js/printonconsolecommand.js"></script>
   <script src="./js/markerwidget.js"></script>
   <script src="./js/addinlinemarkercommand.js"></script>
@@ -72,12 +76,14 @@
   <script src="./js/addmarkercommand.js"></script>
   <script src="./js/highlightlineswidget.js"></script>
   <script src="./js/highlightlinescommand.js"></script>
+  <script src="./js/changecontentcommand.js"></script>
   <script src="./js/setcsscommand.js"></script>
   <script src="./js/writefilecommand.js"></script>
   <script src="./js/streamcommand.js"></script>
   <script src="./js/dialogboxcommand.js"></script>
   <script src="./js/onclickaction.js"></script>
   <script src="./js/codelineaction.js"></script>
+  <script src="./js/timelineaction.js"></script>
   <script src="./js/outputmanager.js"></script>
 
   <link type="text/css" rel="stylesheet" href="./css/ei.default.css"/>
@@ -111,6 +117,7 @@ $( function() {
     theme: "./html/eitheme.resizable.html",
     apps: _ei_data.apps,
     examples: _ei_data.examples,
+    outline: _ei_data.outline,
     outlineapp: _ei_data.outlineapp,
     outlineserver: _ei_data.outlineserver,
   });
