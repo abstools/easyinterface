@@ -491,6 +491,12 @@ available on the server.
   \item \xmlstructtemplate{_ei_stream} is replaced by the local
     temporary directory name, where stream aplications have to save
     all files; 
+
+  \item \xmlstructtemplate{_ei_download} is replaced by the local
+    temporary directory name, where aplications have to save
+    all downloadable files. These files will be accessible from the
+    url
+    \\http://domain/.../ei/server/Download.php?file=FILENAME\&id=\xmlstructtemplate{_ei_execid}; 
 %%
   \item \xmlstructtemplate{_ei_outline} is replaced by a list of
     selected entities (separated by space);

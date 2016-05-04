@@ -64,6 +64,7 @@ complete record:
   (*title*): (*"Easy Interface"*),
   (*apps*): (*[\{server: "http://domain/.../ei/server, apps: ["myapp", "costa", "mhp"]\}, ... ]*),
   (*examples*): (*[\{server: "http://domain/.../ei/server, examples: ["mhpex","costex"]\}, ... ]*),
+  (*outline*):(*"on"*),
   (*outlineserver*): (*"http://domain/.../ei/server"*),
   (*outlineapp*): (*"coutline"*)
 }
@@ -81,9 +82,12 @@ application to be listed in the applications menu, it is explained in
 Section~\ref{ch:clients:web:appsmenu}. The field \texttt{examples} is
 used to change the set of examples that are shown in the file-manager,
 it is explained in Section~\ref{ch:clients:web:filemanager}. The
+component called outline at the Figure~\ref{fig:webclient} could be
+hide with the field \texttt{outline} when gets ``off'' value. The
 fields \texttt{outlineserver} and \texttt{outlineapp} are used to
 indicate which application to use for generating the content of the
-outline, it is explained in Section~\ref{ch:clients:web:outline}.
+outline when the \texttt{outline} is active, it is explained in
+Section~\ref{ch:clients:web:outline}.
 
 \subsection{The Applications Menu}
 \label{ch:clients:web:appsmenu}

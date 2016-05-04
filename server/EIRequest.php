@@ -69,8 +69,11 @@ class EIRequest
     case "get_stream":
        if ( ! array_key_exists( 'exec_id', $this->request ) )
 	 throw new Exception("Missing exec_id");
-
-       return EIStream::get(  $this->request['exec_id'] );
+       if ( ! array_key_exists( 'extension', $this->request ) )
+	 $ext = "ei";
+       else
+	 $ext = $this->request['extension'];
+       return EIStream::get(  $this->request['exec_id'], $ext );
 
 
     case "kill_stream":

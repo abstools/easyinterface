@@ -597,7 +597,7 @@ output changes.
 In the example that we have developed so far, the web-client simply
 printed the output of \texttt{myapp.sh} in the console area. This is
 the default behavior of the web-client if the output does not follow
-the \ei Output Language (\eiol), which is a text-based is language
+the \ei Output Language (\eiol), which is a text-based language
 that allows generating more sophisticated output such as highlighting
 lines, adding markers, etc.
 %
@@ -892,7 +892,8 @@ following code snippet immediately before the instruction that closes
 the \lst{eicommands} tag:
 
 \medskip
-\begin{lstlisting}[style=script]for f in $files 
+\begin{lstlisting}[style=script]
+for f in $files 
 do
   echo "<addinlinemarker dest='$f' outclass='info'>"
   echo "  <lines><line from='15' /></lines>"
