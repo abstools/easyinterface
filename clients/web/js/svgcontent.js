@@ -30,7 +30,7 @@ window.SVGContent = (function() {
 
        self.svgEnv = $(options.content).find("> svg");
 
-       if ( svgEnv.length != 1 ) {
+       if ( self.svgEnv.length != 1 ) {
 	   throw "an svg conetnt environment must include exactly one svg environemt inside";
        }
 	   
