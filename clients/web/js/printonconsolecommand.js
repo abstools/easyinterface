@@ -37,7 +37,6 @@ window.PrintOnConsoleCommand = (function() {
 	this.consoleId = options.consoleId;
 	this.consoleTitle = options.consoleTitle;
 	this.format = options.format;
-      console.log("constructora");
 	this.content = new DocContent({ 
 	    server: options.server,
 	    outputmanager: options.outputmanager,
@@ -45,7 +44,7 @@ window.PrintOnConsoleCommand = (function() {
 	    content: options.content,
 	    outclass: options.outclass
 	}).getDOM();
-      console.log("constructora after content");
+
 	this.added = false;
     };
 
@@ -55,7 +54,7 @@ window.PrintOnConsoleCommand = (function() {
 	//
 	"do":
 	function() {
-	  console.log("do");
+
 	    if ( !this.added ) {
 		if ( ! this.console.existWin( this.consoleId ) ) {
 		 
