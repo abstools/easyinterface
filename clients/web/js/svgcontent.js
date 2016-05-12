@@ -30,8 +30,8 @@ window.SVGContent = (function() {
 
        self.svgEnv = $(options.content).find("> svg");
 
-       if ( svgEnv.length != 1 ) {
-	   throw "an svg conetnt environment must include exactly one svg environemt inside";
+       if ( self.svgEnv.length != 1 ) {
+	   throw "an svg content environment must include exactly one svg environment inside";
        }
 	   
        self.svgEnv = self.svgEnv.prop('outerHTML');
@@ -78,7 +78,7 @@ window.SVGContent = (function() {
 	  self.svgEnv = $(newcontent).find("> svg");
 
 	  if ( self.svgEnv.length != 1 ) {
-	    throw "an svg conetnt environment must include exactly one svg environemt inside";
+	    throw "an svg content environment must include exactly one svg environment inside";
 	  }
 	   
 	  self.svgEnv = self.svgEnv.prop('outerHTML');
@@ -95,7 +95,7 @@ window.SVGContent = (function() {
 	  var self = this;
 	  var cc = $(newcontent).find("> svg");
 	  if ( self.svgEnv.length != 1 ) {
-	    throw "an svg conetnt environment must include exactly one svg environemt inside";
+	    throw "an svg content environment must include exactly one svg environment inside";
 	  }
 	  cc = cc.prop('innerHTML');
 	  var magic = $("<svg>"+cc +""+self.svgEnv.prop('innerHTML')+"</svg>");
@@ -107,7 +107,7 @@ window.SVGContent = (function() {
 	  var self = this;
 	  var cc = $(newcontent).find("> svg");
 	  if ( self.svgEnv.length != 1 ) {
-	    throw "an svg conetnt environment must include exactly one svg environemt inside";
+	    throw "an svg content environment must include exactly one svg environment inside";
 	  }
 	  cc = cc.prop('innerHTML');
 	  var magic = $("<svg>"+self.svgEnv.prop('innerHTML')+""+cc +"</svg>");
