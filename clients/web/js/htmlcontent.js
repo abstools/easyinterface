@@ -32,7 +32,7 @@ window.HTMLContent = (function() {
      HTMLcount++;
 
      self.content = $('<div id="'+self.getTag()+'"><div class="data"></div></div>');
-     $(self.content).find(".data").append( $(options.content).text());//prop('outerHTML') );
+     $(self.content).find(".data").append( $(options.content).prop('outerHTML') );
 
      self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
      $(self.streamBttn).button({ 
