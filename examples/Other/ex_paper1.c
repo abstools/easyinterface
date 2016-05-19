@@ -8,7 +8,7 @@ assert(y>0);
  while(x>0) {
    x--;
    y++;
- while(y>0 && nondet()){
+ while(nondet() && y>0){
      y--;   
      tick(2);
    }
