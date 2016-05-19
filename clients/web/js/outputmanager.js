@@ -11,7 +11,8 @@ window.OutputManager = (function() {
 	    AddInLineMarkerCommand, 
 	    DialogBoxCommand,
 	    WriteFileCommand,
-	    StreamCommand
+	    StreamCommand,
+	    DownloadCommand
 	];
 
 	this.ActionsCollection =  [

@@ -20,6 +20,6 @@ echo "<content format='html'><![CDATA["
 echo '<a href="/ei/server/Download.php?file=pepe&id='$2'" target="_blank"> CLICK HERE </a>'
 echo "]]></content>"
 echo "</printonconsole>"
-
+echo "<download execid='"$2"' filename='pepe' />"
 echo "</eicommands>"
 echo "</eiout>"
