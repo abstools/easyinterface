@@ -29,9 +29,9 @@ window.TextContent = (function() {
 
      self.content = $('<div id="'+self.getTag()+'"><div class="data"></div></div>');
      self.text = $(options.content).text();
-       self.text = self.text.replace(">","&gt;");
-       self.text = self.text.replace("<","&lt;");
-    $(self.content).find(".data").append( "<div class='preformatted'><pre>"+self.text+"</pre></div>" );
+     self.text = self.text.replace(/>/g,"&gt;");
+     self.text = self.text.replace(/</g,"&lt;");
+     $(self.content).find(".data").append( "<div class='preformatted'><pre>"+self.text+"</pre></div>" );
 
      self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
      $(self.streamBttn).button({ 
