@@ -136,6 +136,8 @@ A command in the \ei output language, briefly:
 \item \xmlstructref{eiout}{streamcommand} can be used to notify that
   there is an stream application running.
 %
+\item \xmlstructref{eiout}{downloadcommand} can be used to download a file
+%
 \item \xmlstructref{eiout}{changecontentcommand} can be used to modify some content.
 %
 \end{itemize}
@@ -322,6 +324,18 @@ An action in the \ei output language, briefly:
   Also the \xmlstructref{eiout}{content} of the command will be
   printed on the console \xmlstructattr{consoleid} that print all the
   stream data. 
+%
+}
+
+%% DOWNLOAD COMMAND
+\bigskip
+\xmlstruct
+{eiout}
+{downloadcommand}
+{%
+%
+  Download a \xmlstructattr{filename} given by the ei server asking for it
+  with the \xmlstructattr{execid} given.
 %
 }
 

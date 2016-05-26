@@ -81,6 +81,11 @@ var _ei = {
 	  filename       : "filename",  // attr
 	  overwrite      : "overwrite", // attr
 	  
+	  //DOWNLOAD command
+	  downloadfile   : "download",  //tag
+	  //filename       : "filename",  // attr
+	  //execid         : "execid",    // attr
+
 	  // SETCSS command
 	  setcss         : "setcss",
 	  cssproperties  : "cssproperties",

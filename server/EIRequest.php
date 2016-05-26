@@ -18,7 +18,12 @@ class EIRequest
     if (is_string($this->request)) {
       $this->request = json_decode($this->request, true);
     }
-
+    if( isset( $_GET['download'] ) ){
+	 header("Location: ./Download.php?file=".$_GET['file']."&id=".$_GET['execid']);
+	 die();
+      return;
+    }
+      
     if ( ! array_key_exists( 'command', $this->request ) ) {
       throw new Exception("Missing command in EI request ");
     } 
@@ -82,8 +87,7 @@ class EIRequest
 
        return EIStream::kill(  $this->request['exec_id'] );
 
-
-     default:
+    default:
        throw new Exception("Invalid command in EI request");
      }
    }
