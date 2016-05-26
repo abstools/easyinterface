@@ -229,10 +229,10 @@ window.DygraphContent = (function() {
 	    options['title'] = g.name;
 	    if(g["g-desc"])
 	      options['labels'] = g["g-desc"];
-	    if(g["y-axes"])
-	      options['ylabel'] = g["y-axes"];
-	    if(g["x-axes"])
-	      options['xlabel'] = g["x-axes"];
+	    if(g["y-axis"]) 
+	      options['ylabel'] = g["y-axis"];
+	    if(g["x-axis"])
+	      options['xlabel'] = g["x-axis"];
 
 	    var divid = "graph"+self.DygraphN+"_"+i+"";
 	    var ghp = new Dygraph(
