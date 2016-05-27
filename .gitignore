@@ -3,6 +3,7 @@
 
 # custom config
 clients/web/webclient.cfg
+server/config/eiserver.cfg
 **/absfrontend.jar
 **/ENVISAGE_CONFIG
 
