@@ -76,6 +76,15 @@ window.DygraphContent = (function() {
 		endPos = text.indexOf("}",startPos);
 		var sub = text.substring(startPos,endPos+1);
 		var js = JSON.parse(sub);
+
+		if ( !js["groups"] ) {
+		    js["groups"] = ["DC"+count];
+		}
+
+		if ( !js["labels"] ) {
+		    js["labels"] = ["default"];
+		}
+
 		jsonArr[count] = js;
 		count++;
 		startPos = endPos+1;
