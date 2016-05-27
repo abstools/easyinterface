@@ -18,5 +18,5 @@ do
   	cp -f data.json /tmp/1.stat
     fi
     \mv -f data.json data.json.last
-    sleep $refresh
+    sleep 2
 done
