@@ -39,19 +39,18 @@ if [ $? == 0 ]; then
 	echo '</onclick>'
 	echo "</eiactions>"
     else
-	echo "<printonconsole>"
+	echo "<printonconsole consoleid='erlexec' title='Output'>"
 	echo "<content format='text' streamid='$execid' streamext='out' streamtimeout='$refresh' streamaction='append'>"
 	echo "The source files were successfully compiled to Erlang!"
 	echo "Starting the execution of the Erlang code."
 	echo ""
 	echo "</content>"
 	echo "</printonconsole>"
-	echo "<printonconsole consoleid='stats'>"
+	echo "<printonconsole consoleid='erlstats' title='Statistics'>"
 	echo "<content format='dygraph' streamid='$execid' streamext='stat' streamtimeout='$refresh' streamaction='append'>"
 	echo "</content>"
 	echo "</printonconsole>"
 	envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout &> /dev/null &
-	envisage/simulator/erlangbackend_stats.sh $streamroot $execid $refresh &> /dev/null &
 	echo $! > $streamroot/pid
 	echo "</eicommands>"
     fi
