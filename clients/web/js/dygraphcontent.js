@@ -66,6 +66,7 @@ window.DygraphContent = (function() {
   function buildJSON(content) {
     var jsonArr = JSON.parse("{}");
     var text = $(content).text();
+      alert(text);
     var count = 0;
     var startPos = 0;
     var endPos = 0;

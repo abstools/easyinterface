@@ -27,7 +27,6 @@ if [ $? == 0 ]; then
 	echo "<a id='erlzip$execid' href='#'> Click here to download zip </a>"
 	echo "]]></content>"
 	echo "</printonconsole>"
-	echo "<download execid='$execid' filename='erlang.zip' />"
 	echo "</eicommands>"
 	echo "<eiactions>"
 	echo '<onclick>'
@@ -40,14 +39,19 @@ if [ $? == 0 ]; then
 	echo '</onclick>'
 	echo "</eiactions>"
     else
-	echo "<stream  execid='$execid' time='$refresh' consoletitle='Simulator (Erlang)'>"
-	echo "<content format='text'>"
+	echo "<printonconsole>"
+	echo "<content format='text' streamid='$execid' streamext='out' streamtimeout='$refresh' streamaction='append'>"
 	echo "The source files were successfully compiled to Erlang!"
 	echo "Starting the execution of the Erlang code."
 	echo ""
 	echo "</content>"
-	echo "</stream>"
+	echo "</printonconsole>"
+	echo "<printonconsole consoleid='stats'>"
+	echo "<content format='dygraph' streamid='$execid' streamext='stat' streamtimeout='$refresh' streamaction='append'>"
+	echo "</content>"
+	echo "</printonconsole>"
 	envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout &> /dev/null &
+	envisage/simulator/erlangbackend_stats.sh $streamroot $execid $refresh &> /dev/null &
 	echo $! > $streamroot/pid
 	echo "</eicommands>"
     fi
