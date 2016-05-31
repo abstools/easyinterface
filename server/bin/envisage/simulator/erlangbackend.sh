@@ -7,7 +7,8 @@ streamroot=$(getparam "streamroot")
 downloadroot=$(getparam "downloadroot")
 execid=$(getparam "execid")
 files=$(getparam "files")
-mode=$(getparam "mode")
+enabledownload=$(getparam "download")
+enablestats=$(getparam "stats")
 timeout=$(getparam "timeout")
 refresh=$(($(getparam "refreshrate")*1000))
 
@@ -20,15 +21,37 @@ echo "<eicommands>"
 env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> /tmp/erlangbackend.stderr
 
 if [ $? == 0 ]; then
-    if [$mode == "download" ]; then
-	zip -r $outzip $outdir
-	echo "<printonconsole>"
-	echo "<content format='html'><![CDATA["
-	echo "<a id='erlzip$execid' href='#'> Click here to download zip </a>"
-	echo "]]></content>"
+
+    echo "<printonconsole consoleid='erlexec' consoletitle='Output'>"
+    echo "<content format='text' streamid='$execid' streamext='out' streamtimeout='$refresh' streamaction='append'>"
+    echo "The source files were successfully compiled to Erlang!"
+    echo "Starting the execution of the Erlang code."
+    echo ""
+    echo "</content>"
+    echo "</printonconsole>"
+
+    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout $refresh $enablestats &> /dev/null &
+    echo $! > $streamroot/pid
+
+    if [ $enablestats == "yes" ]; then
+	echo "<printonconsole consoleid='erlstats' consoletitle='Statistics'>"
+	echo "<content format='dygraph' streamid='$execid' streamext='stat' streamtimeout='$refresh' streamaction='append'>"
+	echo "</content>"
 	echo "</printonconsole>"
-	echo "<download execid='$execid' filename='erlang.zip' />"
-	echo "</eicommands>"
+    fi
+
+    if [ $enabledownload == "yes" ]; then
+	zip -r $outzip $outdir
+	echo "<printonconsole consoleid='erldownload' consoletitle='Download'>"
+	echo "<content format='html'>"
+	echo "<a id='erlzip$execid' href='#'> Click here to download zip </a>"
+	echo "</content>"
+	echo "</printonconsole>"
+    fi
+
+    echo "</eicommands>"
+
+    if [ $enabledownload == "yes" ]; then
 	echo "<eiactions>"
 	echo '<onclick>'
 	echo '<elements>'
@@ -39,18 +62,8 @@ if [ $? == 0 ]; then
 	echo '</eicommands>'
 	echo '</onclick>'
 	echo "</eiactions>"
-    else
-	echo "<stream  execid='$execid' time='$refresh' consoletitle='Simulator (Erlang)'>"
-	echo "<content format='text'>"
-	echo "The source files were successfully compiled to Erlang!"
-	echo "Starting the execution of the Erlang code."
-	echo ""
-	echo "</content>"
-	echo "</stream>"
-	envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout &> /dev/null &
-	echo $! > $streamroot/pid
-	echo "</eicommands>"
     fi
+
 else
     echo "<printonconsole>"
     echo "<content format='text'><![CDATA[ There are some errors!"

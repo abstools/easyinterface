@@ -64,9 +64,50 @@ window.DygraphContent = (function() {
        self.content.prepend(self.streamBttn);
    }
 
-  function buildJSON(content){
-    var jsonArr = JSON.parse("{}");;
+
+  // this method has a problem that it does not allow using { and }
+  // inside the values of the json that it parses
+  //
+  function buildJSON(content) {
+    var jsonArr = JSON.parse("{}");
     var text = $(content).text();
+      alert(text);
+    var count = 0;
+    var startPos = 0;
+    var endPos = 0;
+    try { 
+	do {
+	    startPos = text.indexOf("{",endPos);
+	    if ( startPos != -1 ) {
+		endPos = text.indexOf("}",startPos);
+		var sub = text.substring(startPos,endPos+1);
+		var js = JSON.parse(sub);
+
+		if ( !js["groups"] ) {
+		    js["groups"] = ["DC"+count];
+		}
+
+		if ( !js["labels"] ) {
+		    js["labels"] = ["default"];
+		}
+
+		jsonArr[count] = js;
+		count++;
+		startPos = endPos+1;
+	    }
+	} while ( startPos != -1 );
+    } catch (e) {
+      console.log("Failed to parse DyGraph JSON\n", text);
+    }
+
+    return jsonArr;
+  }
+
+/*
+  function buildJSON(content){
+    var jsonArr = JSON.parse("{}");
+    var text = $(content).text();
+      alert(text);
     var previous = 0;
     var pos = text.indexOf("}");
     var sub = text;
@@ -86,11 +127,12 @@ window.DygraphContent = (function() {
     }
     return jsonArr;
   }
-
+*/
   function parseInput(self,jsonData){
     self.gadded = [];
     self.ladded = [];
     self.nadded = {"g":[],"l":[]};
+     console.log($(jsonData).text());
     // Get all Groups and Labels
     var aux;
     $.each(jsonData, function(i,gh) {
@@ -234,10 +276,10 @@ window.DygraphContent = (function() {
 	    options['title'] = g.name;
 	    if(g["g-desc"])
 	      options['labels'] = g["g-desc"];
-	    if(g["y-axes"])
-	      options['ylabel'] = g["y-axes"];
-	    if(g["x-axes"])
-	      options['xlabel'] = g["x-axes"];
+	    if(g["y-axis"]) 
+	      options['ylabel'] = g["y-axis"];
+	    if(g["x-axis"])
+	      options['xlabel'] = g["x-axis"];
 
 	    var divid = "graph"+self.DygraphN+"_"+i+"";
 
