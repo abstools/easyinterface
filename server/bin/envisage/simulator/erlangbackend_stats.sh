@@ -6,12 +6,12 @@ refresh=$3
 
 cd $streamroot
 
-sleep 2
+##sleep 2
 echo "" > data.json.last
 
 while [ 1 ]
 do
-    wget -q http://localhost:8080/dcs/cpu/data.json
+    wget -q http://localhost:8080/dcs/cpu/data.json || (sleep 1; continue)
     diff data.json data.json.last > /dev/null
     if [ $? == 1 ]; then
   	cp -f data.json 1.stat
