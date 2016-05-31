@@ -7,10 +7,11 @@ streamroot=$(getparam "streamroot")
 downloadroot=$(getparam "downloadroot")
 execid=$(getparam "execid")
 files=$(getparam "files")
-enabledownload="yes" # $(getparam "download")
-enablestats="yes" # $(getparam "stats")
+enabledownload=$(getparam "download")
+enablestats=$(getparam "stats")
 timeout=$(getparam "timeout")
 refresh=$(($(getparam "refreshrate")*1000))
+refreshrate=$(($(getparam "refreshrate")))
 
 outdir=$streamroot/erlang
 outzip=$downloadroot/erlang.zip
@@ -18,7 +19,7 @@ outzip=$downloadroot/erlang.zip
 echo "<eiout>"
 echo "<eicommands>"
 
-env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> /tmp/erlangbackend.stderr
+env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> $streamroot/erlangbackend.stderr
 
 if [ $? == 0 ]; then
 
@@ -31,7 +32,7 @@ if [ $? == 0 ]; then
     echo "</content>"
     echo "</printonconsole>"
 
-    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout $refresh $enablestats &> /dev/null &
+    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout $refreshrate $enablestats &> /dev/null &
     echo $! > $streamroot/pid
 
     if [ $enablestats == "yes" ]; then
@@ -69,7 +70,7 @@ if [ $? == 0 ]; then
 else
     echo "<printonconsole>"
     echo "<content format='text'><![CDATA[ There are some errors!"
-    cat /tmp/erlangbackend.stderr
+    cat $streamroot/erlangbackend.stderr
     echo "]]></content>"
     echo "</printonconsole>"
     echo "</eicommands>"
@@ -77,4 +78,4 @@ fi
 
 echo "</eiout>"
 
-\rm -f /tmp/erlangbackend.stderr
+\rm -f $streamroot/erlangbackend.stderr
