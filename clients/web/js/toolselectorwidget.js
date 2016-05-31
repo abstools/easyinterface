@@ -35,6 +35,12 @@ window.ToolSelector = (function() {
 	function( tools ) {
 	    this.tools = tools;
 	},
+	//
+	selectTool:
+	function(toolId){
+	  this.selector.val(toolId);
+	  this.selector.change();
+	},
 
 	//
 	addTool:

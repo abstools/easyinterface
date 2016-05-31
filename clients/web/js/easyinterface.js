@@ -509,6 +509,12 @@ window.EasyInterface = (function() {
 			self.filemanager.openFile(fmid);
 		});
 		break;
+	      case "app":
+		$.each(arr, function(k,n){
+//		  self.tools.setActiveTool(n);
+		  self.toolSelector.selectTool(n);
+		});
+		break;
 	    }
 
 	  });
