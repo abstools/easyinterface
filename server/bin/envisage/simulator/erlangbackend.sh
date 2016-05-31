@@ -7,8 +7,8 @@ streamroot=$(getparam "streamroot")
 downloadroot=$(getparam "downloadroot")
 execid=$(getparam "execid")
 files=$(getparam "files")
-enabledownload=$(getparam "download")
-enablestats=$(getparam "stats")
+enabledownload="yes" # $(getparam "download")
+enablestats="yes" # $(getparam "stats")
 timeout=$(getparam "timeout")
 refresh=$(($(getparam "refreshrate")*1000))
 
@@ -24,6 +24,7 @@ if [ $? == 0 ]; then
 
     echo "<printonconsole consoleid='erlexec' consoletitle='Output'>"
     echo "<content format='text' streamid='$execid' streamext='out' streamtimeout='$refresh' streamaction='append'>"
+    echo "$@"
     echo "The source files were successfully compiled to Erlang!"
     echo "Starting the execution of the Erlang code."
     echo ""
@@ -35,16 +36,17 @@ if [ $? == 0 ]; then
 
     if [ $enablestats == "yes" ]; then
 	echo "<printonconsole consoleid='erlstats' consoletitle='Statistics'>"
-	echo "<content format='dygraph' streamid='$execid' streamext='stat' streamtimeout='$refresh' streamaction='append'>"
+	echo "<content format='dygraph' streamid='$execid' streamext='stat' streamtimeout='$refresh' streamaction='replace'>"
 	echo "</content>"
 	echo "</printonconsole>"
     fi
 
     if [ $enabledownload == "yes" ]; then
-	zip -r $outzip $outdir
+	cd $streamroot
+	zip -r $outzip erlang
 	echo "<printonconsole consoleid='erldownload' consoletitle='Download'>"
 	echo "<content format='html'>"
-	echo "<a id='erlzip$execid' href='#'> Click here to download zip </a>"
+	echo "<span id='erlzip$execid'> Click here to download zip </span>"
 	echo "</content>"
 	echo "</printonconsole>"
     fi
@@ -53,14 +55,14 @@ if [ $? == 0 ]; then
 
     if [ $enabledownload == "yes" ]; then
 	echo "<eiactions>"
-	echo '<onclick>'
-	echo '<elements>'
-	echo '<selector value="#erlzip$execid"/>'
-	echo '</elements>'
-	echo '<eicommands>'
+	echo "<onclick>"
+	echo "<elements>"
+	echo "<selector value='#erlzip$execid'/>"
+	echo "</elements>"
+	echo "<eicommands>"
 	echo "<download execid='$execid' filename='erlang.zip' />"
-	echo '</eicommands>'
-	echo '</onclick>'
+	echo "</eicommands>"
+	echo "</onclick>"
 	echo "</eiactions>"
     fi
 
