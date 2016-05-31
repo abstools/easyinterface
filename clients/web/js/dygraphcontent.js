@@ -240,7 +240,7 @@ window.DygraphContent = (function() {
 	      options['xlabel'] = g["x-axes"];
 
 	    var divid = "graph"+self.DygraphN+"_"+i+"";
-	      console.log ("lookfor: "+divid, self);
+
 	    var ghp = new Dygraph(
 	      document.getElementById(divid),//div,
               g.values,
@@ -283,7 +283,6 @@ window.DygraphContent = (function() {
 	    self.gadded = a.gadded;
 	    self.ladded = a.ladded;
 	    self.nadded = a.nadded;
-	    console.log("replace: ", self.DygraphN ,"to",a.DygraphN);
 	    $(self.content).find("#wrapGraphs"+self.DygraphN).html( $(a.content).find("#wrapGraphs"+a.DygraphN).html() );
 	    $("#wrapGraphs"+self.DygraphN).html( $(a.content).find("#wrapGraphs"+a.DygraphN).html() );
 	    $(self.content).find("#control"+self.DygraphN).html( $(a.content).find("#control"+a.DygraphN).html() );
