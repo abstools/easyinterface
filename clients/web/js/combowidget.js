@@ -32,13 +32,15 @@ window.ComboWidget = ( function() {
 
 	    if ( widgetInfo.options[i].value == widgetInfo.default_value ) {
 		option.attr("selected","selected");
-		this.select.prepend( option );
-	    }else{
+	//	this.select.prepend( option );
+}
+//	    }else{
 		this.select.append( option );
-	    }
+	 //   }
 	    
 	}
-
+      this.select.change();
+      
 	if ( widgetInfo.desc.long ) { 
 	    var x = $("<div class='params-right-col'><span class='ui-icon ui-icon-info'></span></div>");
 	    this.env.append(x); 
@@ -85,6 +87,7 @@ window.ComboWidget = ( function() {
 		    $(opt).removeAttr("selected");
 		}
 	    });
+	  this.env.find("select").change();
 	}
     }
 
