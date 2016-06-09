@@ -16,12 +16,11 @@ refreshrate=$(($(getparam "refreshrate")))
 outdir=$streamroot/erlang
 outzip=$downloadroot/erlang.zip
 
-port=`misc/freeport.sh 8080`
 
 echo "<eiout>"
 echo "<eicommands>"
 
-env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -p $port -erlang -d $outdir $files &> $streamroot/erlangbackend.stderr
+env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> $streamroot/erlangbackend.stderr
 
 if [ $? == 0 ]; then
 
