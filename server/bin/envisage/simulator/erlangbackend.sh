@@ -16,10 +16,12 @@ refreshrate=$(($(getparam "refreshrate")))
 outdir=$streamroot/erlang
 outzip=$downloadroot/erlang.zip
 
+port=`misc/freeport.sh 8080`
+
 echo "<eiout>"
 echo "<eicommands>"
 
-env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> $streamroot/erlangbackend.stderr
+env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -p $port -erlang -d $outdir $files &> $streamroot/erlangbackend.stderr
 
 if [ $? == 0 ]; then
 
@@ -32,7 +34,7 @@ if [ $? == 0 ]; then
     echo "</content>"
     echo "</printonconsole>"
 
-    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout $refreshrate $enablestats &> /dev/null &
+    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout $refreshrate $enablestats $port&> /dev/null &
     echo $! > $streamroot/pid
 
     if [ $enablestats == "yes" ]; then
