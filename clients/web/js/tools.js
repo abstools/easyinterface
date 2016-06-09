@@ -69,6 +69,7 @@ window.Tools = (function() {
 	//
 	setActiveTool:
 	function(toolId) {
+	  if( !this.tools[toolId]) return;
 	    this.currToolId = toolId;
 	    this.parameters.setActiveParameSet( toolId );
 	},
@@ -78,6 +79,7 @@ window.Tools = (function() {
 	    var self = this;
 
 	    if ( !toolId ) toolId = this.currToolId;
+	  if( !this.tools[toolId]) return;
 	    var toolInfo = this.tools[ toolId ];
 
 	    var files = self.filemanager.getEiFiles(fileIds);

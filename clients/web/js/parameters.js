@@ -125,7 +125,9 @@ window.Parameters = (function() {
 	    case "checkbox":
 		var trueval = "true";
 		var falseval = "false";
+		var boolean = true;
 		if(param.attr("explicit")=="true"){
+		  boolean = false;
 		  trueval= (param.attr("trueval"))?param.attr("trueval"):"true";
 		  falseval= (param.attr("falseval"))?param.attr("falseval"):"false";
 		}
@@ -136,6 +138,7 @@ window.Parameters = (function() {
 					 desc: desc,
 					 options: options,
 					 multiple: false,
+					 boolean: boolean,
 					 default_value: defaultValue
 				     });
 		break;
@@ -143,7 +146,9 @@ window.Parameters = (function() {
 	    case "checkboxMultiple":
 		var trueval = "true";
 		var falseval = "false";
+		var boolean = true;
 		if(param.attr("explicit")=="true"){
+		  boolean = false;
 		  trueval= (param.attr("trueval"))?param.attr("trueval"):"true";
 		  falseval= (param.attr("falseval"))?param.attr("falseval"):"false";
 		}
@@ -155,6 +160,7 @@ window.Parameters = (function() {
 					 desc: desc,
 					 options: options,
 					 multiple: true,
+					 boolean: boolean,
 					 default_value: defaultValue
 				     });
 		break;
@@ -258,10 +264,10 @@ window.Parameters = (function() {
 		{ id: paramInfo.id,
 		  options: [
 	              { 
-			  value: paramInfo.options[0], 
+			  value: paramInfo.options, 
 			  selected: (paramInfo.default_value == paramInfo.options[0]), 
 			  desc: paramInfo.desc ,
-			  isBoolean: true
+			  isBoolean: paramInfo.boolean
 		      }
 		  ],
 		  callback: callBackWrapper

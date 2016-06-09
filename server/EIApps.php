@@ -277,7 +277,6 @@ static function get_app_help( $app_id ) {
 
       //$key is the name of the param in the XML
       //$values is an array with all the values
-     
       switch ($localtype){
       case "selectone": 
 	$parameters_str .= " ".$localprefix."".$key ;
@@ -291,7 +290,7 @@ static function get_app_help( $app_id ) {
       case "flag":
 	  $explicit = "false";
 	  if(array_key_exists("explicit",$local["@attr"]))
-	    $explicit =  $local["@attr"]["trueval"];
+	    $explicit =  $local["@attr"]["explicit"];
 	  $tval = "true";
 	  $fval = "false";
 	  if(array_key_exists("trueval",$local["@attr"]))
@@ -333,7 +332,7 @@ static function get_app_help( $app_id ) {
     $cmdline = escapeshellcmd($cmdline);
  
    
-    echo $cmdline; // TODO -- shoudl go into some tags
+    echo $cmdline; 
     $outputLines = array();
     
     chdir("bin"); // we always execute in the bin directory

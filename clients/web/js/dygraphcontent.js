@@ -18,6 +18,7 @@ window.DygraphContent = (function() {
         stData.action = c.attr(_ei.outlang.syntax.streamaction) || "prepend";
         stData.time = c.attr(_ei.outlang.syntax.streamtime) || 500;
         stData.isStream = (stData.execid != null);
+	
 	return new DygraphContent({
 	    content: c,
 	    outclass: outclass,
@@ -27,8 +28,12 @@ window.DygraphContent = (function() {
 
    function DygraphContent(options) {	  
      var self = this;
-     self.DygraphN = DygraphNumber;
-     DygraphNumber++;
+       if(options.replace)
+	   self.DygraphN = options.replaceDygraphN;
+       else {
+	   self.DygraphN = DygraphNumber;
+	   DygraphNumber++;
+       }
      self.stData = options.stData;
      self.numgh = 0;
      self.content = $('<div id="'+self.getTag()+'"><div class="data"><div id="wrapGraphs'+self.DygraphN+'"><br/></div></div></div>');
@@ -66,7 +71,6 @@ window.DygraphContent = (function() {
   function buildJSON(content) {
     var jsonArr = JSON.parse("{}");
     var text = $(content).text();
-      alert(text);
     var count = 0;
     var startPos = 0;
     var endPos = 0;
@@ -277,6 +281,7 @@ window.DygraphContent = (function() {
 	      options['xlabel'] = g["x-axis"];
 
 	    var divid = "graph"+self.DygraphN+"_"+i+"";
+
 	    var ghp = new Dygraph(
 	      document.getElementById(divid),//div,
               g.values,
@@ -298,8 +303,32 @@ window.DygraphContent = (function() {
 	// MODIFY CONTENT
         replace:
 	function(newcontent){
-	  var self = this;
-
+	    var self = this;
+	    var stDt = this.stData;
+	    var outclass = null;
+	    var a = new DygraphContent({
+		content: newcontent,
+		outclass: outclass,
+		stData: stDt,
+		replace:true,
+		replaceDygraphN: self.DygraphN
+	    });
+	    self.groups = a.groups;
+	    self.labels = a.labels;
+	    self.g2k = a.g2k;
+	    self.l2k = a.l2k;
+	    self.graphs = a.graphs;
+	    self.numgh = a.numgh;
+	    self.jsonData = a.jsonData;
+	    self.streamBttn =  a.streamBttn;
+	    self.gadded = a.gadded;
+	    self.ladded = a.ladded;
+	    self.nadded = a.nadded;
+	    $(self.content).find("#wrapGraphs"+self.DygraphN).html( $(a.content).find("#wrapGraphs"+a.DygraphN).html() );
+	    $("#wrapGraphs"+self.DygraphN).html( $(a.content).find("#wrapGraphs"+a.DygraphN).html() );
+	    $(self.content).find("#control"+self.DygraphN).html( $(a.content).find("#control"+a.DygraphN).html() );
+	    $("#control"+self.DygraphN).html( $(a.content).find("#control"+a.DygraphN).html() );
+	    setTimeout(function(){ self.buildGraphs(self,self.jsonData); }, 3000);
 	},
 
         prepend:

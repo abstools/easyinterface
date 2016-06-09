@@ -19,8 +19,7 @@ case $i in
         ;;
     -c) curr_flag="c"
         ;;
-    -s) curr_flag=""
-	showoutline=1
+    -s) curr_flag="s"
 	;;
     -l) curr_flag="l"
         ;;
@@ -36,6 +35,10 @@ case $i in
 	       curr_flag=""
 	       ;;
 	    l) levelout="$i"
+	       curr_flag=""
+	       ;;
+            s)
+    	       showoutline="$i"
 	       curr_flag=""
 	       ;;
 	    *) echo "Invalid parameters"
