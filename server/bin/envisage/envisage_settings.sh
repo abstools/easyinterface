@@ -33,9 +33,10 @@ export MAINGENHOME=${EC_MAINGENHOME}
 
 
 # APET
-export APETHOME=${EC_PETHOME}
+export APETHOME=${EC_APETHOME}
+
 #SYCO
-export SYCOHOME=${EC_PETHOME}
+export SYCOHOME=${EC_SYCOHOME}
 
 # add the  absfrontend.jar to the CLASSPATH
 export CLASSPATH=$ABSFRONTEND:${CLASSPATH}
