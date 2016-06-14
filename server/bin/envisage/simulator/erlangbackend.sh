@@ -26,7 +26,6 @@ if [ $? == 0 ]; then
 
     echo "<printonconsole consoleid='erlexec' consoletitle='Output'>"
     echo "<content format='text' streamid='$execid' streamext='out' streamtimeout='$refresh' streamaction='append'>"
-    echo "$@"
     echo "The source files were successfully compiled to Erlang!"
     echo "Starting the execution of the Erlang code."
     echo ""
