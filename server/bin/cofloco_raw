@@ -15,7 +15,7 @@ File=$1;
 shift
 
 
-$COFLOCO_DIR/cofloco -i $File  $* | sed 's/</\&lt;/' | sed 's/>/\&gt;/'
+timeout 180s $COFLOCO_DIR/cofloco -i $File  $* | sed 's/</\&lt;/' | sed 's/>/\&gt;/'
 
 echo "</content>"
 echo "</printonconsole>"
