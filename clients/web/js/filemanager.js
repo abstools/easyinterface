@@ -19,7 +19,7 @@ window.FileManager = (function() {
     this.objToMove = null;
     this.copy=true;
     this.paste=false;
-    this.githubs = new Array(); // 0-> for general conect (without user)
+    this.githubs = new Array(); // 0 -> for general conect (without user)
     this.githubId = 1; //next id to github conections.
     this.initFileManager();
     this.initialize();
@@ -83,10 +83,7 @@ window.FileManager = (function() {
 	    }
             return true;
           }
-	  
 	}
-	
-
       };
       var fmType = {
 	"max_depth":-2,//-2 is to desactivate the control of this to do the tree faster
@@ -755,7 +752,7 @@ window.FileManager = (function() {
 	});
       }else if(fmInfo.attr.urlGitHub && !fmInfo.attr.urlLoaded ){
 	var gh = fmInfo.attr.githubId;
-	var response = this.githubs[gh].getBlob(fmInfo.attr.url, function(err,data){
+	var response = this.githubs[gh].repo.getBlob(fmInfo.attr.url, function(err,data){
 	  if(err){
 	    fmInfo.attr.content = "Error: "+err;
 	    console.log(err);
@@ -774,7 +771,7 @@ window.FileManager = (function() {
       var fmInfo = self.fmObj[folderId].info;
       if(fmInfo.attr.urlGitHub && !fmInfo.attr.urlLoaded){
 	var gh = fmInfo.attr.githubId;
-	self.githubs[gh].getTree(fmInfo.attr.url,sync, function(err, tree) {
+	self.githubs[gh].repo.getTree(fmInfo.attr.url,sync, function(err, tree) {
 	  fmInfo.attr.urlLoaded = true;
 	  self.buildGithubTree(gh,tree,"",folderId,fmInfo.attr.branch,sync);
 	  
@@ -931,23 +928,167 @@ window.FileManager = (function() {
     },
 		    //
     joinGithubWithfm:
-    function(fmId,gh,branch,url){
+    function(fmId,gh,branch,node){
       this.fmObj[fmId].info.attr.githubId = gh;
       this.fmObj[fmId].info.attr.urlGitHub = true;
       this.fmObj[fmId].info.attr.branch = branch;
-      if(url != ""){
-	this.fmObj[fmId].info.attr.url = url;
-	this.fmObj[fmId].info.attr.loaded = false;
+      if(node != null){
+	switch(node.type){
+	  case "dir":
+	    this.fmObj[fmId].info.attr.url = node.sha;
+	    this.fmObj[fmId].info.attr.loaded = false;
+	    this.fmObj[fmId].info.attr.gh_node = node;
+	    break;
+	  case "tree":
+	    this.fmObj[fmId].info.attr.url = node.sha;
+	    this.fmObj[fmId].info.attr.loaded = false;
+	    this.fmObj[fmId].info.attr.gh_node = node;
+	    break;
+	  case "blob":
+	    this.fmObj[fmId].info.attr.gh_node = node;
+	    break;
+	  case "file":
+	    this.fmObj[fmId].info.attr.gh_node = node;
+	    break;
+	};
       }
     },
 
 		    //
     requestCommit:
     function(fm,fmId){
-      var self = this;
-      
-    },
 
+      var self = this;
+    /*  if($("#CommitterForm").length){
+	$("#CommitterForm").dialog("open");
+	return;
+      }*/
+      var owner = $('<div id="CommitterForm"></div>');
+      var div = $('<div id="committer-content"></div>');
+      var gh_id = self.fmObj[fmId].info.attr.githubId;
+      var gh_branch = self.fmObj[fmId].info.attr.branch;
+
+      var remoteRepo = self.githubs[gh_id].repo;
+      var gh_path = self.fmObj[fmId].info.attr.gh_path|| "";
+
+      var formu = $('<div id="formCommitGithub">'+
+		    '<label><b>Title*: </b></label>'+
+		    '<input type="text" id="titlePR"/>'+
+		    '<br/>'+
+		    '<label><b>Comment*: </b></label>'+
+		    '<input type="text" id="commentPR"/>'+
+		    '<br/>'+
+		    '<label><b>User*: </b></label>'+
+		    '<input type="text" id="userPR"/>'+
+		    '<br/>'+
+		    '<label><b>Password*: </b></label>'+
+		    '<input type="password" id="passPR"/>'+
+		    '</br></div>');
+      var CommitButton = $('<button id="commit-auth">Commit</button>');
+      $(CommitButton).button();
+      $(formu).append(CommitButton);
+      $(CommitButton).click(function(event){ 
+	var arr = new Array();
+	self.doCommit(remoteRepo,gh_branch,self.commitTree(arr,fmId,gh_path));
+      });
+      $(div).append(formu);
+      $(owner).append(div);
+      $(owner).dialog({
+	title: "Commit",
+	resizable: true,
+	height:400,
+	width: 600,
+	modal: true,
+	buttons: {
+	  "Close": function() {
+	    $( this ).dialog( "close" );
+	    $("#CommitterForm").remove();
+	  }
+	}
+      });
+    },
+		    //
+    commitTree:
+    function(arr,fmId,path){
+      var self = this;
+      var fmObjA = self.fmObj[fmId]; 
+      var n_arr = arr;
+      var dir = (path !="")?path+"/":"";
+      switch(fmObjA.info.attr.rel){
+	  case "folderRepo":
+	  if(fmObjA.info.attr.gh_base || (!fmObjA.info.attr.base && fmObjA.info.attr.loaded)){
+	    var childs = fmObjA.info.attr.members;
+	    var gh_node = fmObjA.info.attr.gh_node;
+	    for(var i = 0; i < childs.length; i++){
+	      n_arr = self.commitTree(n_arr,childs[i],dir+gh_node.path);
+	    }
+	  }else{
+	    n_arr.push(fmObjA.info.attr.gh_node);
+	  }
+	  break;
+	  case "fileRepo":
+	    if(fmObjA.info.attr.open){
+	      var gh_node = fmObjA.info.attr.gh_node;
+	      var nodo = {
+		"mode":gh_node.mode,
+		"path":path+gh_node.path,
+		"type":"blob",
+		"content": self.codearea.getTabContent(fmObjA.info.attr.fmId)
+	      };
+	      n_arr.push(nodo);
+	    }else{
+	      n_arr.push(fmObjA.info.attr.gh_node);
+	    }
+	  break;
+      };
+
+      return n_arr;
+    },
+		    //
+    doCommit:
+    function(remoteRepo,branch,tree){
+      var self = this;
+      var titlePR = $("#titlePR").val();
+      var commentPR = $("#commentPR").val();
+      var userGH = $("#userPR").val();
+      var passwordGH = $("#passPR").val();
+      if(userGH == "" || passwordGH == "" || titlePR =="" || commentPR == ""){
+	alert("All fields are required!");
+	return;
+      }
+      var g = new Github({
+	"username":userGH,
+	"password":passwordGH,
+	"auth":"basic"
+      });
+      var r = g.getRepo(remoteRepo.user,remoteRepo.repo);
+      r.show();
+      
+      r.postTree(tree,function(err,sha){
+	if(err){self.errorCommit("postTree",err);return;}
+	r.getSha(branch,"",function(err,currSha){
+	  if(err) {self.errorCommit("getSha",err);return;}
+	  r.commit(currSha,sha,commentPR,function(err,data){
+	    if(err) {self.errorCommit("r.commit",err);return;}
+	    r.updateHead(branch,data,function(err,done){
+	      if(err) {self.errorCommit("updateHead",err);return;}
+	      else {
+		 $("#CommitterForm").dialog("close");
+		 $("#CommitterForm").remove();
+		alert("Done!");
+	      }
+	    });
+	  });
+	});
+      });
+      return;
+    },	  
+		    //
+    errorCommit:
+    function(zone,err){
+      console.log(zone,err);
+      alert("Commit Error");
+    },
 		    //
     requestRemote:
     function(fm,fmId){
@@ -991,16 +1132,16 @@ window.FileManager = (function() {
       $(tree).each(function(k,v){
 	switch(v.type){
 	  case "blob":
-	    self.joinGithubWithfm(self.addFile(v.path,parentId , "", v.sha , "Repo"),repoId,branch,"");
+	    self.joinGithubWithfm(self.addFile(v.path,parentId , "", v.sha , "Repo"),repoId,branch,v);
 	    break;
 	  case "file":
-	    self.joinGithubWithfm(self.addFile(v.name,parentId , "", v.sha , "Repo"),repoId,branch,"");
+	    self.joinGithubWithfm(self.addFile(v.name,parentId , "", v.sha , "Repo"),repoId,branch,v);
 	    break;
 	  case "tree":
-	    self.joinGithubWithfm(self.addFolder(v.path,parentId ,  "Repo"),repoId,branch,v.sha);
+	    self.joinGithubWithfm(self.addFolder(v.path,parentId ,  "Repo"),repoId,branch,v);
 	    break;
 	  case "dir":
-	    self.joinGithubWithfm(self.addFolder(v.name,parentId ,  "Repo"),repoId,branch,v.sha);
+	    self.joinGithubWithfm(self.addFolder(v.name,parentId ,  "Repo"),repoId,branch,v);
 	    break;
 	  default:
 	    console.log("unknow github type.",v.type);
@@ -1015,30 +1156,29 @@ window.FileManager = (function() {
     addGithub:
     function(user,repo,branch,dir,pId){
       var self = this;
-
       self.githubs[0] = new Github({
-	    username: "",
-	    password: "",
-            auth: "basic"
+	username: "",
+	password: "",
+        auth: "basic"
       });
       self.buildRepo(self.githubs[0],user,repo,branch,dir,pId,true);
-      //request close!
-
     },
 		    //
     buildRepo:
     function(git,ownerGH,repoGH,branch,dir,parentId,close){
       var self = this;
       var repoId = ownerGH+"_"+repoGH;
-      if(!self.githubs[repoId]){
+      if(!self.githubs[repoId] || !self.githubs[repoId].repo){
 	try{
 	  var auxy = git.getRepo(ownerGH,repoGH);
 	}catch(err){
+	  console.log(err);
 	  return;
 	}
-	self.githubs[repoId] = auxy;
+	self.githubs[repoId] = {};
+	self.githubs[repoId].repo = auxy;
       }
-      var repo = self.githubs[repoId];
+      var repo = self.githubs[repoId].repo;
       if(!branch || branch == "")
 	branch = 'master';
       if(dir!=""){
@@ -1052,11 +1192,15 @@ window.FileManager = (function() {
 	    var tmp = dir.split("/");
 	    if(isTree){
 	      var tree = content;
+	      self.githubs[repoId].tree = tree;
 	      parentId = self.addFolder(tmp[tmp.length-1],parentId,"Repo");
+	      self.fmObj[parentId].info.attr.githubId = repoId;
+	      self.fmObj[parentId].info.attr.branch = branch;
+	      self.fmObj[parentId].info.attr.gh_path = dir;
 	      self.buildGithubTree(repoId,tree,dir,parentId,branch,close);  
 	    }else{
 	      
-	      self.joinGithubWithfm(self.addFile(content.name,parentId , "", content.sha , "Repo"),repoId,branch,"")
+	      self.joinGithubWithfm(self.addFile(content.name,parentId , "", content.sha , "Repo"),repoId,branch,null)
 	    }
 	  }
 	});
@@ -1064,6 +1208,11 @@ window.FileManager = (function() {
 	repo.getTree(branch,false, function(err, tree) {
 	  if(!err){
 	    parentId = self.addFolder(repoId,parentId,"Repo");
+	    self.fmObj[parentId].info.attr.githubId = repoId;
+	    self.fmObj[parentId].info.attr.branch = branch;
+	    self.fmObj[parentId].info.attr.gh_base = true;
+	    self.fmObj[parentId].info.attr.gh_node = {};
+	    self.fmObj[parentId].info.attr.gh_node.path = dir;
 	    self.buildGithubTree(repoId,tree,dir,parentId,branch,close);  
 	  }
 	});
@@ -1148,35 +1297,7 @@ window.FileManager = (function() {
             });
 
 	    self.buildRepo(github_connector,ownerGH,repoGH,branchGH,dirGH,fm.fmObj[fmId].node.attr("fmId"));
-	  });
-/*
-	  $("#private-"+site,div).click(function(event){ 
-	    self.buildRepo(github,userGH_,repoGH_,branchGH_,fm.fmObj[fmId].node.attr("fmId"));
-	    var user = github.getUser();
-	    user.repos(function(err, repos) {
-	      if (err){
-		console.log(err);
-		return;
-	      }
-	      var parentId = self.addFolder(userGH+"@Git",fm.fmObj[fmId].node.attr("fmId"),"Repo");
-	      $(repos).each(function(k,v){
-		var giti = github;
-		if(v.owner != userGH){
-		  if(!self.conectgithubBase){
-		    self.githubs[0] = new Github({
-		      token: github_Token,
-		      auth: "oauth"
-		    });
-		    self.conectgithubBase = true;
-		  }
-		  giti = self.githubs[0];
-		}
-		self.buildRepo(giti,v.owner.login,v.name,v.default_branch,parentId);
-	      });
-	    });
-	  });
-*/
-	  
+	  });	  
 	  break;
 	default:
 	  $(div).append("<div>Error, Unkown Service</div>");
