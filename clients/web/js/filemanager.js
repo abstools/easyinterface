@@ -265,6 +265,8 @@ window.FileManager = (function() {
 		      delete items.CreateFile;
 		      delete items.CreateFolder;
 		    case "folderRepo":
+		      delete items.Rename;
+		      delete items.Delete;
 		      delete items.RemoteFile;
 		      delete items.Cut;
 		      delete items.Paste;
@@ -587,7 +589,7 @@ window.FileManager = (function() {
     },
 		    //
     addFile: 
-    function( label, parentId, content, url , tipo) {
+    function( label, parentId, content, url , tipo, overwrite) {
       var self = this;
       var parent = parentId ? this.fmObj[ parentId ].node : undefined;
 
@@ -616,7 +618,7 @@ window.FileManager = (function() {
       var path = this.calculatePath(fmInfo);
       var repeated = this.existsFm(path);
       var intento = 1;
-      while(repeated){
+      while(repeated && !overwrite){ // TODO : check Overwrite
 	fmInfo.data = intento +"_"+label;
 	fmInfo.attr.label = intento +"_"+label;
 	path = this.calculatePath(fmInfo);
@@ -640,13 +642,15 @@ window.FileManager = (function() {
     },
 		    //
     createFile:
-    function(path, content, overwrite) {  // TODO: maybe we can support the overwrite option
+    function(path, content, url, overwrite) {  // TODO: maybe we can support the overwrite option
 	var names = path.split('/');
 	var label = names[names.length-1];
 	var str = "/User_Projects/";
 	var last_Id = 1;
-	for (var k=1;k<names.length-1;k++){
-	    if(this.existsFm(str+names[k]+"/")){
+	for (var k=0;k<names.length-1;k++){
+	  if(names[k] == ""){
+	    continue;
+	    }else if(this.existsFm(str+names[k]+"/")){
 		str = str+names[k]+"/";
 	    }else{
 		last_Id = this.addFolder(names[k],this.fmIdByPath[str],"");
@@ -654,7 +658,14 @@ window.FileManager = (function() {
 	    }
 	}
 	
-	this.addFile( label, this.fmIdByPath[str], content, "", "");
+	this.addFile( label, this.fmIdByPath[str], content, url, "",overwrite);
+    },
+
+		    //
+    isVisualExtension:
+    function(ext){
+      var VExtensions = ["md","svg"];
+      return VExtensions.indexOf(ext)>=0;
     },
 
     //
@@ -664,8 +675,8 @@ window.FileManager = (function() {
       var fmInfo = this.fmObj[ fileId ].info;
       var extension = /^.+\.([^.]+)$/.exec(fmInfo.attr.label);
       extension = (extension == null) ? "": extension[1];
-      if ( extension == "md" && !force){
-	this.openMD(fmInfo);
+      if ( this.isVisualExtension(extension) && !force){
+	this.openEspecial(fmInfo,extension);
       }	else if ( fmInfo.attr.open ) {
 	this.codearea.showTab(fmInfo.attr.fmId);
       } else {
@@ -677,8 +688,8 @@ window.FileManager = (function() {
     },
 
 		    //
-    openMD:
-    function (fmInfo){
+    openEspecial:
+    function (fmInfo,extension){
       var self = this;
       if(fmInfo.attr.open){
 	//get new content from codearea
@@ -686,16 +697,20 @@ window.FileManager = (function() {
       }else{
 	self.loadFile(fmInfo.attr.fmId);
       }
-      var htmlMD = markdown.toHTML(fmInfo.attr.content);
-      if($("#mdfile-"+fmInfo.attr.fmId).length){
-	$(".dialog-div","#mdfile-"+fmInfo.attr.fmId+"").html(htmlMD);
-	$("#mdfile-"+fmInfo.attr.fmId).dialog("open");
+      var htmlEsp = "";
+      if(extension == "md")
+	htmlEsp = markdown.toHTML(fmInfo.attr.content);
+      else
+	htmlEsp = (fmInfo.attr.content).replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+      if($("#ei-especialfile-"+fmInfo.attr.fmId).length){
+	$(".dialog-div","#ei-especialfile-"+fmInfo.attr.fmId+"").html(htmlEsp);
+	$("#ei-especialfile-"+fmInfo.attr.fmId).dialog("open");
 	return;
       }
-      var owner = $("<div id='mdfile-"+fmInfo.attr.fmId+"' class='dialog-div'></div>");
+      var owner = $("<div id='ei-especialfileg-"+fmInfo.attr.fmId+"' class='dialog-div'></div>");
       $(owner).append($("<div class='dialog-div'></div>"));
-      $(".dialog-div",owner).html(htmlMD);
-      //create dialog box with markdown
+	$(".dialog-div",owner).html(htmlEsp);
+      //create dialog box with the content
       $(owner).dialog({
 	title: fmInfo.attr.label,
 	resizable: true,
@@ -710,11 +725,7 @@ window.FileManager = (function() {
 	    self.openFile(fmInfo.attr.fmId,true);
 	  },
 	  "Refresh": function(){
-	    if(self.fmObj[ fmInfo.attr.fmId ].info.attr.open){
-	      fmInfo.attr.content = self.codearea.getTabContent(fmInfo.attr.fmId);
-	      var htmlMD2 = markdown.toHTML(fmInfo.attr.content);
-	      $(".dialog-div","#mdfile-"+fmInfo.attr.fmId+"").html(htmlMD2);
-	    }
+	    self.openEspecial(fmInfo,extension);
 	  }
 	}
       });
@@ -773,7 +784,7 @@ window.FileManager = (function() {
 	var gh = fmInfo.attr.githubId;
 	self.githubs[gh].repo.getTree(fmInfo.attr.url,sync, function(err, tree) {
 	  fmInfo.attr.urlLoaded = true;
-	  self.buildGithubTree(gh,tree,"",folderId,fmInfo.attr.branch,sync);
+	  self.buildGithubTree(gh,tree,fmInfo.attr.gh_path,folderId,fmInfo.attr.branch,sync);
 	  
 	});
       }
@@ -928,10 +939,11 @@ window.FileManager = (function() {
     },
 		    //
     joinGithubWithfm:
-    function(fmId,gh,branch,node){
+    function(fmId,gh,branch,node,path){
       this.fmObj[fmId].info.attr.githubId = gh;
       this.fmObj[fmId].info.attr.urlGitHub = true;
       this.fmObj[fmId].info.attr.branch = branch;
+      this.fmObj[fmId].info.attr.gh_path = path;
       if(node != null){
 	switch(node.type){
 	  case "dir":
@@ -969,8 +981,10 @@ window.FileManager = (function() {
       var gh_branch = self.fmObj[fmId].info.attr.branch;
 
       var remoteRepo = self.githubs[gh_id].repo;
-      var gh_path = self.fmObj[fmId].info.attr.gh_path|| "";
-
+      var gh_path = self.fmObj[fmId].info.attr.gh_path|| undefined;
+     
+      if(!gh_path)
+      gh_path = self.fmObj[fmId].info.attr.gh_node.path||"";
       var formu = $('<div id="formCommitGithub">'+
 		    '<label><b>Title*: </b></label>'+
 		    '<input type="text" id="titlePR"/>'+
@@ -989,7 +1003,8 @@ window.FileManager = (function() {
       $(formu).append(CommitButton);
       $(CommitButton).click(function(event){ 
 	var arr = new Array();
-	self.doCommit(remoteRepo,gh_branch,self.commitTree(arr,fmId,gh_path));
+	var c_tree = self.commitTree(arr,fmId,gh_path,true);
+	self.doCommit(remoteRepo,gh_branch,c_tree,gh_path);
       });
       $(div).append(formu);
       $(owner).append(div);
@@ -1009,36 +1024,61 @@ window.FileManager = (function() {
     },
 		    //
     commitTree:
-    function(arr,fmId,path){
+    function(arr,fmId,path,first){
       var self = this;
       var fmObjA = self.fmObj[fmId]; 
       var n_arr = arr;
-      var dir = (path !="")?path+"/":"";
+      var dir = path;
+      var gh_node = fmObjA.info.attr.gh_node;
       switch(fmObjA.info.attr.rel){
-	  case "folderRepo":
-	  if(fmObjA.info.attr.gh_base || (!fmObjA.info.attr.base && fmObjA.info.attr.loaded)){
+	case "folderRepo":
+	  if(fmObjA.info.attr.gh_base || (!fmObjA.info.attr.base && fmObjA.info.attr.urlLoaded)){
+	    dir = (dir !="" && !first)?dir+"/":dir;
 	    var childs = fmObjA.info.attr.members;
-	    var gh_node = fmObjA.info.attr.gh_node;
+	    if(!fmObjA.info.attr.gh_base && !first)
+	      dir = dir + fmObjA.info.attr.label;
 	    for(var i = 0; i < childs.length; i++){
-	      n_arr = self.commitTree(n_arr,childs[i],dir+gh_node.path);
+	      n_arr = self.commitTree(n_arr,childs[i],dir,false);
 	    }
 	  }else{
-	    n_arr.push(fmObjA.info.attr.gh_node);
+	    dir = (dir !=""&& !first)?dir+"/":dir;
+	     var label = dir+fmObjA.info.attr.label;
+	      var nodo = {
+		"mode":gh_node.mode || "040000",
+		"path":label,
+		"type":"tree",//gh_node.type,
+		"sha": gh_node.sha
+	      };
+	      
+	      n_arr.push(nodo);
 	  }
 	  break;
-	  case "fileRepo":
+	case "fileRepo":
+	  dir = (dir !=""&& !first)?dir+"/":dir;
+	  var label = dir+fmObjA.info.attr.label;
 	    if(fmObjA.info.attr.open){
-	      var gh_node = fmObjA.info.attr.gh_node;
+	     
 	      var nodo = {
 		"mode":gh_node.mode,
-		"path":path+gh_node.path,
-		"type":"blob",
+		"path":label,
+		"type":gh_node.type,
 		"content": self.codearea.getTabContent(fmObjA.info.attr.fmId)
 	      };
 	      n_arr.push(nodo);
 	    }else{
-	      n_arr.push(fmObjA.info.attr.gh_node);
+	     
+	      var nodo = {
+		"mode":gh_node.mode|| "100644",
+		"path":label,
+		"type":"blob",//gh_node.type,
+		"sha": gh_node.sha
+	      };
+	      
+	      n_arr.push(nodo);
 	    }
+	  break;
+	default:
+	  console.log(fmObjA.info.attr.rel);
 	  break;
       };
 
@@ -1046,7 +1086,8 @@ window.FileManager = (function() {
     },
 		    //
     doCommit:
-    function(remoteRepo,branch,tree){
+    function(remoteRepo,branch,tree,gh_path){
+
       var self = this;
       var titlePR = $("#titlePR").val();
       var commentPR = $("#commentPR").val();
@@ -1063,8 +1104,14 @@ window.FileManager = (function() {
       });
       var r = g.getRepo(remoteRepo.user,remoteRepo.repo);
       r.show();
-      
-      r.postTree(tree,function(err,sha){
+      var base_tree = "";
+      var error = false;;
+      r.getTree(branch,true,function(err,tree,oth){
+	if(err){self.errorCommit("getTree",err);error = true;return;}
+	base_tree = oth.sha;
+      });
+      if(error)return;
+      r.postTree(tree,base_tree,function(err,sha){
 	if(err){self.errorCommit("postTree",err);return;}
 	r.getSha(branch,"",function(err,currSha){
 	  if(err) {self.errorCommit("getSha",err);return;}
@@ -1129,19 +1176,20 @@ window.FileManager = (function() {
     function(repoId,tree,dir,parentId,branch,close){
       var self = this;
       //construir arbol en el filemanager
+      var path = (dir!="")?dir+"/":dir;
       $(tree).each(function(k,v){
 	switch(v.type){
 	  case "blob":
-	    self.joinGithubWithfm(self.addFile(v.path,parentId , "", v.sha , "Repo"),repoId,branch,v);
+	    self.joinGithubWithfm(self.addFile(v.path,parentId , "", v.sha , "Repo",false),repoId,branch,v,path);
 	    break;
 	  case "file":
-	    self.joinGithubWithfm(self.addFile(v.name,parentId , "", v.sha , "Repo"),repoId,branch,v);
+	    self.joinGithubWithfm(self.addFile(v.name,parentId , "", v.sha , "Repo",false),repoId,branch,v,path);
 	    break;
 	  case "tree":
-	    self.joinGithubWithfm(self.addFolder(v.path,parentId ,  "Repo"),repoId,branch,v);
+	    self.joinGithubWithfm(self.addFolder(v.path,parentId ,  "Repo"),repoId,branch,v,path+v.path);
 	    break;
 	  case "dir":
-	    self.joinGithubWithfm(self.addFolder(v.name,parentId ,  "Repo"),repoId,branch,v);
+	    self.joinGithubWithfm(self.addFolder(v.name,parentId ,  "Repo"),repoId,branch,v,path+v.name);
 	    break;
 	  default:
 	    console.log("unknow github type.",v.type);
@@ -1181,11 +1229,13 @@ window.FileManager = (function() {
       var repo = self.githubs[repoId].repo;
       if(!branch || branch == "")
 	branch = 'master';
-      if(dir!=""){
+     if(dir!=""){
 	if(dir[0]=="/")
 	  dir = dir.substring(1);
 	if(dir[dir.length-1]=="/")
 	  dir = dir.substring(0,dir.length-1);
+       var base = null;
+
 	repo.contents(branch,dir, function(err,content){
 	  if(!err){
 	    var isTree = $.isArray(content);
@@ -1195,12 +1245,15 @@ window.FileManager = (function() {
 	      self.githubs[repoId].tree = tree;
 	      parentId = self.addFolder(tmp[tmp.length-1],parentId,"Repo");
 	      self.fmObj[parentId].info.attr.githubId = repoId;
+	      self.fmObj[parentId].info.attr.gh_base = false;
+	      self.fmObj[parentId].info.attr.urlLoaded = true;
 	      self.fmObj[parentId].info.attr.branch = branch;
 	      self.fmObj[parentId].info.attr.gh_path = dir;
+	      self.fmObj[parentId].info.attr.base_tree = base;
 	      self.buildGithubTree(repoId,tree,dir,parentId,branch,close);  
 	    }else{
 	      
-	      self.joinGithubWithfm(self.addFile(content.name,parentId , "", content.sha , "Repo"),repoId,branch,null)
+	      self.joinGithubWithfm(self.addFile(content.name,parentId , "", content.sha , "Repo"),repoId,branch,null,dir)
 	    }
 	  }
 	});
@@ -1213,6 +1266,7 @@ window.FileManager = (function() {
 	    self.fmObj[parentId].info.attr.gh_base = true;
 	    self.fmObj[parentId].info.attr.gh_node = {};
 	    self.fmObj[parentId].info.attr.gh_node.path = dir;
+	    self.fmObj[parentId].info.attr.gh_path = dir;
 	    self.buildGithubTree(repoId,tree,dir,parentId,branch,close);  
 	  }
 	});

@@ -408,7 +408,7 @@
       this.getTree = function(tree,sync, cb) {
         _request("GET", repoPath + "/git/trees/"+tree, null, function(err, res) {
           if (err) return cb(err);
-          cb(null, res.tree);
+          cb(null, res.tree,res);
         },'',sync);
       };
 
@@ -459,8 +459,16 @@
       // with a new blob SHA getting a tree SHA back
       // -------
 
-      this.postTree = function(tree, cb) {
-        _request("POST", repoPath + "/git/trees", { "tree": tree }, function(err, res) {
+      this.postTree = function(tree,base, cb) {
+	var opt = {};
+	if(arguments.length === 2 && typeof arguments[1] === "function") {
+          cb = base;
+        }else{
+	  opt["base_tree"] = base;
+	}
+	opt["tree"] = tree;
+	console.log("ooo",opt);
+        _request("POST", repoPath + "/git/trees", opt, function(err, res) {
           if (err) return cb(err);
           cb(null, res.sha);
         });
