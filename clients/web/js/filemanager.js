@@ -117,7 +117,7 @@ window.FileManager = (function() {
 	  },
 	  "folderRepo":{
 	    "icon": {image:"./lib/jstree/themes/classic/folderR.png"},
-	    "valid_children":["fileRepo","folderRepo"]
+	    "valid_children":["fileRepo","folderRepo","file"]
 	  },
 	  "#":{
 	    "start_drag" : false,
@@ -183,8 +183,19 @@ window.FileManager = (function() {
 		      "separator_before": true,
 		      "action": function (obj) {
 			var fmId = obj.attr('fmId');
-			var x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","");	    
-			self.openFile( x );
+			var x;
+			if ( self.fmObj[fmId].info.attr.rel == "folderRepo"){
+			  self.openFolder(fmId,true);
+			  x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","","Repo");
+			  self.openFile( x );
+			  var repoId = self.fmObj[fmId].info.attr.githubId;
+			  var branch = self.fmObj[fmId].info.attr.branch;
+			  var path = self.fmObj[fmId].info.attr.gh_path;
+			  self.joinGithubWithfm(x,repoId,branch,null,path);
+			} else {
+			  x = self.addFile(null,self.fmObj[ fmId ].node.attr('fmId'),"","","");
+			  self.openFile( x );
+			}
 		      }
 		    },
 		    "CreateFolder": {
@@ -192,7 +203,16 @@ window.FileManager = (function() {
 		      "separator_after":true,
 		      "action": function (obj) {
 			var fmId = obj.attr('fmId');
-			var x = self.addFolder(null,self.fmObj[ fmId ].node.attr('fmId'),"");
+			var x;
+			if ( self.fmObj[fmId].info.attr.rel == "folderRepo"){
+			  x = self.addFolder(null,self.fmObj[ fmId ].node.attr('fmId'),"Repo");
+			  var repoId = self.fmObj[fmId].info.attr.githubId;
+			  var branch = self.fmObj[fmId].info.attr.branch;
+			  var path = self.fmObj[fmId].info.attr.gh_path+"/"+self.fmObj[fmId].info.data;
+			  self.joinGithubWithfm(x,repoId,branch,null,path);
+			} else {
+			  x = self.addFolder(null,self.fmObj[ fmId ].node.attr('fmId'),"");
+			}
 		      }
 		    },
 		    "RemoteFile": {
@@ -264,7 +284,13 @@ window.FileManager = (function() {
 		    case "fileRepo":
 		      delete items.CreateFile;
 		      delete items.CreateFolder;
+		      delete items.Delete;
+		      delete items.RemoteFile;
+		      delete items.Cut;
+		      delete items.Paste;
+		      break;
 		    case "folderRepo":
+		      delete items.CreateFolder;
 		      delete items.Rename;
 		      delete items.Delete;
 		      delete items.RemoteFile;
@@ -575,7 +601,7 @@ window.FileManager = (function() {
 	intento++;
       }
       var node = this.jstree.jstree("create", parent, "last", fmInfo , false, true );
-      
+      console.log(node);
       this.fmObj[ fmInfo.attr.fmId ] = { info: fmInfo, node: node };
       this.fmId++;
       
@@ -642,7 +668,7 @@ window.FileManager = (function() {
     },
 		    //
     createFile:
-    function(path, content, url, overwrite) {  // TODO: maybe we can support the overwrite option
+    function(path, content, url, overwrite) {  
 	var names = path.split('/');
 	var label = names[names.length-1];
 	var str = "/User_Projects/";
@@ -681,6 +707,7 @@ window.FileManager = (function() {
 	this.codearea.showTab(fmInfo.attr.fmId);
       } else {
 	this.loadFile( fmInfo.attr.fmId );
+	console.log(fmInfo.attr.content);
 	this.codearea.createTab(fmInfo.attr.label,fmInfo.attr.fmId,fmInfo.attr.content);
 	fmInfo.attr.open = true;
       }
@@ -944,6 +971,8 @@ window.FileManager = (function() {
       this.fmObj[fmId].info.attr.urlGitHub = true;
       this.fmObj[fmId].info.attr.branch = branch;
       this.fmObj[fmId].info.attr.gh_path = path;
+      this.fmObj[fmId].info.attr.gh_node = {};
+      this.fmObj[fmId].info.attr.gh_node.path = path;
       if(node != null){
 	switch(node.type){
 	  case "dir":
@@ -984,7 +1013,7 @@ window.FileManager = (function() {
       var gh_path = self.fmObj[fmId].info.attr.gh_path|| undefined;
      
       if(!gh_path)
-      gh_path = self.fmObj[fmId].info.attr.gh_node.path||"";
+	gh_path = self.fmObj[fmId].info.attr.gh_node.path||"";
       var formu = $('<div id="formCommitGithub">'+
 		    '<label><b>Title*: </b></label>'+
 		    '<input type="text" id="titlePR"/>'+
@@ -1059,9 +1088,9 @@ window.FileManager = (function() {
 	    if(fmObjA.info.attr.open){
 	     
 	      var nodo = {
-		"mode":gh_node.mode,
+		"mode":gh_node.mode || "100644",
 		"path":label,
-		"type":gh_node.type,
+		"type":gh_node.type || "blob",
 		"content": self.codearea.getTabContent(fmObjA.info.attr.fmId)
 	      };
 	      n_arr.push(nodo);
