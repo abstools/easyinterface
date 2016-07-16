@@ -130,6 +130,7 @@ static function get_app_help( $app_id ) {
     //   
     $files_str = "";
     $root_str = "";
+    $base_str = "";
     $stream_str = "";
     $execid_str = EIApps::token(5);
 
@@ -159,7 +160,7 @@ static function get_app_help( $app_id ) {
     mkdir($stream_str, 0755);
     $download_str = $dir . "/_ei_download";
     mkdir($download_str, 0755);
-
+    $base_str = $dir;
     // outline
     //
     $outline_str = "";
@@ -334,9 +335,12 @@ static function get_app_help( $app_id ) {
    
     echo $cmdline; 
     $outputLines = array();
-    
+    $logpath = "./exec.log";
+    $launcher = "./launcher.sh 30 30 ".$logpath." ".$cmdline;
     chdir("bin"); // we always execute in the bin directory
-    exec($cmdline, $outputLines);
+    exec($launcher, $outputLines);
+    $cleaner = "./clean.sh 30 ".$base_str." ".$logpath. " > /dev/null 2>/dev/null &";
+    exec($cleaner);
     $output =  implode("\n", $outputLines);
 
     return $output;
