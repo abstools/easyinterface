@@ -2,13 +2,14 @@
 
 . envisage/envisage_settings.sh
 
-root=$1
+root=$1/_ei_files
+tmpdir=$1/_ei_tmp
 shift
 
 echo "<eiout>"
 echo "<eicommands>"
 
-java -jar $ABSFRONTEND $@ 2> /tmp/abssyntaxchecker.stderr
+java -jar $ABSFRONTEND $@ 2> $tmpdir/abssyntaxchecker.stderr
 
 if [ $? == 0 ]; then
     echo "<printonconsole>"
@@ -18,7 +19,7 @@ else
     echo "<printonconsole>"
     echo "<content format='text'>There are some compilation errors! See markers in the code area!!</content>"
     echo "</printonconsole>"
-    cat /tmp/abssyntaxchecker.stderr | gawk -v root=$root '{ 
+    cat $tmpdir/abssyntaxchecker.stderr | gawk -v root=$root '{ 
     if (match($0,/(.+):([0-9]+):([0-9]+):(.*)/,m)) {
       dest = m[1]
       print "<addmarker dest=\47" dest "\47 outclass=\47error\47>"

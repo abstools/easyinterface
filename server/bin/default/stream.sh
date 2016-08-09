@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SPECIAL_PATH=$1
-PATH2=$1
+SPECIAL_PATH=$1/_ei_tmp
+PATH2=$1/_ei_stream
 
 
 COUNT=1

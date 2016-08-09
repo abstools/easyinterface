@@ -3,8 +3,9 @@
 . misc/parse_params.sh
 . envisage/envisage_settings.sh
 
-streamroot=$(getparam "streamroot")
-downloadroot=$(getparam "downloadroot")
+execroot=$(getparam "execroot")
+downloadroot=$execroot/_ei_download
+streamroot=$execroot/_ei_stream
 execid=$(getparam "execid")
 files=$(getparam "files")
 enabledownload=$(getparam "download")

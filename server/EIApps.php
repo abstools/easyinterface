@@ -138,7 +138,6 @@ static function get_app_help( $app_id ) {
     //   
     $files_str = "";
     $root_str = "";
-    $base_str = "";
     $stream_str = "";
     $execid_str = EIApps::token(5);
 
@@ -158,17 +157,21 @@ static function get_app_help( $app_id ) {
     $dir = str_replace("\\", "/", $aux);
     unset($aux);
     mkdir($dir, 0755);
+    $dir_str = $dir . "/_ei_files";
+    mkdir($dir_str, 0755);
+    $dir_str = $dir . "/_ei_stream";
+    mkdir($dir_str, 0755);
+    $dir_str = $dir . "/_ei_tmp";
+    mkdir($dir_str, 0755);
+    $dir_str = $dir . "/_ei_download";
+    mkdir($dir_str, 0755);
+
     if ( array_key_exists( '_ei_files', $parameters ) ) {    
-      $root_str = $dir . "/_ei_files";
-      mkdir($root_str, 0755);
       EIApps::build_directories($files_str,$root_str,$parameters);
       unset( $parameters['_ei_files'] );
     }
-    $stream_str = $dir . "/_ei_stream";
-    mkdir($stream_str, 0755);
-    $download_str = $dir . "/_ei_download";
-    mkdir($download_str, 0755);
-    $base_str = $dir;
+
+    $root_str = $dir;
     // outline
     //
     $outline_str = "";
@@ -329,8 +332,8 @@ static function get_app_help( $app_id ) {
 			   "_ei_files" => $files_str,
 			   "_ei_root" => $root_str,
 			   "_ei_outline" => $outline_str,
-			   "_ei_stream" => $stream_str,
-			   "_ei_download" => $download_str,
+	//		   "_ei_stream" => $stream_str,
+	//		   "_ei_download" => $download_str,
 			   "_ei_parameters" => $parameters_str,
 			   "_ei_clientid" => $clientid_str,
 			   "_ei_outformat" => $outformat_str,
@@ -348,7 +351,7 @@ static function get_app_help( $app_id ) {
     $launcher = "./launcher.sh 30 30 ".$logpath." ".$cmdline;
     chdir("bin"); // we always execute in the bin directory
     exec($launcher, $outputLines);
-    $cleaner = "./clean.sh 30 ".$base_str." ".$logpath. " > /dev/null 2>/dev/null &";
+    $cleaner = "./clean.sh 30 ".$root_str." ".$logpath. " > /dev/null 2>/dev/null &";
     exec($cleaner);
     $output =  implode("\n", $outputLines);
 
@@ -366,7 +369,7 @@ static function get_app_help( $app_id ) {
   }
 
   private static function valid_file_name( $fname ) {
-    return preg_match("/^[a-zA-z0-9\-_\.\/]+$/",$fname) && strpos($fname,"..") == false;
+    return preg_match("/^[a-zA-z0-9\-\+_\.\/]+$/",$fname) && strpos($fname,"..") == false;
   }
 
   private static function build_directories(& $files_str, $dir, $parameters )
