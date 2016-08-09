@@ -42,6 +42,9 @@ window.CmdEngine = (function() {
 	    // add the client id
 	    jsonParams["parameters"]["_ei_clientid"] = _ei.clientId;
 
+	    // add ei output support
+	    jsonParams["parameters"]["_ei_outformat"] = _ei.outformat;
+
 	    //var eirequest = JSON.stringify(jsonParams);
 	    var eirequest = jsonParams;
 

@@ -126,6 +126,14 @@ static function get_app_help( $app_id ) {
       $clientid_str = $parameters['_ei_clientid'];
       unset( $parameters['_ei_clientid'] );
     }
+
+    // outformat 
+    //
+    $outformat_str = "txt";
+    if ( array_key_exists( '_ei_outformat', $parameters ) ) {    
+      $outformat_str = $parameters['_ei_outformat'];
+      unset( $parameters['_ei_outformat'] );
+    }
     // files
     //   
     $files_str = "";
@@ -325,6 +333,7 @@ static function get_app_help( $app_id ) {
 			   "_ei_download" => $download_str,
 			   "_ei_parameters" => $parameters_str,
 			   "_ei_clientid" => $clientid_str,
+			   "_ei_outformat" => $outformat_str,
 			   "_ei_sessionid" => $sessionid_str,
 			   "_ei_execid" => $execid_str
 			   );

@@ -1,5 +1,6 @@
 var _ei = {
   clientId: "web_client",
+  outformat: "eiol",
   serverPath:"",
   exampleServerPath:"",
   serverCommand: {
