@@ -111,7 +111,7 @@ window.DocContent = (function() {
 	 var empty = false;
 	 var states = $("ei_stream",data).attr("state").split(" ");
 	 $(states).each(function(k,v){
-	   if (v == "finish" || v == "nostream"){
+	   if (v == "terminated" || v == "nostream"){
 	     self.off(stData.execid,false);
 	   }
 	   if (v == "nonewfiles")
