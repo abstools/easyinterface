@@ -115,7 +115,7 @@ window.CodeArea = (function() {
 	    // create a CodeMirror for this tab
 	    var ed = CodeMirror.fromTextArea( content.find("#"+tabTag+"-ed").get(0), { 
  	        lineNumbers: true, 
- 		mode: "text/abs",//x-java", 
+ 		mode: _ei.language,//"text/abs"
  		//value: tabContent, // this line is to add content to the codemirror when is not from a text area
 		gutters: ["actionGutter","CodeMirror-linenumbers","infoGutter"],
 		scrollbarStyle: "overlay",

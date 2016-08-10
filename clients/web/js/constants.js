@@ -1,6 +1,7 @@
 var _ei = {
   clientId: "web_client",
   outformat: "eiol",
+  language: "text/x-csrc",
   serverPath:"",
   exampleServerPath:"",
   serverCommand: {
