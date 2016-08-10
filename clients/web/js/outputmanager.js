@@ -11,7 +11,6 @@ window.OutputManager = (function() {
 	    AddInLineMarkerCommand, 
 	    DialogBoxCommand,
 	    WriteFileCommand,
-	    StreamCommand,
 	    DownloadCommand
 	];
 
