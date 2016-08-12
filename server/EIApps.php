@@ -33,7 +33,7 @@ class EIApps {
     return $out;
   }
 
-static function get_app_help( $app_id ) {
+  static function get_app_help( $app_id ) {
       $app_ids = EIApps::expand_app_ids($app_id);
       $out = '<apps>';
     foreach ($app_ids as $id ) {
@@ -117,7 +117,13 @@ static function get_app_help( $app_id ) {
     }
     // session ID
     //
-    $sessionid_str = "";
+    $sessiondir_str = sys_get_temp_dir()."/easyinterface_sessions/";
+    $sessionid_str = EIApps::getSessionData();
+
+    if (!file_exists($sessiondir_str)) {
+      mkdir($sessiondir_str, 0755);
+    }
+    mkdir($sessiondir_str."/".$sessionid_str,0755);
     
     // client ID
     //
@@ -332,12 +338,11 @@ static function get_app_help( $app_id ) {
 			   "_ei_files" => $files_str,
 			   "_ei_root" => $root_str,
 			   "_ei_outline" => $outline_str,
-	//		   "_ei_stream" => $stream_str,
-	//		   "_ei_download" => $download_str,
 			   "_ei_parameters" => $parameters_str,
 			   "_ei_clientid" => $clientid_str,
 			   "_ei_outformat" => $outformat_str,
 			   "_ei_sessionid" => $sessionid_str,
+			   "_ei_sessiondir" => $sessiondir_str,
 			   "_ei_execid" => $execid_str
 			   );
     
@@ -396,7 +401,22 @@ static function get_app_help( $app_id ) {
 	$files_str .= " ".$filename;  // concatenate the filename to the list of filenames
       }
     }
-  }	  
+  }
+
+  private static function getSessionData(){
+    session_start();
+    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3600)) {
+      // last request was more than 1 hour ago
+      //TODO: clean folder session...
+      session_unset();     // unset $_SESSION variable for the run-time 
+      session_destroy();   // destroy session data in storage
+    }
+    $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+    if(!isset($_SESSION["sessionID"])){
+      $_SESSION["sessionID"] = EIApps::token(10);
+    }
+    return $_SESSION["sessionID"];
+  }
 }
 
 ?>
