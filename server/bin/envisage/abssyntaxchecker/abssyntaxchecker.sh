@@ -9,7 +9,7 @@ shift
 echo "<eiout>"
 echo "<eicommands>"
 
-java -jar $ABSFRONTEND $@ 2> $tmpdir/abssyntaxchecker.stderr
+java -jar $ABSFRONTEND $root ${@:2} 2> $tmpdir/abssyntaxchecker.stderr
 
 if [ $? == 0 ]; then
     echo "<printonconsole>"
