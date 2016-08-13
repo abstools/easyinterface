@@ -123,8 +123,9 @@ class EIApps {
     if (!file_exists($sessiondir_str)) {
       mkdir($sessiondir_str, 0755);
     }
-    mkdir($sessiondir_str."/".$sessionid_str,0755);
-    
+
+    $sessiondir_str  .= $sessionid_str;
+    mkdir($sessiondir_str,0755);
     // client ID
     //
     $clientid_str = "";
