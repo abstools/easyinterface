@@ -95,6 +95,7 @@ class EIApps {
 
   static function execute_cmdline( $app_id, $parameters ) {
     $execInfo = EIConfig::get_appExecXML($app_id);
+    $sandboxProps = EIConfig::get_sandboxProps();
     $pAuxy = (EIConfig::get_appParametersARRAY($app_id));
     $paramsArr = $pAuxy["parameters"];
 
@@ -351,18 +352,55 @@ class EIApps {
     $cmdline = escapeshellcmd($cmdline);
  
    
-    echo $cmdline; 
+    //echo $cmdline; 
     $outputLines = array();
-    $logpath = "./exec.log";
-    $launcher = "./launcher.sh 30 30 ".$logpath." ".$cmdline;
+    $sb_timeout = EIApps::get_timeout($sandboxProps);
+    $sb_timeclean = EIApps::get_timeclean($sandboxProps);
+    $sb_logpath = EIApps::get_logpath($sandboxProps);
+    $sb_maxproc = EIApps::get_maxproc($sandboxProps);
+    $launcher = "./launcher.sh ".$sb_timeout." ".$sb_maxproc." ".$sb_logpath." ".$cmdline;
     chdir("bin"); // we always execute in the bin directory
     exec($launcher, $outputLines);
-    $cleaner = "./clean.sh 30 ".$root_str." ".$logpath. " > /dev/null 2>/dev/null &";
-    exec($cleaner);
-    $output =  implode("\n", $outputLines);
 
+    $output =  implode("\n", $outputLines);
+    $cleaner = "./clean.sh ".$sb_timeclean." ".$root_str." ".$sb_logpath. " > /dev/null 2>/dev/null &";
+
+    exec($cleaner);
     return $output;
   }
+
+  private static function get_timeout($sandboxProps){
+    if(!array_key_exists("timeout",$sandboxProps)){
+      return 30;
+    } else {
+      return $sandboxProps["timeout"];
+    }
+  }
+
+  private static function get_timeclean($sandboxProps){
+    if(!array_key_exists("timeclean",$sandboxProps)){
+      return 30;
+    } else {
+      return $sandboxProps["timeclean"];
+    }
+  }
+
+  private static function get_maxproc($sandboxProps){
+    if(!array_key_exists("max_proc",$sandboxProps)){
+      return 30;
+    } else {
+      return $sandboxProps["max_proc"];
+    }
+  }
+
+  private static function get_logpath($sandboxProps){
+    if(!array_key_exists("logpath",$sandboxProps)){
+      return "./exec.log";
+    } else {
+      return $sandboxProps["logpath"];
+    }
+  }
+
 
   private static function checkvalue($posibles, $actual){
     foreach($posibles["option"] as $opt){
