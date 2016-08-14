@@ -86,9 +86,9 @@ window.StreamCommand = (function() {
       var empty = false;
       var states = $("ei_stream",data).attr("state").split(" ");
       $(states).each(function(k,v){
-	if (v == "finish" || v == "nostream")
+	if (v == "terminated" || v == "nostream")
 	  self.off(false);
-	if (v == "nonewfiles")
+	if (v == "empty")
 	  empty = true;
       });
       if(!empty){

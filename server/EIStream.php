@@ -34,7 +34,7 @@ class EIStream {
     }
     $output ="";
     if($empty)
-      $state .= " nonewfiles";
+      $state .= " empty";
     else{
       $output .= "<content><![CDATA[\n";
       $output .= $output_f;

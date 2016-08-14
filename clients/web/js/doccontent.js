@@ -114,7 +114,7 @@ window.DocContent = (function() {
 	   if (v == "terminated" || v == "nostream"){
 	     self.off(stData.execid,false);
 	   }
-	   if (v == "nonewfiles")
+	   if (v == "empty")
 	     empty = true;
 	 });
 	 if(!empty){
