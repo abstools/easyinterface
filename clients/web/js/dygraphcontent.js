@@ -272,13 +272,13 @@ window.DygraphContent = (function() {
 	  var i =  self.numgh;
 	  $.each(jsonData, function(idx,g){
 	    var options = {};
-	    options['title'] = g.name;
-	    if(g["g-desc"])
-	      options['labels'] = g["g-desc"];
-	    if(g["y-axis"]) 
-	      options['ylabel'] = g["y-axis"];
-	    if(g["x-axis"])
-	      options['xlabel'] = g["x-axis"];
+	    options['title'] = g.title;
+	    if(g["f-titles"])
+	      options['labels'] = g["f-titles"];
+	    if(g["y-title"]) 
+	      options['ylabel'] = g["y-title"];
+	    if(g["x-title"])
+	      options['xlabel'] = g["x-title"];
 
 	    var divid = "graph"+self.DygraphN+"_"+i+"";
 
