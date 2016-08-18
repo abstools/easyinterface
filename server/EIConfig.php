@@ -13,6 +13,7 @@ class EIConfig {
   static private $appHelpXML       = null;
   static private $appExecXML       = null;
   static private $appParametersXML = null;
+  static private $appProfilesXML = null;
 
   static private $examplesXML       = null;
   static private $exsetIds          = null;
@@ -28,6 +29,7 @@ class EIConfig {
     EIConfig::$appHelpXML = array();
     EIConfig::$appExecXML = array();
     EIConfig::$appParametersXML = array();
+    EIConfig::$appProfilesXML = array();
     EIConfig::$exsetXML = array();
     EIConfig::$sandboxXML = array();
     if(file_exists(EIConfig::$cfgDir."/eiserver.cfg")){
@@ -227,6 +229,20 @@ class EIConfig {
       }
     }
     return EIConfig::$appParametersXML[$id];
+  }
+
+  /* get_appProfilesXML( $id )
+   */
+  static function get_appProfilesXML( $id ) {
+    if ( ! array_key_exists(  $id, EIConfig::$appProfilesXML ) ) {
+      EIConfig::load_appXML( $id );
+      if ( EIConfig::$appXML[$id]->profiles ) {
+	EIConfig::$appProfilesXML[$id] = EIConfig::expand_xml( EIConfig::$appXML[$id]->profiles );
+      } else {
+	EIConfig::$appProfilesXML[$id] = simplexml_load_string("<profiles></profiles>");
+      }
+    }
+    return EIConfig::$appProfilesXML[$id];
   }
 
   /* get_appParametersARRAY

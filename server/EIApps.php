@@ -55,6 +55,22 @@ class EIApps {
       if(EIConfig::get_appVisible( $id )== "true"){
 	$out .= '<app id=\'' . $id . '\'>';
 	$out .= EIConfig::get_appParametersXML( $id )->asXML();
+	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
+	$out .= '</app>';
+      }
+    }
+    $out .= ' </apps> '; 
+
+    return $out;
+  }
+
+  static function get_app_profiles( $app_id ) {
+    $app_ids = EIApps::expand_app_ids($app_id);
+    $out = ' <apps> ';
+    foreach ($app_ids as $id ) {
+      if(EIConfig::get_appVisible( $id )== "true"){
+	$out .= '<app id=\'' . $id . '\'>';
+	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
 	$out .= '</app>';
       }
     }
@@ -72,6 +88,7 @@ class EIApps {
 	$out .= EIConfig::get_appInfoXML( $id )->asXML();
 	$out .= EIConfig::get_appHelpXML( $id )->asXML();
 	$out .= EIConfig::get_appParametersXML( $id )->asXML();
+	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
 	$out .= '</app>';
       }
     }
@@ -323,7 +340,7 @@ class EIApps {
 	    $parameters_str .= " ".$localprefix."".$key." ".$values[0];
 	break;
       case "textfield":
-	  if(array_key_exists("passinfile",$local["@attr"])){
+	  if(array_key_exists("passinfile",$local["@attr"]) && $local["@attr"]["passinfile"]=="true"){
 	    $name_tmpfile = tempnam($dir,$key."_");
 	    file_put_contents($name_tmpfile,$values[0]);
 	    chmod($name_tmpfile,0755);
