@@ -277,7 +277,7 @@ class EIApps {
 	      throw new Exception("This parameter (".$local["@attr"]["name"].
 				  ") requeire at least one value");
 	    foreach ($values as $v)
-	      if(!EIApps::checkvalue($local,$v))
+	      if($v != "" && !EIApps::checkvalue($local,$v))
 		throw new Exception("Invalid parameter's value: ".$v
 				    ." in parameter: ".$local["@attr"]["name"] );
 	    break;
@@ -298,6 +298,33 @@ class EIApps {
 	    break;
 
 	  case "textfield":
+	      echo "checking textfield";
+	      if(array_key_exists("type",$local["@attr"])){
+		$texttype=$local["@attr"]["type"];
+		$error = false;
+		if(count($values)!=1)
+		  throw new Exception("Something went wrong with the textfield parameter (".$local["@attr"]["name"]."), no values detected.");
+		switch($texttype){
+		  case "bool":
+		    if($values[0] != "true" && $values[0] != "false")
+		      $error = true;
+		    break;
+		  case "int":
+		    $error = !filter_var($values[0], FILTER_VALIDATE_INT);
+		    break;
+		  case "float":
+		    $error = !is_numeric($values[0]);
+		    break;
+		  case "word":
+		    $error = count(explode(' ', $values[0])) > 1;
+		    break;
+		  default:
+		    break;
+		}
+		if($error)
+		  throw new Exception("Incorrect type of value for textfield parameter ".$local["@attr"]["name"].", it has to be of type ".$texttype);
+		    
+	      }
 	    break;
 
 	  default: 
@@ -308,7 +335,7 @@ class EIApps {
 	}//end localcheck
       }else{// end encontrado
 	//this parameter is not specificated on the config file
-        throw new Exception("This app doesnt accept more parameters".
+        throw new Exception("This app does not accept more parameters".
 			      " than the especificated");
       }
 
