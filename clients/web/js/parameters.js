@@ -114,7 +114,6 @@ window.Parameters = (function() {
 	    
 	    sectionInfo.profileChange = false;
 	  });
-	  console.log(sectionInfo.profiles);
 	},
 
 	//
@@ -155,7 +154,6 @@ window.Parameters = (function() {
 	    };
 
 	    var defaultValue = this.defaultValueFromXML(type,param);
-	  console.log(name,defaultValue);
 	    switch ( widget ) {
 	    case "checkbox":
 		var trueval = "true";
@@ -325,7 +323,6 @@ window.Parameters = (function() {
 	      profileValue[name][i] = $(this).text();
 
 	  });
-	  console.log(profile,profileValue);
 	  return profileValue;
 	},
 
@@ -406,7 +403,6 @@ window.Parameters = (function() {
 		    this.restoreDefaultValues(p);
 		}
 	    }else{
-	      console.log(this.sectionInfoById[sectionId].params);
 	      $('#profile-'+this.sectionInfoById[sectionId].tag+'').find("option").each(function(k,v){
 		if($(v).val()=="default")
 		  $(v).attr("selected","selected");
@@ -414,7 +410,6 @@ window.Parameters = (function() {
 		  $(v).removeAttr("selected");
 	      });
 		for(var p in this.sectionInfoById[sectionId].params){
-		  console.log(p);
 		  this.sectionInfoById[sectionId].params[p].restoreDefault();
 		}
 
@@ -426,7 +421,6 @@ window.Parameters = (function() {
         setProfileValues:
 	function(sectionId,profile) {
  	  var self = this;
-	  console.log("pr",profile);
 	  if(profile == "default"){
 	      self.restoreDefaultValues(sectionId);
 	  } else{

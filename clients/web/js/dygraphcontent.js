@@ -55,7 +55,6 @@ window.DygraphContent = (function() {
        text: "stream" 
      }).click( function() { 
        self.disableStreamButton();
-       console.log("call from dygraph button");
        self.doc.off(self.stData.execid,true);
      });
      $(self.streamBttn).hide();
@@ -131,7 +130,6 @@ window.DygraphContent = (function() {
     self.gadded = [];
     self.ladded = [];
     self.nadded = {"g":[],"l":[]};
-     console.log($(jsonData).text());
     // Get all Groups and Labels
     var aux;
     $.each(jsonData, function(i,gh) {

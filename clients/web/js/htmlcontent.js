@@ -40,7 +40,6 @@ window.HTMLContent = (function() {
        text: "stream" 
      }).click( function() { 
        self.disableStreamButton();
-       console.log("call from html button");
        self.doc.off(self.stData.execid,true);
      });
      $(self.streamBttn).hide();

@@ -35,7 +35,6 @@ window.ComboWidget = ( function() {
 	    }*/
 	  this.select.append( option );
 	}
-      console.log(widgetInfo.default_value);
       for(var k in widgetInfo.default_value){
 	$("option[value='" + widgetInfo.default_value[k] + "']",this.select).attr("selected","selected");
       }

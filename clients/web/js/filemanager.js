@@ -601,7 +601,6 @@ window.FileManager = (function() {
 	intento++;
       }
       var node = this.jstree.jstree("create", parent, "last", fmInfo , false, true );
-      console.log(node);
       this.fmObj[ fmInfo.attr.fmId ] = { info: fmInfo, node: node };
       this.fmId++;
       
@@ -707,7 +706,6 @@ window.FileManager = (function() {
 	this.codearea.showTab(fmInfo.attr.fmId);
       } else {
 	this.loadFile( fmInfo.attr.fmId );
-	console.log(fmInfo.attr.content);
 	this.codearea.createTab(fmInfo.attr.label,fmInfo.attr.fmId,fmInfo.attr.content);
 	fmInfo.attr.open = true;
       }
@@ -1107,7 +1105,6 @@ window.FileManager = (function() {
 	    }
 	  break;
 	default:
-	  console.log(fmObjA.info.attr.rel);
 	  break;
       };
 
