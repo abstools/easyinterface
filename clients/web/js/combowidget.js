@@ -30,15 +30,15 @@ window.ComboWidget = ( function() {
 	    option.append(widgetInfo.options[i].desc.short);
 	    option.attr("value",widgetInfo.options[i].value);
 
-	    if ( widgetInfo.options[i].value == widgetInfo.default_value ) {
+	/*    if ( widgetInfo.options[i].value == widgetInfo.default_value ) {
 		option.attr("selected","selected");
-	//	this.select.prepend( option );
-}
-//	    }else{
-		this.select.append( option );
-	 //   }
-	    
+	    }*/
+	  this.select.append( option );
 	}
+      console.log(widgetInfo.default_value);
+      for(var k in widgetInfo.default_value){
+	$("option[value='" + widgetInfo.default_value[k] + "']",this.select).attr("selected","selected");
+      }
       this.select.change();
       
 	if ( widgetInfo.desc.long ) { 
@@ -68,7 +68,20 @@ window.ComboWidget = ( function() {
 	    return id;
 	},
 
-
+	
+	//
+	setValue:
+	function(newvalue) {
+	    var self = this;
+	    this.select.find("option").each(function (k,opt){
+	      if($.inArray($(opt).val(), newvalue)>-1){
+		$(opt).prop("selected",true);
+	      }else{
+		$(opt).removeAttr("selected");
+	      }
+	    });
+	  this.env.find("select").change();
+	},
 	//
 	getValue:
 	function() {
@@ -76,16 +89,17 @@ window.ComboWidget = ( function() {
 	    widgetValue = this.select.val();
 	    return widgetValue;
 	},
+
+	//
 	restoreDefault:
 	function() {
 	    var self = this;
-	    this.env.find("option").each(function (k,opt){
-		var val = $(opt).attr("value");
-		if(val == self.widgetInfo.default_value){
-		    $(opt).attr("selected","selected");
-		}else{
-		    $(opt).removeAttr("selected");
-		}
+	    this.select.find("option").each(function (k,opt){
+	      if($.inArray($(opt).val(), self.widgetInfo.default_value)>-1){
+		$(opt).prop("selected",true);
+	      }else{
+		$(opt).removeAttr("selected");
+	      }
 	    });
 	  this.env.find("select").change();
 	}

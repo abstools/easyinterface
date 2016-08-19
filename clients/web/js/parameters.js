@@ -47,32 +47,71 @@ window.Parameters = (function() {
 
 	//
 	addSection: 
-	function(label, sectionId, params) {
+	function(label, sectionId, params, profiles) {
 	    var self = this;
             var tagId = this.sectionId_to_sectionTag( sectionId );
 	    this.accord.append("<h3 id='label-"+tagId+"'>"+
 			       label+"</h3><div id='"+tagId+"'></div>");
 	    this.accord.accordion( "refresh" );
-	    this.accord.find("#"+tagId).append("<button id='def-"+tagId+
-					       "'>b1</button><br/><br/>");
+	    this.accord.find("#"+tagId).append("<div><div style='float: left;'><button id='def-"+tagId+
+					       "'>b1</button><br/><br/></div></div>");
 	    $("#def-"+tagId).button({
 		label: "Restore Default Values"
 	    });
 	    $("#def-"+tagId).click(function(){
 		self.restoreDefaultValues(sectionId);
 	    });
+
+	    this.accord.find("#"+tagId+ "> div").append("<div style='float: right;'><b>Profile:</b><select id='profile-"+tagId+"'></select></div>");
+
 	    var sectionInfo = { id: sectionId, 
-				 tag: tagId, 
-				 secId: this.secId, 
-				 params: new Array() 
-			       };
+				tag: tagId, 
+				secId: this.secId, 
+				profileChange: false,
+				params: {},
+				profiles: {}
+	                      };
 
 	    this.sectionInfoById[sectionId] = sectionInfo;
 	    this.secId++;
 
-	    if ( params ) this.addParamsFromXML(sectionId,params);
-	    
+	    if ( params ) this.addParamsFromXML(sectionId,params);	    
+	    if ( profiles ) this.addProfilesFromXML(sectionId,profiles);	    
 
+
+	},
+
+	//
+	addProfilesFromXML:
+	function(sectionId,profiles) {
+	  var self = this;
+	  var sectionInfo = self.sectionInfoById[sectionId];
+	  var selector = $("#profile-"+sectionInfo.tag);
+	  selector.append("<option value='default'>Default</option>");
+
+
+	  $(profiles).find("> ").each(
+	    function() {
+	      var profileValues = self.profileValuesFromXML(this);
+	      var profileName = $(this).attr("name");
+	      selector.append("<option value='"+profileName+"' >"+profileName+"</option>");
+	      sectionInfo.profiles[profileName] = profileValues;
+	    });
+	  selector.append("<option value='custom'>Custom</option>");
+	  $(selector).change(function(){
+	    if(sectionInfo.profileChange)
+	      return;
+	    sectionInfo.profileChange = true;
+	    var optionSelected = $(this).find("option:selected");
+	    var valueSelected  = optionSelected.val();
+	    if(valueSelected == "default"){
+	      self.restoreDefaultValues(sectionId);
+	    } else if(valueSelected != "custom"){
+	      self.setProfileValues(sectionId,valueSelected);
+	    }
+	    sectionInfo.profileChange = false;
+	  });
+	  console.log(sectionInfo.profiles);
 	},
 
 	//
@@ -112,15 +151,8 @@ window.Parameters = (function() {
 		long: param.find("> desc").find("long").text()
 	    };
 
-	    //more than one default value?
-	    var defaultValue;
-	  if(type == "textfield")
-	    defaultValue = param.find("> initialtext").text();
-	  else if(param.find("> default").attr("value"))
-	    defaultValue = param.find("> default").attr("value");
-	  else
-	    defaultValue = param.find("> default").text();
-
+	    var defaultValue = this.defaultValueFromXML(type,param);
+	  console.log(name,defaultValue);
 	    switch ( widget ) {
 	    case "checkbox":
 		var trueval = "true";
@@ -250,6 +282,50 @@ window.Parameters = (function() {
 
 	},
 
+
+	//
+	defaultValueFromXML:
+        function(type,param){
+	  var defaultValue = new Array();
+	  if(type == "textfield")
+	    defaultValue[0] = param.find("> initialtext").text();
+	  else{
+	    var i = 0;
+	    param.find("> default").each(function(){
+	      if($(this).attr("value"))
+		defaultValue[i] = $(this).attr("value");
+	      else
+		defaultValue[i] = $(this).text();
+	      i++;
+	    });
+
+	  }
+	  return defaultValue;
+	},
+
+	//
+	profileValuesFromXML:
+	function(profile){
+	  var profileValue = {};
+	  $(profile).find("> parameter").each(function(){
+	    var name = $(this).attr("name");
+	    var i = 0;
+
+	    if(profileValue[name])
+	      i = profileValue[name].length;
+	    else
+	      profileValue[name] = new Array();
+
+	    if($(this).attr("value"))
+	      profileValue[name][i] = $(this).attr("value");
+	    else
+	      profileValue[name][i] = $(this).text();
+
+	  });
+	  console.log(profile,profileValue);
+	  return profileValue;
+	},
+
 	// paramInfo: id, options,multiple,default_value, desc
 	//
 	addCheckWidget:
@@ -265,7 +341,7 @@ window.Parameters = (function() {
 		  options: [
 	              { 
 			  value: paramInfo.options, 
-			  selected: (paramInfo.default_value == paramInfo.options[0]), 
+			  selected: (paramInfo.default_value[0] == paramInfo.options[0]), 
 			  desc: paramInfo.desc ,
 			  isBoolean: paramInfo.boolean
 		      }
@@ -327,14 +403,32 @@ window.Parameters = (function() {
 		    this.restoreDefaultValues(p);
 		}
 	    }else{
+	      console.log(this.sectionInfoById[sectionId].params);
+	      $('#profile-'+this.sectionInfoById[sectionId].tag+'').find("option").each(function(k,v){
+		if($(v).val()=="default")
+		  $(v).attr("selected","selected");
+		else
+		  $(v).removeAttr("selected");
+	      });
 		for(var p in this.sectionInfoById[sectionId].params){
-		    this.sectionInfoById[sectionId].params[p].restoreDefault();
+		  console.log(p);
+		  this.sectionInfoById[sectionId].params[p].restoreDefault();
 		}
 
 	    }
 
 	},
 
+	//
+        setProfileValues:
+	function(sectionId,profile) {
+ 	  var self = this;
+	  var secTag = this.sectionId_to_sectionTag(sectionId);
+	  var profileValues = this.sectionInfoById[sectionId].profiles[profile];
+	  for(var p in profileValues){
+	    this.sectionInfoById[sectionId].params[p].setValue(profileValues[p]);
+	  }
+	},
 
 	//
 	setActiveParameSet:
