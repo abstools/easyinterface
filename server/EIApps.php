@@ -191,7 +191,7 @@ class EIApps {
     $dir_str = $dir . "/_ei_download";
     mkdir($dir_str, 0755);
     $root_str = $dir;
-    echo $filespath_str;
+
     if ( array_key_exists( '_ei_files', $parameters ) ) {    
       EIApps::build_directories($files_str,$filespath_str,$parameters);
       unset( $parameters['_ei_files'] );
