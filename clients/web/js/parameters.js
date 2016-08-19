@@ -53,7 +53,7 @@ window.Parameters = (function() {
 	    this.accord.append("<h3 id='label-"+tagId+"'>"+
 			       label+"</h3><div id='"+tagId+"'></div>");
 	    this.accord.accordion( "refresh" );
-	    this.accord.find("#"+tagId).append("<div><div style='float: left;'><button id='def-"+tagId+
+/*	    this.accord.find("#"+tagId).append("<div><div style='float: left;'><button id='def-"+tagId+
 					       "'>b1</button><br/><br/></div></div>");
 	    $("#def-"+tagId).button({
 		label: "Restore Default Values"
@@ -61,9 +61,15 @@ window.Parameters = (function() {
 	    $("#def-"+tagId).click(function(){
 		self.restoreDefaultValues(sectionId);
 	    });
+*/
+	    this.accord.find("#"+tagId/*+ "> div"*/).append(/*"<div style='float: right;'>*/"<b>Profile: </b><select id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button>"/*</div>"*/);
 
-	    this.accord.find("#"+tagId+ "> div").append("<div style='float: right;'><b>Profile:</b><select id='profile-"+tagId+"'></select></div>");
-
+	  $("#btn-profile-"+tagId).button({
+		label: "Load Profile"
+	    });
+	    $("#btn-profile-"+tagId).click(function(){
+	      self.setProfileValues(sectionId,$("#profile-"+tagId).find("option:selected").val());
+	    });
 	    var sectionInfo = { id: sectionId, 
 				tag: tagId, 
 				secId: this.secId, 
@@ -97,18 +103,15 @@ window.Parameters = (function() {
 	      selector.append("<option value='"+profileName+"' >"+profileName+"</option>");
 	      sectionInfo.profiles[profileName] = profileValues;
 	    });
-	  selector.append("<option value='custom'>Custom</option>");
 	  $(selector).change(function(){
 	    if(sectionInfo.profileChange)
 	      return;
 	    sectionInfo.profileChange = true;
 	    var optionSelected = $(this).find("option:selected");
 	    var valueSelected  = optionSelected.val();
-	    if(valueSelected == "default"){
-	      self.restoreDefaultValues(sectionId);
-	    } else if(valueSelected != "custom"){
+	    
 	      self.setProfileValues(sectionId,valueSelected);
-	    }
+	    
 	    sectionInfo.profileChange = false;
 	  });
 	  console.log(sectionInfo.profiles);
@@ -423,10 +426,15 @@ window.Parameters = (function() {
         setProfileValues:
 	function(sectionId,profile) {
  	  var self = this;
-	  var secTag = this.sectionId_to_sectionTag(sectionId);
-	  var profileValues = this.sectionInfoById[sectionId].profiles[profile];
-	  for(var p in profileValues){
-	    this.sectionInfoById[sectionId].params[p].setValue(profileValues[p]);
+	  console.log("pr",profile);
+	  if(profile == "default"){
+	      self.restoreDefaultValues(sectionId);
+	  } else{
+	    var secTag = self.sectionId_to_sectionTag(sectionId);
+	    var profileValues = self.sectionInfoById[sectionId].profiles[profile];
+	    for(var p in profileValues){
+	      this.sectionInfoById[sectionId].params[p].setValue(profileValues[p]);
+	    }
 	  }
 	},
 
