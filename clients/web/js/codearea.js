@@ -132,7 +132,9 @@ window.CodeArea = (function() {
 	        edArea: this.tabs.find("#"+tabTag+"-ed")[0],
 	        visible: true,
 		panel: panel,
-		content: content 
+		content: content,
+		markers: {},
+		inlines: {},
 	    };
 
 	    this.tabInfoByPos[currTabInfo.pos] = currTabInfo;
@@ -289,17 +291,47 @@ window.CodeArea = (function() {
 
 	    // get the tab information
 	    var tabInfo = this.tabInfoById[id];
+	    var lines = markerInfo.lines;
+	    var markers = new Array();
+	    var visited = {};
+	    for(var j = 0; j < lines.length; j++){
+	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
+		if(!tabInfo.markers[line]){
+		  var markerWidgetInfo = {
+		    lines    : line, 
+		    content  : markerInfo.content, 
+		    outclass : markerInfo.outclass,
+		    onclick  : markerInfo.onclick,
+		    gutter   : markerInfo.gutter,
+		    editor   : tabInfo.editor
+		  };
+		  tabInfo.markers[line] = new MarkerWidget( markerWidgetInfo );
+		}else{
+		  tabInfo.markers[line].addContent(markerInfo.content);
+		}
+		if(!visited[line]){
+		  markers[markers.length] = tabInfo.markers[line];
+		  visited[line] = true;
+		}
+	      }
+	    }
+	    return markers; 
+	},
 
-	    var markerWidgetInfo = {
-		lines    : markerInfo.lines, 
-		content  : markerInfo.content, 
-		outclass : markerInfo.outclass,
-		onclick  : markerInfo.onclick,
-		gutter   : markerInfo.gutter,
-		editor   : tabInfo.editor
-	    };
+	removeMarkers:
+	function(id,lines){
+	  console.log("aa",id,lines);
+	  if ( !Number(id) )   
+	    id = this.filemanager.getIdByPath(id);
+	  // get the tab information
+	  var tabInfo = this.tabInfoById[id];
+	  for(var j = 0; j < lines.length; j++){
+	    for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
+	      tabInfo.markers[line] = null;
+	    }
+	  }
+	  this.tabInfoById[id] = tabInfo;
 
-	    return new MarkerWidget( markerWidgetInfo );
 	},
 
 	//

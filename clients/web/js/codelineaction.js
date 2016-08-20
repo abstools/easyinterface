@@ -94,30 +94,38 @@ window.CodeLineAction = (function() {
 	//
 	activate:
 	function() {
-	    this.markerWidget.do();
+	  $(this.markerWidget).each(function(){
+	    this.do();
+	  });
 	},
 
 	//
 	deActivate:
 	function() {
-	    this.undoAction();
-	    this.markerWidget.undo();
+	  this.undoAction();
+	  $(this.markerWidget).each(function(){
+	    this.undo();
+	  });
 	},
 
 	//
 	doAction:
 	function() {
-	    this.markerWidget.selectMarker();
-	    if ( this.commands )
-		this.commands.asyncIterate( function(c) { c.do(); } );
+	  $(this.markerWidget).each(function(){
+	    this.selectMarker();
+	  });
+	  if ( this.commands )
+	    this.commands.asyncIterate( function(c) { c.do(); } );
 	},
 
 	//
 	undoAction:
 	function() {
-	    this.markerWidget.unselectMarker();
-	    if ( this.commands )
-		this.commands.asyncIterate( function(c) { c.undo(); } );
+	  $(this.markerWidget).each(function(){
+	    this.unselectMarker();
+	  });
+	  if ( this.commands )
+	    this.commands.asyncIterate( function(c) { c.undo(); } );
 	}
 
     }

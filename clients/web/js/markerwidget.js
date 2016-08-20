@@ -23,7 +23,7 @@ window.MarkerWidget = (function() {
 	    this.content = null;
 	}
 
-	this.markers = new Array();
+	this.marker = null;
     };
 
     MarkerWidget.prototype = {
@@ -50,68 +50,67 @@ window.MarkerWidget = (function() {
 	    }
 
 
-	    for( var i=0; i<this.lines.length; i++) {
-		
-		// we wrap it with a function to store the current
-		// value of i for future use
-		//
-		(function(i) {
-		    self.markers[i] = $("<div><span class='"+cssClass+"'></span></div>");
-		
-		    if ( self.content ) {
-			var c = $("<div><span class='markerToolTip'></span></div>").append(self.content);
-
-			self.markers[i].tooltip({ 
-			    track: false, 
-			    tooltipClass: "markerToolTip",
-			    items: self.markers[i].find("span"),
-			    content: c.prop('outerHTML')
-			}).dblclick( function() { 
-			    var self1 = this;
-			    self.markers[i].tooltip({ disabled: true });
-			    c.dialog( { title: self.boxtitle,
-					width: self.boxwidth,
-					height: self.boxheight,
-				        close: function( event, ui ) {  self.markers[i].tooltip({ disabled: false }); }});
-			});
-		    }
-
-		    if ( self.onclick ) {
-			self.markers[i].click( self.onclick );
-		    }
-		    
-	      	    self.editor.setGutterMarker(
-			self.lines[i].init.line,
-			self.gutter,
-			self.markers[i][0] // !!the [0] is needed to get the first element of the jquery element!!
-		    );
-		})(i);
+	    self.marker = $("<div><span class='"+cssClass+"'></span></div>");
+	    if ( self.content ) {
+	      var c = $("<div><span class='markerToolTip'></span></div>").append(self.content);
+	      self.marker.tooltip({ 
+		track: false, 
+		tooltipClass: "markerToolTip",
+		items: self.marker.find("span"),
+		content: /*self.content.clone().html()//*/c.prop('outerHTML')
+	      }).dblclick( function() { 
+		var self1 = this;
+		self.marker.tooltip({ disabled: true });
+		c.dialog( { title: self.boxtitle,
+			    width: self.boxwidth,
+			    height: self.boxheight,
+			    open: function() { $('.markerToolTip',this).html(self.content.clone()); },
+			    close: function( event, ui ) {  self.marker.tooltip({ disabled: false }); }});
+	      });
 	    }
+	    if ( self.onclick ) {
+	      self.marker.click( self.onclick );
+	    }
+	    self.editor.setGutterMarker(
+	      self.lines,
+	      self.gutter,
+	      self.marker[0] // !!the [0] is needed to get the first element of the jquery element!!
+	    );
+
 	},
 
 	selectMarker:
 	function() {
-	    for( var i=0; i<this.lines.length; i++) {
-		this.markers[i].addClass('highlightline');
-	    }
+	  var i = 0;
+	  this.marker.addClass('highlightline');
 	},
 
 	unselectMarker:
 	function() {
-	    for( var i=0; i<this.lines.length; i++) {
-		this.markers[i].removeClass('highlightline');
-	    }
+	  var i = 0;
+	  this.marker.removeClass('highlightline');
 	},
 
+	addContent:
+	function(newcontent) {
+	  var precontent  = new DocContent({
+	    content: newcontent
+	  }).getDOM();
+	  var i = 0;
+	  this.content = this.content.add(precontent);
+	  if(this.marker)
+	    this.marker.tooltip("option", "content", this.content);
+	},
+	     
 	"undo":
 	function() {
-	    for( var i=0; i<this.lines.length; i++) {
-	      	    this.editor.setGutterMarker(
-			this.lines[i].init.line,
-			this.gutter,
-			null
-		    );
-	    }
+	  var self = this;
+	  var i = 0;
+	  this.editor.setGutterMarker(
+	    self.lines,
+	    self.gutter,
+	    null
+	  );
 	}
     }
 

@@ -268,8 +268,8 @@ window.OutputManager = (function() {
 	clearAllAnnotations:
 	function() {
 	  var self = this;
-	    this.commands.asyncIterate( function(c) { c.undo(); });
-	    this.actions.asyncIterate( function(a) { a.deActivate(); });
+	    this.commands.iterate( function(c) { c.undo(); });
+	    this.actions.iterate( function(a) { a.deActivate(); });
 	    this.lastAction = false;
 	    this.console.initConsole();
 	    this.defaultConsoleId = this.console.createWin('default',"Default Console");
