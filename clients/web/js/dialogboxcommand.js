@@ -55,6 +55,7 @@ window.DialogBoxCommand = (function() {
 	function() {
 	    if ( this.dialogBox ) {
 		this.dialogBox.dialog("destroy").remove();
+	      this.dialogBox = null;
 	    }
 	}
     }
