@@ -2,11 +2,13 @@ window.MarkerWidget = (function() {
     "use strict";
 
     function MarkerWidget(options) {	
-	
+        this.outputmanager = options.outputmanager;
 	this.editor   = options.editor;
 	this.gutter   = options.gutter;
 	this.outclass = options.outclass;
-	this.onclick  = options.onclick;
+	this.actions  = new Array();
+      if(options.actions)
+	this.actions[0] = options.actions;
 	this.lines    = options.lines;
 	this.boxtitle = options.boxtitle || "Expanded Tooltip";
 	this.boxwidth = options.boxwidth || 200;
@@ -64,12 +66,12 @@ window.MarkerWidget = (function() {
 		c.dialog( { title: self.boxtitle,
 			    width: self.boxwidth,
 			    height: self.boxheight,
-			    open: function() { $('.markerToolTip',this).html(self.content.clone()); },
+			 //   open: function() { $('.markerToolTip',this).html(self.content.clone()); },
 			    close: function( event, ui ) {  self.marker.tooltip({ disabled: false }); }});
 	      });
 	    }
-	    if ( self.onclick ) {
-	      self.marker.click( self.onclick );
+	    if ( self.actions && self.outputmanager) {
+	      self.marker.click( function(ev,ui,concat){ self.outputmanager.performActions(self.actions,concat);} );
 	    }
 	    self.editor.setGutterMarker(
 	      self.lines,
@@ -93,20 +95,22 @@ window.MarkerWidget = (function() {
 
 	addInfo:
 	function(newInfo) {
+	  var self = this;
 	  // CONTENT
 	  var precontent  = new DocContent({
 	    content: newInfo.content
 	  }).getDOM();
-	  this.content = this.content.add(precontent);
-	  if(this.marker)
-	    this.marker.tooltip("option", "content", this.content);
+	  self.content = self.content.add(precontent);
+	  if(self.marker)
+	    self.marker.tooltip("option", "content", self.content);
 	  // ONCLICK
-	  if(newInfo.onclick){
-	    var temponclick = this.onclick;
-	    this.onclick = function(ev,ui){if(temponclick)temponclick(ev,ui);newInfo.onclick(ev,ui);};
+	  if(newInfo.actions){
+	    self.actions[self.actions.length] = newInfo.actions;
 	  }
-	  if(this.marker ){
-	    this.marker.click( this.onclick );
+	  if(!self.outputmanager)
+	    self.outputmanager = newInfo.outputmanager;
+	  if(self.marker && self.actions && self.outputmanager){
+	    self.marker.click( function(ev,ui,concat){ self.outputmanager.performActions(self.actions,concat);} );
 	  }
 	},
 	     

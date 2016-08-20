@@ -300,9 +300,11 @@ window.CodeArea = (function() {
 	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
 		if(!tabInfo.markers[gutter][line]){
 		  var markerWidgetInfo = {
-		    lines    : line, 
+		    lines    : line,
+		    outputmanager : markerInfo.outputmanager,
 		    content  : markerInfo.content, 
 		    outclass : markerInfo.outclass,
+		    actions  : markerInfo.actions,
 		    onclick  : markerInfo.onclick,
 		    gutter   : markerInfo.gutter,
 		    editor   : tabInfo.editor
@@ -321,14 +323,16 @@ window.CodeArea = (function() {
 	},
 
 	removeMarkers:
-	function(id,lines){
+	function(id,lines,gutter){
 	  if ( !Number(id) )   
 	    id = this.filemanager.getIdByPath(id);
 	  // get the tab information
 	  var tabInfo = this.tabInfoById[id];
-	  for(var j = 0; j < lines.length; j++){
-	    for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
-	      tabInfo.markers[line] = null;
+	  if(tabInfo.markers[gutter]){
+	    for(var j = 0; j < lines.length; j++){
+	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
+		tabInfo.markers[gutter][line] = null;
+	      }
 	    }
 	  }
 	  this.tabInfoById[id] = tabInfo;
@@ -340,7 +344,6 @@ window.CodeArea = (function() {
 	function(id, widgetInfo) {
 	    if ( !Number(id) )   
 		id = this.filemanager.getIdByPath(id);
-
 	    if(id < 0 ) {
 		throw "linewidget: invalid file name";
 	    }
@@ -358,7 +361,6 @@ window.CodeArea = (function() {
 		  });
 	      }
 	    }
-
 	    return widgets;
 	},
 

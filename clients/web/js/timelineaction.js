@@ -8,10 +8,10 @@ window.TimeLineAction = (function() {
         var dest = a.attr(_ei.outlang.syntax.dest) || ei_info.dest;
 	var outclass = a.attr( _ei.outlang.syntax.outclass ) || ei_info.outclass;
       var autoclean  = a.attr( _ei.outlang.syntax.actionautoclean ) || ei_info.autoclean;
+	if ( autoclean == "false" ) 
+	    autoclean=false;
+	else autoclean=true
 
-	if ( autoclean == "true" ) 
-	    autoclean=true;
-	else autoclean=false;
 	var boxtitle  = a.attr( _ei.outlang.syntax.tltitle ) || "Time Line";
         var tltimer = parseInt( a.attr( _ei.outlang.syntax.tlauto ) ) || 5;
 	var boxwidth  =  400;

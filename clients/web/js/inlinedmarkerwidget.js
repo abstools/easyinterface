@@ -58,14 +58,12 @@ window.InlinedMarkerWidget = (function() {
 	      noHScroll: true
 	    });
 	},
-	addContent:
-	function(newcontent){
-	},
 
 	"undo":
 	function() {
+	  if(this.lineWidget)
 	    this.lineWidget.clear();
-	    this.lineWidget = null;
+	  this.lineWidget = null;
 	}
     }
 
