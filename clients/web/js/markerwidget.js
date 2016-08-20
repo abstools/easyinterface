@@ -57,7 +57,7 @@ window.MarkerWidget = (function() {
 		track: false, 
 		tooltipClass: "markerToolTip",
 		items: self.marker.find("span"),
-		content: /*self.content.clone().html()//*/c.prop('outerHTML')
+		content: c.prop('outerHTML')
 	      }).dblclick( function() { 
 		var self1 = this;
 		self.marker.tooltip({ disabled: true });

@@ -133,8 +133,7 @@ window.CodeArea = (function() {
 	        visible: true,
 		panel: panel,
 		content: content,
-		markers: {},
-		inlines: {},
+		markers: {}
 	    };
 
 	    this.tabInfoByPos[currTabInfo.pos] = currTabInfo;
@@ -320,7 +319,6 @@ window.CodeArea = (function() {
 
 	removeMarkers:
 	function(id,lines){
-	  console.log("aa",id,lines);
 	  if ( !Number(id) )   
 	    id = this.filemanager.getIdByPath(id);
 	  // get the tab information
@@ -345,13 +343,21 @@ window.CodeArea = (function() {
 	    }
 
 	    var tabInfo = this.tabInfoById[id];
+	    var lines = widgetInfo.lines;
+	    var widgets = new Array();
+	  console.log(lines);
+	    for(var j = 0; j < lines.length; j++){
+	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
+		widgets[widgets.length] = new InlinedMarkerWidget({
+		    lines: line, 
+		    content: widgetInfo.content,
+		    outclass: widgetInfo.outclass,
+		    editor: tabInfo.editor
+		  });
+	      }
+	    }
 
-	    return new InlinedMarkerWidget({
-		lines: widgetInfo.lines, 
-		content: widgetInfo.content,
-		outclass: widgetInfo.outclass,
-		editor: tabInfo.editor
-	    });
+	    return widgets;
 	},
 
 	//
