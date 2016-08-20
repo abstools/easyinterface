@@ -55,7 +55,6 @@ window.CmdEngine = (function() {
 		       try {
 			   data = jQuery.parseXML(data);
 			   if ( _ei.debug ) console.log(data);
-	    		   callback(data);
 		       } catch(e) {
 			   var n = data.indexOf("<"+_ei.outlang.syntax.eiappout+">");
 			   var m = data.indexOf("</"+_ei.outlang.syntax.eiappout+">");
@@ -65,11 +64,13 @@ window.CmdEngine = (function() {
 			   }
 			   try {
 			       data = jQuery.parseXML(data);
-			       callback(data);
 			   } catch(e1) {
   			     errorcb(e1);
+			     return;
 			   }
 		       }
+		     callback(data);
+
 	    	   }).error(function(data) {
 		       if ( _ei.debug ) {
 			   console.log("HTTP Request error occurred: ");
