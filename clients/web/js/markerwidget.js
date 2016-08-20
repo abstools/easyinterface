@@ -91,15 +91,23 @@ window.MarkerWidget = (function() {
 	  this.marker.removeClass('highlightline');
 	},
 
-	addContent:
-	function(newcontent) {
+	addInfo:
+	function(newInfo) {
+	  // CONTENT
 	  var precontent  = new DocContent({
-	    content: newcontent
+	    content: newInfo.content
 	  }).getDOM();
-	  var i = 0;
 	  this.content = this.content.add(precontent);
 	  if(this.marker)
 	    this.marker.tooltip("option", "content", this.content);
+	  // ONCLICK
+	  if(newInfo.onclick){
+	    var temponclick = this.onclick;
+	    this.onclick = function(ev,ui){if(temponclick)temponclick(ev,ui);newInfo.onclick(ev,ui);};
+	  }
+	  if(this.marker ){
+	    this.marker.click( this.onclick );
+	  }
 	},
 	     
 	"undo":

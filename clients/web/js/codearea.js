@@ -291,11 +291,14 @@ window.CodeArea = (function() {
 	    // get the tab information
 	    var tabInfo = this.tabInfoById[id];
 	    var lines = markerInfo.lines;
+	    var gutter = markerInfo.gutter;
+	  if(!tabInfo.markers[gutter])
+	    tabInfo.markers[gutter] = {};
 	    var markers = new Array();
 	    var visited = {};
 	    for(var j = 0; j < lines.length; j++){
 	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
-		if(!tabInfo.markers[line]){
+		if(!tabInfo.markers[gutter][line]){
 		  var markerWidgetInfo = {
 		    lines    : line, 
 		    content  : markerInfo.content, 
@@ -304,12 +307,12 @@ window.CodeArea = (function() {
 		    gutter   : markerInfo.gutter,
 		    editor   : tabInfo.editor
 		  };
-		  tabInfo.markers[line] = new MarkerWidget( markerWidgetInfo );
+		  tabInfo.markers[gutter][line] = new MarkerWidget( markerWidgetInfo );
 		}else{
-		  tabInfo.markers[line].addContent(markerInfo.content);
+		  tabInfo.markers[gutter][line].addInfo(markerInfo);
 		}
 		if(!visited[line]){
-		  markers[markers.length] = tabInfo.markers[line];
+		  markers[markers.length] = tabInfo.markers[gutter][line];
 		  visited[line] = true;
 		}
 	      }
@@ -345,7 +348,6 @@ window.CodeArea = (function() {
 	    var tabInfo = this.tabInfoById[id];
 	    var lines = widgetInfo.lines;
 	    var widgets = new Array();
-	  console.log(lines);
 	    for(var j = 0; j < lines.length; j++){
 	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
 		widgets[widgets.length] = new InlinedMarkerWidget({
