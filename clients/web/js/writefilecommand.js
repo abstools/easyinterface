@@ -10,6 +10,7 @@ window.WriteFileCommand = (function() {
 	    throw "The 'filename' is missing in the "+_ei.outlang.syntax.writefile+ " command";
 
 	var overwrite = c.attr(_ei.outlang.syntax.overwrite);
+      console.log(c.text());
         var url = c.attr(_ei.outlang.syntax.url) || "";
 	if ( overwrite == "true" )
 	    overwrite = true;

@@ -82,6 +82,7 @@ var _ei = {
 	  writefile      : "writefile",  // tag
 	  filename       : "filename",  // attr
 	  overwrite      : "overwrite", // attr
+	  url            : "url",       // attr
 	  
 	  //DOWNLOAD command
 	  downloadfile   : "download",  //tag
