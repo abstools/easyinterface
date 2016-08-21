@@ -13,7 +13,8 @@ window.OnClickAction = (function() {
 	var eicommands = a.find("> "+_ei.outlang.syntax.eicommands );
 	if ( autoclean == "false" ) 
 	    autoclean=false;
-	else autoclean=true
+	else 
+	    autoclean=true;
 	return new OnClickAction({
 	    eicommands: eicommands,
 	    elements: elements,

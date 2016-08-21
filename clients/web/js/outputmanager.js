@@ -229,7 +229,7 @@ window.OutputManager = (function() {
 
 	  $.each(this.lastAction, function(){
 	    var action = this;
-	    if(a == action || (a.autoClean()&&!concatenated))
+	    if(a == action || (a.autoClean() && !concatenated))
 	      action.undoAction();
 	    else
 	      tmp[tmp.length] = action;
@@ -248,7 +248,8 @@ window.OutputManager = (function() {
 	  var self = this;
 	  var autoclean = false;
 	  $.each(as,function(){
-	    autoclean = autoclean || this.autoClean();
+	    if(this !== undefined)
+	      autoclean = autoclean || this.autoClean();
 	  });
 	  var tmp = new Array();
 
