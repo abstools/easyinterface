@@ -166,13 +166,13 @@ window.FileManager = (function() {
 		  var items = {	
 
 		    "Apply": {
-		      "label": "Apply here",
+		      "label": "Run",
 		      "action": function (obj) {
 			self.tools.apply(self.getSelectedId());
 		      }
 		    },
 		    "Outline": {
-		      "label": "Refresh Outline here",
+		      "label": "Refresh Outline",
 		      "separator_after":true,
 		      "action": function (obj) {
 			self.outline.refresh(self.getSelectedId());
