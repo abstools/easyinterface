@@ -355,3 +355,8 @@ body {
     margin: 0;
     padding: 0.3em;
 }
+
+.profile-combobox {
+  height: 33.8px;
+  margin-left: 3.2px;
+}

@@ -62,7 +62,7 @@ window.Parameters = (function() {
 		self.restoreDefaultValues(sectionId);
 	    });
 */
-	    this.accord.find("#"+tagId/*+ "> div"*/).append(/*"<div style='float: right;'>*/"<b>Profile: </b><select id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button>"/*</div>"*/);
+	    this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button>");
 
 	  $("#btn-profile-"+tagId).button({
 		label: "Load Profile"
@@ -432,12 +432,14 @@ window.Parameters = (function() {
 	      return;
 
 	    var selector = sectionInfo.profileSelector;
-	    $(selector).val(profile);
-	    sectionInfo.profileChange = true;
-	    
-	    self.setProfileValues(sectionId,profile);
-	    
-	    sectionInfo.profileChange = false;
+	    if( $("option[value='"+profile+"']",selector).length > 0){
+	      $(selector).val(profile);
+	      sectionInfo.profileChange = true;
+	      
+	      self.setProfileValues(sectionId,profile);
+	      
+	      sectionInfo.profileChange = false;
+	    }
 	  }
 	},
 
