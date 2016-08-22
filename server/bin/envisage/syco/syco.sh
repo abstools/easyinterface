@@ -25,22 +25,21 @@ ${PROGRAM} $@ &> /tmp/syco.stderr
 # If costabs exit with exit-code 0 we just print the output to the
 # stdout, otherwise we print an error message to the stdout as well.
 #
-if [ $? == 0 ]; then
+R=$?
+if [ $R == 0 ]; then
     cat /tmp/pet/output.xml    
 else
+    
     echo "<eiout>"
     echo "<eicommands>"
     echo "<printonconsole consoleid='Error'>"
-    echo "<content format='html'>"
-    echo "<span style='color:red;' >"
-    echo "syco exit with non-zero exit code: $?"
-    echo "</span><![CDATA["
+    echo "<content format='text'>"
     cat /tmp/syco.stderr
-    echo "]]></content>"
+    echo "</content>"
     echo "</printonconsole>"
     echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
     echo "<content format='html'>"
-    echo "<span style='color:red;' >See Console Error</span>"
+    echo "<span style='color:red;' >syco exit with non-zero exit code: $R</span>"
     echo "</content>"
     echo "</dialogbox>"
     echo "</eicommands>"
