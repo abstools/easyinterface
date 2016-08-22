@@ -509,10 +509,13 @@ window.EasyInterface = (function() {
 		break;
 	      case "app":
 		$.each(arr, function(k,n){
-//		  self.tools.setActiveTool(n);
 		  self.toolSelector.selectTool(n);
 		});
 		break;
+	      case "profile": 
+		$.each(arr, function(k,n){
+		  self.parameters.selectProfile(-1,n);
+		});
 	    }
 
 	  });

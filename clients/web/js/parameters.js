@@ -104,16 +104,18 @@ window.Parameters = (function() {
 	      sectionInfo.profiles[profileName] = profileValues;
 	    });
 	  $(selector).change(function(){
+	    var optionSelected = $(this).find("option:selected");
+	    var valueSelected  = optionSelected.val();	
 	    if(sectionInfo.profileChange)
 	      return;
 	    sectionInfo.profileChange = true;
-	    var optionSelected = $(this).find("option:selected");
-	    var valueSelected  = optionSelected.val();
 	    
-	      self.setProfileValues(sectionId,valueSelected);
+	    self.setProfileValues(sectionId,valueSelected);
 	    
 	    sectionInfo.profileChange = false;
 	  });
+
+	  sectionInfo.profileSelector = selector;
 	},
 
 	//
@@ -417,13 +419,39 @@ window.Parameters = (function() {
 
 	},
 
+	selectProfile:
+	function(sectionId,profile){
+	  var self = this;
+	  if(sectionId < 0){
+	    for(var p in self.sectionInfoById){
+	      self.selectProfile(p,profile);
+	    }
+	  }else{
+	    var sectionInfo = self.sectionInfoById[sectionId];
+	    if(sectionInfo.profileChange)
+	      return;
+
+	    var selector = sectionInfo.profileSelector;
+	    $(selector).val(profile);
+	    sectionInfo.profileChange = true;
+	    
+	    self.setProfileValues(sectionId,profile);
+	    
+	    sectionInfo.profileChange = false;
+	  }
+	},
+
 	//
         setProfileValues:
 	function(sectionId,profile) {
  	  var self = this;
 	  if(profile == "default"){
 	      self.restoreDefaultValues(sectionId);
-	  } else{
+	  } else if(sectionId < 0){
+	    for(var p in this.sectionInfoById){
+	      this.setProfileValues(p,profile);
+	    }
+	  }else{
 	    var secTag = self.sectionId_to_sectionTag(sectionId);
 	    var profileValues = self.sectionInfoById[sectionId].profiles[profile];
 	    for(var p in profileValues){
