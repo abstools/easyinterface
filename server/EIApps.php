@@ -408,9 +408,9 @@ class EIApps {
     exec($launcher, $outputLines);
 
     $output =  implode("\n", $outputLines);
-    $cleaner = "./clean.sh ".$sb_timeclean." ".$root_str." ".$sb_logpath. " > /dev/null 2>/dev/null &";
+//    $cleaner = "./clean.sh ".$sb_timeclean." ".$root_str." ".$sb_logpath. " > /dev/null 2>/dev/null &";
 
-    exec($cleaner);
+//    exec($cleaner);
     return $output;
   }
 
