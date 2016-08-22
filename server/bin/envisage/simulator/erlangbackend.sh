@@ -33,7 +33,7 @@ if [ $? == 0 ]; then
     echo "</content>"
     echo "</printonconsole>"
 
-    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout $refreshrate $enablestats $port&> /dev/null &
+    envisage/simulator/erlangbackend_run.sh $streamroot $execid $timeout $refreshrate $enablestats &> /dev/null &
     echo $! > $streamroot/pid
 
     if [ $enablestats == "yes" ]; then

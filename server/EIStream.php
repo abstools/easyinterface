@@ -68,7 +68,7 @@ class EIStream {
   }
 
   static function path($id){
-    $aux = sys_get_temp_dir()."/easyinterface_".$id;
+    $aux = sys_get_temp_dir()."/ei/".$id;
     $dir = str_replace("\\", "/", $aux);
     unset($aux);
     return $dir."/_ei_stream/";
