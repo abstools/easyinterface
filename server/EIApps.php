@@ -135,7 +135,7 @@ class EIApps {
     }
     // session ID
     //
-    $sessiondir_str = sys_get_temp_dir()."/easyinterface_sessions/";
+    $sessiondir_str = sys_get_temp_dir()."/ei/sessions/";
     $sessionid_str = EIApps::getSessionData();
 
     if (!file_exists($sessiondir_str)) {
@@ -178,7 +178,7 @@ class EIApps {
     // can reconstruct file names easily (i.e., whatever comes after
     // _ei_files is the name passed by the client)
     
-    $aux = sys_get_temp_dir()."/easyinterface_".$execid_str; 
+    $aux = sys_get_temp_dir()."/ei/".$execid_str; 
     $dir = str_replace("\\", "/", $aux);
     unset($aux);
     mkdir($dir, 0755);
