@@ -28,10 +28,23 @@ ${PROGRAM} $@ &> /tmp/syco.stderr
 if [ $? == 0 ]; then
     cat /tmp/pet/output.xml    
 else
-    echo "<ei_error>"
+    echo "<eiout>"
+    echo "<eicommands>"
+    echo "<printonconsole consoleid='Error'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >"
     echo "syco exit with non-zero exit code: $?"
+    echo "</span><![CDATA["
     cat /tmp/syco.stderr
-    echo "</ei_error>"
+    echo "]]></content>"
+    echo "</printonconsole>"
+    echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >See Console Error</span>"
+    echo "</content>"
+    echo "</dialogbox>"
+    echo "</eicommands>"
+    echo "</eiout>"
 fi
 
 #\rm -f /tmp/syco.stderr

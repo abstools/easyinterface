@@ -28,11 +28,23 @@ ${PROGRAM} $@ -ei_version 2 &> /tmp/deadlock.stderr
 if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
-    echo "<ei_error>"
+    echo "<eiout>"
+    echo "<eicommands>"
+    echo "<printonconsole consoleid='Error'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >"
     echo "Error occurred while executing deadlock analysis:"
-    echo ""
+    echo "</span><![CDATA["
     cat /tmp/deadlock.stderr
-    echo "</ei_error>"
+    echo "]]></content>"
+    echo "</printonconsole>"
+    echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >See Console Error</span>"
+    echo "</content>"
+    echo "</dialogbox>"
+    echo "</eicommands>"
+    echo "</eiout>"
 fi
 
 \rm -f /tmp/deadlock.stderr

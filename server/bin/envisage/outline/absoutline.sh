@@ -5,9 +5,22 @@
 java -jar $ABSFRONTEND -outline $@ 2> /tmp/absoutline.stderr
 
 if [ $? == 1 ]; then
-    echo "<ei_error>"
+    echo "<eiout>"
+    echo "<eicommands>"
+    echo "<printonconsole consoleid='Error'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >"
+    echo "</span><![CDATA["
     cat /tmp/absoutline.stderr
-    echo "</ei_error>"
+    echo "]]></content>"
+    echo "</printonconsole>"
+    echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >See Console Error</span>"
+    echo "</content>"
+    echo "</dialogbox>"
+    echo "</eicommands>"
+    echo "</eiout>"
 fi
 
 \rm -f /tmp/absoutline.stderr

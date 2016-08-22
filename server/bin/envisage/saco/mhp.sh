@@ -28,11 +28,22 @@ ${PROGRAM} $@ -ei_version 2 -mode complete -highlight '/dev/null' &> /tmp/mhp.st
 if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
-    echo "<ei_error>"
-    echo "Error occurred while executing May-Happen-in-Parallel analysis:"
-    echo ""
+    echo "<eiout>"
+    echo "<eicommands>"
+    echo "<printonconsole consoleid='Error'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >Error occurred while executing May-Happen-in-Parallel analysis:</span>"
+    echo "<![CDATA["
     cat /tmp/mhp.stderr
-    echo "</ei_error>"
+    echo "]]></content>"
+    echo "</printonconsole>"
+    echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >See Console Error</span>"
+    echo "</content>"
+    echo "</dialogbox>"
+    echo "</eicommands>"
+    echo "</eiout>"
 fi
 
 \rm -f /tmp/mhp.stderr
