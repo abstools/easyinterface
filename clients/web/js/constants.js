@@ -1,5 +1,7 @@
 var _ei = {
   clientId: "web_client",
+  outformat: "eiol",
+  language: "text/x-csrc",
   serverPath:"",
   exampleServerPath:"",
   serverCommand: {
@@ -44,15 +46,15 @@ var _ei = {
 
 	  // CONTENT environemnt
 	  content        : "content",      // tag
-	  streamid       : "streamid",     // attr
-	  streamext      : "streamext",    // attr
-	  streamaction   : "streamaction", // attr
-	  streamtime     : "streamtimeout",// attr
+	  streamid       : "execid",     // attr
+	  streamext      : "ext",    // attr
+	  streamaction   : "action", // attr
+	  streamtime     : "refreshrate",// attr
 	  format         : "format",       // attr
 	  htmlcontent    : "html",         // attr value
 	  svgcontent     : "svg",          // attr value
 	  textcontent    : "text",         // attr value
-	  dygraphcontent : "dygraph",      // attr value
+	  dygraphcontent : "graph",      // attr value
 
 	  // PRINTONCONSOLE command
 	  printonconsole : "printonconsole", // tag
@@ -80,6 +82,7 @@ var _ei = {
 	  writefile      : "writefile",  // tag
 	  filename       : "filename",  // attr
 	  overwrite      : "overwrite", // attr
+	  url            : "url",       // attr
 	  
 	  //DOWNLOAD command
 	  downloadfile   : "download",  //tag

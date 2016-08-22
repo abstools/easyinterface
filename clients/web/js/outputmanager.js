@@ -11,13 +11,12 @@ window.OutputManager = (function() {
 	    AddInLineMarkerCommand, 
 	    DialogBoxCommand,
 	    WriteFileCommand,
-	    StreamCommand,
 	    DownloadCommand
 	];
 
 	this.ActionsCollection =  [
 	    CodeLineAction,
-	    TimeLineAction,
+	    //TimeLineAction,
 	    OnClickAction
 	];
 
@@ -26,7 +25,7 @@ window.OutputManager = (function() {
 	this.setOptions(options);
 	this.commands = new Set();
 	this.actions = new Set();
-	this.lastAction = null;
+	this.lastAction = new Array();
 	this.defaultConsoleId = this.console.createWin('default',"Default Console");
 	this.console.switchWin( this.defaultConsoleId );
 
@@ -225,53 +224,59 @@ window.OutputManager = (function() {
 
 	//
 	performAction:
-	function( a ) {
-	    if ( this.lastAction ) {
-		var tmp;
-		if ( this.lastAction instanceof Array ) 
-		    tmp = this.lastAction;
-		else {
-		    tmp = [this.lastAction];
-		}
-		for(var i=0;i<tmp.length;i++) tmp[i].undoAction();
-	    }
-	    if ( this.lastAction == a ) {
-		this.lastAction = null;
-	    } else {
-		this.lastAction = a;
-		this.lastAction.doAction();
-	    }
+	function( a , concatenated) {
+	  var tmp = new Array();
+
+	  $.each(this.lastAction, function(){
+	    var action = this;
+	    if(a == action || (a.autoClean() && !concatenated))
+	      action.undoAction();
+	    else
+	      tmp[tmp.length] = action;
+	  });
+	  if(this.lastAction.indexOf(a) < 0){
+	    tmp[tmp.length] = a;
+	    a.doAction();
+	  }
+
+	  this.lastAction = tmp;
 	},
 
 	//
 	performActions:
-	function( as ) {
+	function( as , concatenated) {
+	  var self = this;
+	  var autoclean = false;
+	  $.each(as,function(){
+	    if(this !== undefined)
+	      autoclean = autoclean || this.autoClean();
+	  });
+	  var tmp = new Array();
 
-	    if ( this.lastAction ) {
-		var tmp;
-		if ( this.lastAction instanceof Array ) 
-		    tmp = this.lastAction;
-		else {
-		    tmp = [this.lastAction];
-		}
-		for(var i=0;i<tmp.length;i++) tmp[i].undoAction();
+	  $.each(self.lastAction, function(){
+	    var action = this;
+	    if(as.indexOf(action) > -1 || (autoclean && ! concatenated))
+	      action.undoAction();
+	    else
+	      tmp[tmp.length] = action;
+	  });
+	  $.each(as, function(){
+	    var a = this;
+	    if(self.lastAction.indexOf(a) < 0){
+	      tmp[tmp.length] = a;
+	      a.doAction();
 	    }
-	    if ( this.lastAction == as ) {
-		this.lastAction = null;
-	    } else {
-		this.lastAction = as;
-		for(var i=0; i<as.length; i++)
-		    as[i].doAction();
-	    }
+	  });
+	  self.lastAction = tmp;
 	},
 	
 	//
 	clearAllAnnotations:
 	function() {
 	  var self = this;
-	    this.commands.asyncIterate( function(c) { c.undo(); });
-	    this.actions.asyncIterate( function(a) { a.deActivate(); });
-	    this.lastAction = false;
+	    this.commands.iterate( function(c) { c.undo(); });
+	    this.actions.iterate( function(a) { a.deActivate(); });
+	    this.lastAction = new Array();
 	    this.console.initConsole();
 	    this.defaultConsoleId = this.console.createWin('default',"Default Console");
 	    this.console.switchWin( this.defaultConsoleId );

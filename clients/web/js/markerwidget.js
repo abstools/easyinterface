@@ -2,11 +2,13 @@ window.MarkerWidget = (function() {
     "use strict";
 
     function MarkerWidget(options) {	
-	
+        this.outputmanager = options.outputmanager;
 	this.editor   = options.editor;
 	this.gutter   = options.gutter;
 	this.outclass = options.outclass;
-	this.onclick  = options.onclick;
+	this.actions  = new Array();
+      if(options.actions)
+	this.actions[0] = options.actions;
 	this.lines    = options.lines;
 	this.boxtitle = options.boxtitle || "Expanded Tooltip";
 	this.boxwidth = options.boxwidth || 200;
@@ -23,7 +25,7 @@ window.MarkerWidget = (function() {
 	    this.content = null;
 	}
 
-	this.markers = new Array();
+	this.marker = null;
     };
 
     MarkerWidget.prototype = {
@@ -50,68 +52,77 @@ window.MarkerWidget = (function() {
 	    }
 
 
-	    for( var i=0; i<this.lines.length; i++) {
-		
-		// we wrap it with a function to store the current
-		// value of i for future use
-		//
-		(function(i) {
-		    self.markers[i] = $("<div><span class='"+cssClass+"'></span></div>");
-		
-		    if ( self.content ) {
-			var c = $("<div><span class='markerToolTip'></span></div>").append(self.content);
-
-			self.markers[i].tooltip({ 
-			    track: false, 
-			    tooltipClass: "markerToolTip",
-			    items: self.markers[i].find("span"),
-			    content: c.prop('outerHTML')
-			}).dblclick( function() { 
-			    var self1 = this;
-			    self.markers[i].tooltip({ disabled: true });
-			    c.dialog( { title: self.boxtitle,
-					width: self.boxwidth,
-					height: self.boxheight,
-				        close: function( event, ui ) {  self.markers[i].tooltip({ disabled: false }); }});
-			});
-		    }
-
-		    if ( self.onclick ) {
-			self.markers[i].click( self.onclick );
-		    }
-		    
-	      	    self.editor.setGutterMarker(
-			self.lines[i].init.line,
-			self.gutter,
-			self.markers[i][0] // !!the [0] is needed to get the first element of the jquery element!!
-		    );
-		})(i);
+	    self.marker = $("<div><span class='"+cssClass+"'></span></div>");
+	    if ( self.content ) {
+	      var c = $("<div><span class='markerToolTip'></span></div>").append(self.content);
+	      self.marker.tooltip({ 
+		track: false, 
+		tooltipClass: "markerToolTip",
+		items: self.marker.find("span"),
+		content: c.prop('outerHTML')
+	      }).dblclick( function() { 
+		var self1 = this;
+		self.marker.tooltip({ disabled: true });
+		c.dialog( { title: self.boxtitle,
+			    width: self.boxwidth,
+			    height: self.boxheight,
+			 //   open: function() { $('.markerToolTip',this).html(self.content.clone()); },
+			    close: function( event, ui ) {  self.marker.tooltip({ disabled: false }); }});
+	      });
 	    }
+	    if ( self.actions && self.outputmanager) {
+	      self.marker.click( function(ev,ui,concat){ self.outputmanager.performActions(self.actions,concat);} );
+	    }
+	    self.editor.setGutterMarker(
+	      self.lines,
+	      self.gutter,
+	      self.marker[0] // !!the [0] is needed to get the first element of the jquery element!!
+	    );
+
 	},
 
 	selectMarker:
 	function() {
-	    for( var i=0; i<this.lines.length; i++) {
-		this.markers[i].addClass('highlightline');
-	    }
+	  var i = 0;
+	  this.marker.addClass('highlightline');
 	},
 
 	unselectMarker:
 	function() {
-	    for( var i=0; i<this.lines.length; i++) {
-		this.markers[i].removeClass('highlightline');
-	    }
+	  var i = 0;
+	  this.marker.removeClass('highlightline');
 	},
 
+	addInfo:
+	function(newInfo) {
+	  var self = this;
+	  // CONTENT
+	  var precontent  = new DocContent({
+	    content: newInfo.content
+	  }).getDOM();
+	  self.content = self.content.add(precontent);
+	  if(self.marker)
+	    self.marker.tooltip("option", "content", self.content);
+	  // ONCLICK
+	  if(newInfo.actions){
+	    self.actions[self.actions.length] = newInfo.actions;
+	  }
+	  if(!self.outputmanager)
+	    self.outputmanager = newInfo.outputmanager;
+	  if(self.marker && self.actions && self.outputmanager){
+	    self.marker.click( function(ev,ui,concat){ self.outputmanager.performActions(self.actions,concat);} );
+	  }
+	},
+	     
 	"undo":
 	function() {
-	    for( var i=0; i<this.lines.length; i++) {
-	      	    this.editor.setGutterMarker(
-			this.lines[i].init.line,
-			this.gutter,
-			null
-		    );
-	    }
+	  var self = this;
+	  var i = 0;
+	  this.editor.setGutterMarker(
+	    self.lines,
+	    self.gutter,
+	    null
+	  );
 	}
     }
 

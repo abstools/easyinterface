@@ -5,9 +5,20 @@
 $ABSTOOLSHOME/frontend/bin/bash/dsaTester $@ 2> /tmp/dsa.stderr
 
 if [ $? == 1 ]; then
-    echo "<ei_error>"
+    echo "<eiout>"
+    echo "<eicommands>"
+    echo "<printonconsole consoleid='Error'>"
+    echo "<content format='text'>"
     cat /tmp/dsa.stderr
-    echo "</ei_error>"
+    echo "</content>"
+    echo "</printonconsole>"
+    echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >Execution Error</span>"
+    echo "</content>"
+    echo "</dialogbox>"
+    echo "</eicommands>"
+    echo "</eiout>"
 fi
 
 rm -f /tmp/dsa.stderr

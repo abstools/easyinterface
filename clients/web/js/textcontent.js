@@ -39,7 +39,6 @@ window.TextContent = (function() {
        text: "stream" 
      }).click( function() { 
        self.disableStreamButton();
-       console.log("call from text button");
        self.doc.off(self.stData.execid,true);
      });
      $(self.streamBttn).hide();

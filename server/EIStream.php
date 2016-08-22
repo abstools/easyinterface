@@ -8,7 +8,7 @@ class EIStream {
       return "<ei_stream state='nostream' />";
     }
     if(EIStream::finish($exec_id))
-      $state = "finish";
+      $state = "terminated";
     else
       $state = "running";
     echo $ext;
@@ -34,7 +34,7 @@ class EIStream {
     }
     $output ="";
     if($empty)
-      $state .= " nonewfiles";
+      $state .= " empty";
     else{
       $output .= "<content><![CDATA[\n";
       $output .= $output_f;
@@ -45,7 +45,7 @@ class EIStream {
 
   static function kill( $exec_id ) {
     if(!EIStream::isStream($exec_id) || EIStream::finish($exec_id))
-      return "<ei_stream state='finish' />";
+      return "<ei_stream state='terminated' />";
 
     $aux = EIStream::getPID($exec_id);
     if($aux === FALSE)

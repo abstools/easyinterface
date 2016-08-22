@@ -6,11 +6,9 @@ window.EasyInterface = (function() {
     // independent EasyInterface(s) on the same page
     //
     var countEasyInterface = 0;
-    var serverPath = [{server:"/ei/server/eiserver.php",apps:"_all"}];
-    var examplesPath = [{server:"/ei/server/eiserver.php",examples:"_all"}];
+    var serverPath = [{server:"/ei/server/eiserver.php",apps:"_ei_all"}];
+    var examplesPath = [{server:"/ei/server/eiserver.php",examples:"_ei_all"}];
 
-    //
-    var defaultSettingFile = "./settings.cfg";
 
     function EasyInterface(options) {
 
@@ -18,7 +16,6 @@ window.EasyInterface = (function() {
 
 	this.holder = null;
 	this.theme = null;
-	this.cfgFile = null;
 	this.userProjectsCatId = -1;
 	this.userDefaultProjectId = -1;
 	this.settingsFileContent = null;
@@ -134,12 +131,13 @@ window.EasyInterface = (function() {
 
 	    this.holder  = $( options.holder );
 	    this.theme   = options.theme   || "default";
-	    this.cfgFile = options.cfgFile || defaultSettingFile;
+
+	    _ei.language = options.language || "text/x-csrc";
 	    _ei.serverPath = options.apps || serverPath;
-	  _ei.exampleServerPath = options.examples || examplesPath;
-	  _ei.outline.active = (options.outline=="on")? true : false;
-	  if(_ei.outline.active){
-	    _ei.outline.app = options.outlineapp || "outline";
+	    _ei.exampleServerPath = options.examples || examplesPath;
+	    _ei.outline.active = (options.outline=="on")? true : false;
+	    if(_ei.outline.active){
+	      _ei.outline.app = options.outlineapp || "outline";
 	    _ei.outline.server = options.outlineserver || _ei.serverPath[0].server;
 	  }
 
@@ -362,13 +360,13 @@ window.EasyInterface = (function() {
 	  var currentServer;
 	  for (serverNum in _ei.serverPath){
 	    //_ei.serverPath[serverNum] = 
-	    // = {server: "", apps: "_all"|["",""]}
+	    // = {server: "", apps: "_ei_all"|["",""]}
 	    currentServer =  _ei.serverPath[serverNum];
 	    var bucle_apps = true;
 	      
 	    for( var index = 0; (bucle_apps && index < currentServer.apps.length);index+=1){
 	      var jsonParam;
-	      if(currentServer.apps == "_all"){
+	      if(currentServer.apps == "_ei_all"){
 		bucle_apps = false;
 		jsonParam = {
 		  "command" : _ei.serverCommand.app.details,
@@ -411,13 +409,13 @@ window.EasyInterface = (function() {
 	  var serverNum;
 	  var currentServer;
 	  for (serverNum in _ei.serverPath){
-	    // = {server: "", examples: "_all"|["",""]}
+	    // = {server: "", examples: "_ei_all"|["",""]}
 	    currentServer =  _ei.exampleServerPath[serverNum];
-	    var bucle_examples = true;
-	    for( var index = 0; (bucle_examples && index < currentServer.examples.length);index+=1){
+	    var loop_examples = true;
+	    for( var index = 0; (loop_examples && index < currentServer.examples.length);index+=1){
 	      var jsonParam;
-	      if(currentServer.examples == "_all"){
-		bucle_examples = false;
+	      if(currentServer.examples == "_ei_all"){
+		loop_examples = false;
 		jsonParam = {
 		  "command" : _ei.serverCommand.example.details,
 		  "exset_id" : _ei.serverCommand.all
@@ -511,10 +509,13 @@ window.EasyInterface = (function() {
 		break;
 	      case "app":
 		$.each(arr, function(k,n){
-//		  self.tools.setActiveTool(n);
 		  self.toolSelector.selectTool(n);
 		});
 		break;
+	      case "profile": 
+		$.each(arr, function(k,n){
+		  self.parameters.selectProfile(-1,n);
+		});
 	    }
 
 	  });

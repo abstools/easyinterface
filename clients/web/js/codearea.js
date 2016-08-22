@@ -115,7 +115,7 @@ window.CodeArea = (function() {
 	    // create a CodeMirror for this tab
 	    var ed = CodeMirror.fromTextArea( content.find("#"+tabTag+"-ed").get(0), { 
  	        lineNumbers: true, 
- 		mode: "text/abs",//x-java", 
+ 		mode: _ei.language,//"text/abs"
  		//value: tabContent, // this line is to add content to the codemirror when is not from a text area
 		gutters: ["actionGutter","CodeMirror-linenumbers","infoGutter"],
 		scrollbarStyle: "overlay",
@@ -132,7 +132,8 @@ window.CodeArea = (function() {
 	        edArea: this.tabs.find("#"+tabTag+"-ed")[0],
 	        visible: true,
 		panel: panel,
-		content: content 
+		content: content,
+		markers: {}
 	    };
 
 	    this.tabInfoByPos[currTabInfo.pos] = currTabInfo;
@@ -289,17 +290,53 @@ window.CodeArea = (function() {
 
 	    // get the tab information
 	    var tabInfo = this.tabInfoById[id];
+	    var lines = markerInfo.lines;
+	    var gutter = markerInfo.gutter;
+	  if(!tabInfo.markers[gutter])
+	    tabInfo.markers[gutter] = {};
+	    var markers = new Array();
+	    var visited = {};
+	    for(var j = 0; j < lines.length; j++){
+	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
+		if(!tabInfo.markers[gutter][line]){
+		  var markerWidgetInfo = {
+		    lines    : line,
+		    outputmanager : markerInfo.outputmanager,
+		    content  : markerInfo.content, 
+		    outclass : markerInfo.outclass,
+		    actions  : markerInfo.actions,
+		    onclick  : markerInfo.onclick,
+		    gutter   : markerInfo.gutter,
+		    editor   : tabInfo.editor
+		  };
+		  tabInfo.markers[gutter][line] = new MarkerWidget( markerWidgetInfo );
+		}else{
+		  tabInfo.markers[gutter][line].addInfo(markerInfo);
+		}
+		if(!visited[line]){
+		  markers[markers.length] = tabInfo.markers[gutter][line];
+		  visited[line] = true;
+		}
+	      }
+	    }
+	    return markers; 
+	},
 
-	    var markerWidgetInfo = {
-		lines    : markerInfo.lines, 
-		content  : markerInfo.content, 
-		outclass : markerInfo.outclass,
-		onclick  : markerInfo.onclick,
-		gutter   : markerInfo.gutter,
-		editor   : tabInfo.editor
-	    };
+	removeMarkers:
+	function(id,lines,gutter){
+	  if ( !Number(id) )   
+	    id = this.filemanager.getIdByPath(id);
+	  // get the tab information
+	  var tabInfo = this.tabInfoById[id];
+	  if(tabInfo.markers[gutter]){
+	    for(var j = 0; j < lines.length; j++){
+	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
+		tabInfo.markers[gutter][line] = null;
+	      }
+	    }
+	  }
+	  this.tabInfoById[id] = tabInfo;
 
-	    return new MarkerWidget( markerWidgetInfo );
 	},
 
 	//
@@ -307,19 +344,24 @@ window.CodeArea = (function() {
 	function(id, widgetInfo) {
 	    if ( !Number(id) )   
 		id = this.filemanager.getIdByPath(id);
-
 	    if(id < 0 ) {
 		throw "linewidget: invalid file name";
 	    }
 
 	    var tabInfo = this.tabInfoById[id];
-
-	    return new InlinedMarkerWidget({
-		lines: widgetInfo.lines, 
-		content: widgetInfo.content,
-		outclass: widgetInfo.outclass,
-		editor: tabInfo.editor
-	    });
+	    var lines = widgetInfo.lines;
+	    var widgets = new Array();
+	    for(var j = 0; j < lines.length; j++){
+	      for(var line = lines[j].init.line; line <= lines[j].end.line; line++){
+		widgets[widgets.length] = new InlinedMarkerWidget({
+		    lines: line, 
+		    content: widgetInfo.content,
+		    outclass: widgetInfo.outclass,
+		    editor: tabInfo.editor
+		  });
+	      }
+	    }
+	    return widgets;
 	},
 
 	//

@@ -28,11 +28,20 @@ ${PROGRAM} $@ -ei_version 2 &> /tmp/costabs.stderr
 if [ $? == 0 ]; then
     cat /tmp/costabs/output.xml
 else
-    echo "<ei_error>"
-    echo "Error occurred while executing the resource usage analysis:"
-    echo ""
+    echo "<eiout>"
+    echo "<eicommands>"
+    echo "<printonconsole consoleid='Error'>"
+    echo "<content format='text'>"
     cat /tmp/costabs.stderr
-    echo "</ei_error>"
+    echo "</content>"
+    echo "</printonconsole>"
+    echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
+    echo "<content format='html'>"
+    echo "<span style='color:red;' >Error occurred while executing the resource usage analysis:</span>"
+    echo "</content>"
+    echo "</dialogbox>"
+    echo "</eicommands>"
+    echo "</eiout>"
 fi
 
 \rm -f /tmp/costabs.stderr

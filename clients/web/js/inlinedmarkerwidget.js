@@ -3,8 +3,7 @@ window.InlinedMarkerWidget = (function() {
     
     function InlinedMarkerWidget(options) {	
 
-	this.lineWidget = new Array();
-	this.widget = new Array();
+	this.lineWidget = null;
 
 	this.editor = options.editor;
 	this.lines = options.lines;
@@ -46,32 +45,25 @@ window.InlinedMarkerWidget = (function() {
 	  var wid = document.createElement("div");
 	  var icon = wid.appendChild(document.createElement("span"));
 	  icon.innerHTML = symbol;
-	    icon.className = cssIconClass;
-	    wid.appendChild(document.createTextNode(this.content.text()));
+	  icon.className = cssIconClass;
+	  wid.appendChild(document.createTextNode(this.content.text()));
 	    
 	    wid.className = cssDivClass;
-	  for(var i = 0; i < this.lines.length;i++){
-	    this.lineWidget[i] = 
-		  this.editor.addLineWidget(
-		      this.lines[i].init.line, 
-		      wid,
-		      {
-			  above:true,
-			  coverGutter: false, 
-			  noHScroll: true
-		      });
-
-
-	  }
-
+	  this.lineWidget = this.editor.addLineWidget(
+	    this.lines, 
+	    wid,
+	    {
+	      above:true,
+	      coverGutter: false, 
+	      noHScroll: true
+	    });
 	},
 
 	"undo":
 	function() {
-	  for(var i = 0; i < this.lines.length;i++){
-	    this.lineWidget[i].clear();
-	  }
-	    this.lineWidget = new Array();
+	  if(this.lineWidget)
+	    this.lineWidget.clear();
+	  this.lineWidget = null;
 	}
     }
 

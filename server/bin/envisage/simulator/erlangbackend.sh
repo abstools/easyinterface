@@ -3,8 +3,9 @@
 . misc/parse_params.sh
 . envisage/envisage_settings.sh
 
-streamroot=$(getparam "streamroot")
-downloadroot=$(getparam "downloadroot")
+execroot=$(getparam "execroot")
+downloadroot=$execroot/_ei_download
+streamroot=$execroot/_ei_stream
 execid=$(getparam "execid")
 files=$(getparam "files")
 enabledownload=$(getparam "download")
@@ -25,7 +26,7 @@ env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $fil
 if [ $? == 0 ]; then
 
     echo "<printonconsole consoleid='erlexec' consoletitle='Output'>"
-    echo "<content format='text' streamid='$execid' streamext='out' streamtimeout='$refresh' streamaction='append'>"
+    echo "<content format='text' execid='$execid' ext='out' refreshrate='$refresh' action='append'>"
     echo "The source files were successfully compiled to Erlang!"
     echo "Starting the execution of the Erlang code."
     echo ""
@@ -37,7 +38,7 @@ if [ $? == 0 ]; then
 
     if [ $enablestats == "yes" ]; then
 	echo "<printonconsole consoleid='erlstats' consoletitle='Statistics'>"
-	echo "<content format='dygraph' streamid='$execid' streamext='stat' streamtimeout='$refresh' streamaction='replace'>"
+	echo "<content format='graph' execid='$execid' ext='stat' refreshrate='$refresh' action='replace'>"
 	echo "</content>"
 	echo "</printonconsole>"
     fi

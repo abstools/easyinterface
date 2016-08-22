@@ -11,7 +11,10 @@ window.OnClickAction = (function() {
 	var autoclean  = a.attr( _ei.outlang.syntax.actionautoclean ) || ei_info.autoclean;
 	var elements = a.find("> " + _ei.outlang.syntax.elements );
 	var eicommands = a.find("> "+_ei.outlang.syntax.eicommands );
-
+	if ( autoclean == "false" ) 
+	    autoclean=false;
+	else 
+	    autoclean=true;
 	return new OnClickAction({
 	    eicommands: eicommands,
 	    elements: elements,
@@ -79,8 +82,8 @@ window.OnClickAction = (function() {
 		    
 		    if ( elem.prop("onclickcallbacks") == undefined ) {
 		    	elem.prop("onclickcallbacks", new Array());
-			$(elem).on( "click", function() { 
-			    self.outputmanager.performActions( $(this).prop("onclickcallbacks") ); 
+			$(elem).on( "click", function(ev,ui,concat) { 
+			    self.outputmanager.performActions( $(this).prop("onclickcallbacks"),concat); 
 			});
 		    }
 		    var callbacks = elem.prop("onclickcallbacks");
@@ -89,6 +92,11 @@ window.OnClickAction = (function() {
 	    }
 
 	    
+	},
+	//
+	autoClean:
+	function(){
+	  return this.autoclean;
 	},
 
 	//

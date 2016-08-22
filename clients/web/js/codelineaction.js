@@ -11,9 +11,9 @@ window.CodeLineAction = (function() {
 	var lines = getLines(a.find("> "+_ei.outlang.syntax.lines));
 	var autoclean  = a.attr( _ei.outlang.syntax.actionautoclean ) || ei_info.autoclean;
 
-	if ( autoclean == "true" ) 
-	    autoclean=true;
-	else autoclean=false;
+	if ( autoclean == "false" ) 
+	    autoclean=false;
+	else autoclean=true;
 
 	var boxtitle  = a.attr( _ei.outlang.syntax.boxtitle );
 	var boxwidth  = parseInt(a.attr( _ei.outlang.syntax.boxwidth ));
@@ -42,7 +42,7 @@ window.CodeLineAction = (function() {
 
     function CodeLineAction(options) {	
 	var self = this;
-
+        
 	this.codearea = options.codearea;
 	this.lines = options.lines;
 	if (options.content.length == 0) 
@@ -55,7 +55,7 @@ window.CodeLineAction = (function() {
 	this.autoclean = options.autoclean;
 	this.boxheight = options.boxheight;
 	this.boxwidth = options.boxwidth;
-
+        this.gutter = "actionGutter";
 	this.commands = new Set();
 	options.eicommands.each( function() {
 
@@ -83,8 +83,10 @@ window.CodeLineAction = (function() {
 	    lines: this.lines,
 	    outclass: "arrow", 
 	    content: this.content,
-	    gutter: "actionGutter",
-	    onclick: function() { self.outputmanager.performAction(self); }
+	    gutter: this.gutter,
+	    outputmanager: self.outputmanager,
+	    actions: self
+
 	    });
 	};
 
@@ -94,30 +96,45 @@ window.CodeLineAction = (function() {
 	//
 	activate:
 	function() {
-	    this.markerWidget.do();
+	  $(this.markerWidget).each(function(){
+	    this.do();
+	  });
 	},
 
 	//
 	deActivate:
 	function() {
-	    this.undoAction();
-	    this.markerWidget.undo();
+	  this.undoAction();
+	  $(this.markerWidget).each(function(){
+	    this.undo();
+	  });
+	  this.codearea.removeMarkers(this.dest,this.lines,this.gutter);
+
 	},
 
 	//
+	autoClean:
+	function(){
+	  return this.autoclean;
+	},
+	//
 	doAction:
 	function() {
-	    this.markerWidget.selectMarker();
-	    if ( this.commands )
-		this.commands.asyncIterate( function(c) { c.do(); } );
+	  $(this.markerWidget).each(function(){
+	    this.selectMarker();
+	  });
+	  if ( this.commands )
+	    this.commands.asyncIterate( function(c) { c.do(); } );
 	},
 
 	//
 	undoAction:
 	function() {
-	    this.markerWidget.unselectMarker();
-	    if ( this.commands )
-		this.commands.asyncIterate( function(c) { c.undo(); } );
+	  $(this.markerWidget).each(function(){
+	    this.unselectMarker();
+	  });
+	  if ( this.commands )
+	    this.commands.asyncIterate( function(c) { c.undo(); } );
 	}
 
     }

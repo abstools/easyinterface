@@ -33,7 +33,7 @@ class EIApps {
     return $out;
   }
 
-static function get_app_help( $app_id ) {
+  static function get_app_help( $app_id ) {
       $app_ids = EIApps::expand_app_ids($app_id);
       $out = '<apps>';
     foreach ($app_ids as $id ) {
@@ -55,6 +55,22 @@ static function get_app_help( $app_id ) {
       if(EIConfig::get_appVisible( $id )== "true"){
 	$out .= '<app id=\'' . $id . '\'>';
 	$out .= EIConfig::get_appParametersXML( $id )->asXML();
+	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
+	$out .= '</app>';
+      }
+    }
+    $out .= ' </apps> '; 
+
+    return $out;
+  }
+
+  static function get_app_profiles( $app_id ) {
+    $app_ids = EIApps::expand_app_ids($app_id);
+    $out = ' <apps> ';
+    foreach ($app_ids as $id ) {
+      if(EIConfig::get_appVisible( $id )== "true"){
+	$out .= '<app id=\'' . $id . '\'>';
+	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
 	$out .= '</app>';
       }
     }
@@ -72,6 +88,7 @@ static function get_app_help( $app_id ) {
 	$out .= EIConfig::get_appInfoXML( $id )->asXML();
 	$out .= EIConfig::get_appHelpXML( $id )->asXML();
 	$out .= EIConfig::get_appParametersXML( $id )->asXML();
+	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
 	$out .= '</app>';
       }
     }
@@ -95,6 +112,7 @@ static function get_app_help( $app_id ) {
 
   static function execute_cmdline( $app_id, $parameters ) {
     $execInfo = EIConfig::get_appExecXML($app_id);
+    $sandboxProps = EIConfig::get_sandboxProps();
     $pAuxy = (EIConfig::get_appParametersARRAY($app_id));
     $paramsArr = $pAuxy["parameters"];
 
@@ -117,14 +135,29 @@ static function get_app_help( $app_id ) {
     }
     // session ID
     //
-    $sessionid_str = "";
-    
+    $sessiondir_str = sys_get_temp_dir()."/ei/sessions/";
+    $sessionid_str = EIApps::getSessionData();
+
+    if (!file_exists($sessiondir_str)) {
+      mkdir($sessiondir_str, 0755);
+    }
+
+    $sessiondir_str  .= $sessionid_str;
+    mkdir($sessiondir_str,0755);
     // client ID
     //
     $clientid_str = "";
     if ( array_key_exists( '_ei_clientid', $parameters ) ) {    
       $clientid_str = $parameters['_ei_clientid'];
       unset( $parameters['_ei_clientid'] );
+    }
+
+    // outformat 
+    //
+    $outformat_str = "txt";
+    if ( array_key_exists( '_ei_outformat', $parameters ) ) {    
+      $outformat_str = $parameters['_ei_outformat'];
+      unset( $parameters['_ei_outformat'] );
     }
     // files
     //   
@@ -145,20 +178,25 @@ static function get_app_help( $app_id ) {
     // can reconstruct file names easily (i.e., whatever comes after
     // _ei_files is the name passed by the client)
     
-    $aux = sys_get_temp_dir()."/easyinterface_".$execid_str; 
+    $aux = sys_get_temp_dir()."/ei/".$execid_str; 
     $dir = str_replace("\\", "/", $aux);
     unset($aux);
     mkdir($dir, 0755);
+    $filespath_str = $dir . "/_ei_files";
+    mkdir($filespath_str, 0755);
+    $dir_str = $dir . "/_ei_stream";
+    mkdir($dir_str, 0755);
+    $dir_str = $dir . "/_ei_tmp";
+    mkdir($dir_str, 0755);
+    $dir_str = $dir . "/_ei_download";
+    mkdir($dir_str, 0755);
+    $root_str = $dir;
+
     if ( array_key_exists( '_ei_files', $parameters ) ) {    
-      $root_str = $dir . "/_ei_files";
-      mkdir($root_str, 0755);
-      EIApps::build_directories($files_str,$root_str,$parameters);
+      EIApps::build_directories($files_str,$filespath_str,$parameters);
       unset( $parameters['_ei_files'] );
     }
-    $stream_str = $dir . "/_ei_stream";
-    mkdir($stream_str, 0755);
-    $download_str = $dir . "/_ei_download";
-    mkdir($download_str, 0755);
+
 
     // outline
     //
@@ -240,7 +278,7 @@ static function get_app_help( $app_id ) {
 	      throw new Exception("This parameter (".$local["@attr"]["name"].
 				  ") requeire at least one value");
 	    foreach ($values as $v)
-	      if(!EIApps::checkvalue($local,$v))
+	      if($v != "" && !EIApps::checkvalue($local,$v))
 		throw new Exception("Invalid parameter's value: ".$v
 				    ." in parameter: ".$local["@attr"]["name"] );
 	    break;
@@ -261,6 +299,33 @@ static function get_app_help( $app_id ) {
 	    break;
 
 	  case "textfield":
+	      echo "checking textfield";
+	      if(array_key_exists("type",$local["@attr"])){
+		$texttype=$local["@attr"]["type"];
+		$error = false;
+		if(count($values)!=1)
+		  throw new Exception("Something went wrong with the textfield parameter (".$local["@attr"]["name"]."), no values detected.");
+		switch($texttype){
+		  case "bool":
+		    if($values[0] != "true" && $values[0] != "false")
+		      $error = true;
+		    break;
+		  case "int":
+		    $error = !filter_var($values[0], FILTER_VALIDATE_INT);
+		    break;
+		  case "float":
+		    $error = !is_numeric($values[0]);
+		    break;
+		  case "word":
+		    $error = count(explode(' ', $values[0])) > 1;
+		    break;
+		  default:
+		    break;
+		}
+		if($error)
+		  throw new Exception("Incorrect type of value for textfield parameter ".$local["@attr"]["name"].", it has to be of type ".$texttype);
+		    
+	      }
 	    break;
 
 	  default: 
@@ -271,7 +336,7 @@ static function get_app_help( $app_id ) {
 	}//end localcheck
       }else{// end encontrado
 	//this parameter is not specificated on the config file
-        throw new Exception("This app doesnt accept more parameters".
+        throw new Exception("This app does not accept more parameters".
 			      " than the especificated");
       }
 
@@ -303,7 +368,7 @@ static function get_app_help( $app_id ) {
 	    $parameters_str .= " ".$localprefix."".$key." ".$values[0];
 	break;
       case "textfield":
-	  if(array_key_exists("passinfile",$local["@attr"])){
+	  if(array_key_exists("passinfile",$local["@attr"]) && $local["@attr"]["passinfile"]=="true"){
 	    $name_tmpfile = tempnam($dir,$key."_");
 	    file_put_contents($name_tmpfile,$values[0]);
 	    chmod($name_tmpfile,0755);
@@ -320,11 +385,11 @@ static function get_app_help( $app_id ) {
 			   "_ei_files" => $files_str,
 			   "_ei_root" => $root_str,
 			   "_ei_outline" => $outline_str,
-			   "_ei_stream" => $stream_str,
-			   "_ei_download" => $download_str,
 			   "_ei_parameters" => $parameters_str,
 			   "_ei_clientid" => $clientid_str,
+			   "_ei_outformat" => $outformat_str,
 			   "_ei_sessionid" => $sessionid_str,
+			   "_ei_sessiondir" => $sessiondir_str,
 			   "_ei_execid" => $execid_str
 			   );
     
@@ -332,15 +397,55 @@ static function get_app_help( $app_id ) {
     $cmdline = escapeshellcmd($cmdline);
  
    
-    echo $cmdline; 
+    //echo $cmdline; 
     $outputLines = array();
-    
+    $sb_timeout = EIApps::get_timeout($sandboxProps);
+    $sb_timeclean = EIApps::get_timeclean($sandboxProps);
+    $sb_logpath = EIApps::get_logpath($sandboxProps);
+    $sb_maxproc = EIApps::get_maxproc($sandboxProps);
+    $launcher = "./launcher.sh ".$sb_timeout." ".$sb_maxproc." ".$sb_logpath." ".$cmdline;
     chdir("bin"); // we always execute in the bin directory
-    exec($cmdline, $outputLines);
-    $output =  implode("\n", $outputLines);
+    exec($launcher, $outputLines);
 
+    $output =  implode("\n", $outputLines);
+//    $cleaner = "./clean.sh ".$sb_timeclean." ".$root_str." ".$sb_logpath. " > /dev/null 2>/dev/null &";
+
+//    exec($cleaner);
     return $output;
   }
+
+  private static function get_timeout($sandboxProps){
+    if(!array_key_exists("timeout",$sandboxProps)){
+      return 30;
+    } else {
+      return $sandboxProps["timeout"];
+    }
+  }
+
+  private static function get_timeclean($sandboxProps){
+    if(!array_key_exists("timeclean",$sandboxProps)){
+      return 30;
+    } else {
+      return $sandboxProps["timeclean"];
+    }
+  }
+
+  private static function get_maxproc($sandboxProps){
+    if(!array_key_exists("max_proc",$sandboxProps)){
+      return 30;
+    } else {
+      return $sandboxProps["max_proc"];
+    }
+  }
+
+  private static function get_logpath($sandboxProps){
+    if(!array_key_exists("logpath",$sandboxProps)){
+      return "./exec.log";
+    } else {
+      return $sandboxProps["logpath"];
+    }
+  }
+
 
   private static function checkvalue($posibles, $actual){
     foreach($posibles["option"] as $opt){
@@ -353,7 +458,7 @@ static function get_app_help( $app_id ) {
   }
 
   private static function valid_file_name( $fname ) {
-    return preg_match("/^[a-zA-z0-9\-_\.\/]+$/",$fname) && strpos($fname,"..") == false;
+    return preg_match("/^[a-zA-z0-9\-\+_\.\/]+$/",$fname) && strpos($fname,"..") == false;
   }
 
   private static function build_directories(& $files_str, $dir, $parameters )
@@ -380,7 +485,22 @@ static function get_app_help( $app_id ) {
 	$files_str .= " ".$filename;  // concatenate the filename to the list of filenames
       }
     }
-  }	  
+  }
+
+  private static function getSessionData(){
+    session_start();
+    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 3600)) {
+      // last request was more than 1 hour ago
+      //TODO: clean folder session...
+      session_unset();     // unset $_SESSION variable for the run-time 
+      session_destroy();   // destroy session data in storage
+    }
+    $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+    if(!isset($_SESSION["sessionID"])){
+      $_SESSION["sessionID"] = EIApps::token(10);
+    }
+    return $_SESSION["sessionID"];
+  }
 }
 
 ?>

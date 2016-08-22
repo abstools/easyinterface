@@ -16,7 +16,7 @@ TEXTO='<h1>My <span style="color:red">Important</span> Heading</h1>'
 
 echo $TEXTO > $1/C3.tmp
 
-TEXTO='{"g-desc":["X","Y1","Y2"],"y-axes":"test","groups":["Group 5","Group 6","Group 7"],"labels":["Label 1","Label 99"],"name":"uoo","values":[[22,0,1],[23,1,1],[24,1,1],[25,1,1],[26,0.9466666666666667,1]]}'
+TEXTO='{"f-titles":["X","Y1","Y2"],"y-title":"test","groups":["Group 5","Group 6","Group 7"],"labels":["Label 1","Label 99"],"title":"uoo","values":[[22,0,1],[23,1,1],[24,1,1],[25,1,1],[26,0.9466666666666667,1]]}'
 
 echo $TEXTO > $1/G1.tmpgh
 
@@ -36,21 +36,21 @@ echo "</content>"
 echo "</printonconsole>"
 
 echo "<printonconsole consoleid='html'>"
-echo "<content format='html' streamid='$2' streamext='html' streamtimeout='5000'>"
+echo "<content format='html' execid='$2' ext='html' refreshrate='5000'>"
 echo '<p>text to associated to the marker</p>'
 echo '</content>'
 echo '</printonconsole>'
 
 #echo "<printonconsole consoleid='texto'>"
-#echo "<content format='text' streamid='$2' streamext='ei' streamtimeout='5000'>"
+#echo "<content format='text' execid='$2' ext='ei' refreshrate='5000'>"
 #echo '<p>text to associated to the marker</p>'
 #echo '</content>'
 #echo '</printonconsole>'
 
 echo "<printonconsole consoleid='graphs'>"
-echo "<content format='dygraph' streamid='$2' streamext='gh' streamtimeout='5000' streamaction='replace'>"
-echo '{"g-desc":["X","Y1","Y2"],"y-axes":"test","groups":["Group 1","Group 2","Group 3"],"labels":["Label 1","Label 2"],"name":"slave 2","values":[[22,0,1],[23,1,1],[24,1,1],[25,1,1],[26,0.9466666666666667,1]]}'
-echo '{"g-desc":["X","Y1","Y2"],"x-axes":"testa","groups":["Group 2","Group 4"],"labels":["Label 3","Label 2"],"name":"slave 1","values":[[22,0,1],[23,1,1],[24,1,1],[25,1,1],[26,0.9466666666666667,1]]}'
+echo "<content format='graph' execid='$2' ext='gh' refreshrate='5000' action='replace'>"
+echo '{"f-titles":["X","Y1","Y2"],"y-title":"test","groups":["Group 1","Group 2","Group 3"],"labels":["Label 1","Label 2"],"title":"slave 2","values":[[22,0,1],[23,1,1],[24,1,1],[25,1,1],[26,0.9466666666666667,1]]}'
+echo '{"f-titles":["X","Y1","Y2"],"x-title":"testa","groups":["Group 2","Group 4"],"labels":["Label 3","Label 2"],"title":"slave 1","values":[[22,0,1],[23,1,1],[24,1,1],[25,1,1],[26,0.9466666666666667,1]]}'
 echo "</content>"
 echo "</printonconsole>"
 

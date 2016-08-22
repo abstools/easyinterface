@@ -54,15 +54,15 @@ window.AddMarkerCommand = (function() {
 	this.boxtitle = options.boxtitle;
 	this.boxwidth = options.boxwidth;
 	this.boxheight = options.boxheight;
-
-	this.markerWidget = this.codearea.marker(this.dest,{
+        this.gutter = "infoGutter";
+	this.markerWidgets = this.codearea.marker(this.dest,{
 	    boxtitle: this.boxtitle, 
 	    boxwidth: this.boxwidth,
 	    boxheight: this.boxheight,
 	    lines: this.lines,
 	    outclass: this.outclass, 
 	    content: this.content,
-	    gutter: "infoGutter"
+	    gutter: this.gutter
 	});
 
     };
@@ -73,13 +73,18 @@ window.AddMarkerCommand = (function() {
 	//
 	"do":
 	function() {
-	    this.markerWidget.do();
+	  $(this.markerWidgets).each(function(){
+	    this.do();
+	  });
 	},
 
 	//
 	"undo":
 	function() {
-	    this.markerWidget.undo();
+	  $(this.markerWidgets).each(function(){
+	    this.undo();
+	  });
+	  this.codearea.removeMarkers(this.dest,this.lines,this.gutter);
 	}
     }
 

@@ -59,13 +59,12 @@ window.ChangeContentCommand = (function() {
 		for(var j=0; j< obj.length;j++){
 		  var actual = obj[j];
 		  self.previousContent[i][j]=$(actual).html();
-		  
 		  if(self.ccaction == "prepend"){
-		    $(actual).prepend($("div>>",self.content).clone());
+		    $(actual).prepend($("content",self.content).clone());
 		  }else if(self.ccaction == "append"){
-		    $(actual).append($("div>>",self.content).clone());
+		    $(actual).append($("content",self.content).clone());
 		  }else if(self.ccaction == "replace"){
-		    $(actual).html($("div>",self.content).clone());
+		    $(actual).html($("content",self.content).clone());
 		  }
 		  $(actual).html($(actual).html());
 		}
