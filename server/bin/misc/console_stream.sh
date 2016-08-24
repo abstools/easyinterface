@@ -12,7 +12,7 @@ fname="$outdir/$fncounter"
 
 echo $x > $fname
 l=0;
-while read -t 2 -r x; 
+while read -t 0.01 -r x; 
 do
     echo $x >> $fname
     ((l++))
