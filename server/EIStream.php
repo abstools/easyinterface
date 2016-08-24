@@ -26,7 +26,7 @@ class EIStream {
 	$empty = false;
 
 	$output_f .= $aux;
-	$output_f .= "\n";
+	$output_f .= "";
 
       }
       unlink($f);
