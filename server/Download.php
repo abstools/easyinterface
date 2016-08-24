@@ -29,7 +29,7 @@ if ( strlen($EI_ID)!=5 || preg_match($regexp_id,$EI_ID)){
   exit;
 }
 
-$EI_PATH = sys_get_temp_dir()."/easyinterface_";
+$EI_PATH = sys_get_temp_dir()."/ei/";
 $EI_EXEC = $EI_ID."/_ei_download/";
 
 // sanitize the file request, keep just the name and extension
