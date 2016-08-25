@@ -92,12 +92,14 @@
 
 $( function() {
 
- // for now we stop if we detect Safari browser
+ // - for now we stop if we detect Safari browser
  //
- if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') == -1) {
-    $("#ei_1").html("<span style='color: red; font-weight:bold;'>Safari browser is not supported yet</span>, please use Google Chrome, Firefox or Internet explorer.");
-  return;
-  }
+ //  Just tried in "Safari 9.1.2 (11601.7.7)" and it works fine -Samir
+ //
+ //if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+ //   $("#ei_1").html("<span style='color: red; font-weight:bold;'>Safari browser is not supported yet</span>, please use Google Chrome, Firefox or Internet explorer.");
+ // return;
+ // }
 
   var baseURI = document.baseURI;             
   var n = baseURI.lastIndexOf("clients/web");
