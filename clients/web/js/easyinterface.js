@@ -51,7 +51,8 @@ window.EasyInterface = (function() {
 	this.toolSelectHolder = this.holder.find("#toolselector");
 	this.outlineHolder = this.holder.find("#outline");
 	this.outlineButtonHolder = this.holder.find("#refreshoutline");
-
+	this.clearButtonHolder = this.holder.find("#clearanno");
+        this.upSectionHolder = this.holder.find("#up");
 	// create/installl the different widgets
 	this.initCmdEngine();
 	this.initCodeAreaWidget();
@@ -90,7 +91,7 @@ window.EasyInterface = (function() {
 		}
 	    } ).click(function() { self.helpsHolder.dialog( "open" ); } );
 
-	$( "#clearanno" ).button( 
+	this.clearButtonHolder.button( 
 	    {
 		icons: {
 		    primary: "ui-icon-tag"
@@ -479,11 +480,11 @@ window.EasyInterface = (function() {
 	initResizeEffect:
 	function() {
 	  var self = this;
-	  var RE = new ResizeEffect();
-	  RE.addHorizontalEffect("filemanager","codearea");
+	  var RE = new ResizeEffect({holder:self.holder});
+	  RE.addHorizontalEffect(self.filemanagerHolder,self.codeareaHolder);
 	  if(_ei.outline.active)
-	    RE.addHorizontalEffect("codearea","outline");
-	  RE.addVerticalEffect("up","console");
+	    RE.addHorizontalEffect(self.codeareaHolder,self.outlineHolder);
+	  RE.addVerticalEffect(self.upSectionHolder,self.consoleHolder);
 	},
 	removeOutline:
 	function(){
