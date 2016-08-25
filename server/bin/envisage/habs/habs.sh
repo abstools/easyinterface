@@ -18,7 +18,7 @@ echo "<eicommands>"
 
 olddir=`pwd`
 cd $HABSHOME
-./dist/build/habs/habs -o $outdir $files &> $outdir/habs.stderr
+./.cabal-sandbox/bin/habs -o $outdir $files &> $outdir/habs.stderr
 env HOME=$outdir cabal exec ghc -- --make $outdir/*.hs -main-is $mainprog &> $outdir/habs.stderr
 
 if [ $? == 0 ]; then
