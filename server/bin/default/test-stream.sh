@@ -5,24 +5,24 @@
 
 TEXTO='<p>My mother has <span style="color:blue">blue</span> eyes.</p>' 
 
-echo $TEXTO > $1/C1.tmp
+echo $TEXTO > $1/_ei_tmp/C1.tmp
 
 TEXTO=' <div style="background-color:black; color:white; padding:20px;"><h2>London</h2><p>London is the capital city of England. It is the most populous city in the United Kingdom, with a metropolitan area of over 13 million inhabitants.</p></div>'
 
-echo $TEXTO > $1/C2.tmp
+echo $TEXTO > $1/_ei_tmp/C2.tmp
 
 
 TEXTO='<h1>My <span style="color:red">Important</span> Heading</h1>'
 
-echo $TEXTO > $1/C3.tmp
+echo $TEXTO > $1/_ei_tmp/C3.tmp
 
 TEXTO='{"f-titles":["X","Y1","Y2"],"y-title":"test","groups":["Group 5","Group 6","Group 7"],"labels":["Label 1","Label 99"],"title":"uoo","values":[[22,0,1],[23,1,1],[24,1,1],[25,1,1],[26,0.9466666666666667,1]]}'
 
-echo $TEXTO > $1/G1.tmpgh
+echo $TEXTO > $1/_ei_tmp/G1.tmpgh
 
 
 ./default/stream.sh $1 &> /dev/null &
-echo $! > $1/pid
+echo $! > $1/_ei_stream/pid
 
 
 echo "<eiout>"

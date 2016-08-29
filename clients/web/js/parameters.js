@@ -53,15 +53,7 @@ window.Parameters = (function() {
 	    this.accord.append("<h3 id='label-"+tagId+"'>"+
 			       label+"</h3><div id='"+tagId+"'></div>");
 	    this.accord.accordion( "refresh" );
-/*	    this.accord.find("#"+tagId).append("<div><div style='float: left;'><button id='def-"+tagId+
-					       "'>b1</button><br/><br/></div></div>");
-	    $("#def-"+tagId).button({
-		label: "Restore Default Values"
-	    });
-	    $("#def-"+tagId).click(function(){
-		self.restoreDefaultValues(sectionId);
-	    });
-*/
+
 	    this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button>");
 
 	  $("#btn-profile-"+tagId).button({
@@ -96,7 +88,7 @@ window.Parameters = (function() {
 	  selector.append("<option value='default'>Default</option>");
 
 
-	  $(profiles).find("> ").each(
+	  $(profiles).find("> profile").each(
 	    function() {
 	      var profileValues = self.profileValuesFromXML(this);
 	      var profileName = $(this).attr("name");
@@ -310,7 +302,7 @@ window.Parameters = (function() {
 	profileValuesFromXML:
 	function(profile){
 	  var profileValue = {};
-	  $(profile).find("> parameter").each(function(){
+	  $(profile).find("> setparamvalue").each(function(){
 	    var name = $(this).attr("name");
 	    var i = 0;
 
