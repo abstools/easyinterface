@@ -6,7 +6,7 @@ MANPDFFILE = $(patsubst %,%.pdf,$(MANDOC))
 
 TEXCODE = $(patsubst code/%.cc, code/%.tex, $(wildcard code/*.cc))
 
-man:  $(MANPDFFILE) 
+all:  $(MANPDFFILE) 
 
 $(MANDVIFILE): $(TEXCODE) ${DOCS} 
 $(MANPDFFILE): $(TEXCODE) ${DOCS} 
