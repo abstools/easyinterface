@@ -1,0 +1,185 @@
+{% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
+}
+
+\chapter{Installation Guide}
+\label{ch:installation}
+
+In this appendix we explain how to install the server and how to use the
+different clients.
+
+\section{Downloading \ei}
+\label{ch:installation:downloading}
+
+We assume that you have already downloaded%
+\footnote{\url{http://github.com/abstools/easyinterface}} 
+%
+\ei into a directory called \lst{easyinterface}, and that all files
+inside this directory have read and execute permissions to
+\lst{others} which can be done, for example, in Unix based systems
+by executing:
+
+\medskip
+\begin{lstlisting}
+> chmod -R 755 easyinterface
+\end{lstlisting}
+
+\medskip
+\noindent
+The purpose of this is to make all files visible to the
+\lst{Apache\ Web\ Server} on which the \ei server runs.
+This is (most likley) not required if you are using Microsoft Windows.
+
+\section{Installing \ei Server}
+\label{ch:installation:installing-server}
+
+The installation consists in installing an \lst{Apache\ Web\ Server}
+(with \lst{PHP} > 5.0 enabled) and then configuring it to recognize the
+\lst{easyinterface} directory. If you already have Apache installed
+and the \lst{easyinterface} directory is visible then no further
+configuration is required, simply visit the corresponding address (e.g.,
+if it is placed in the \lst{public_html} directory, visit
+\url{http://localhost/~user/easyinterface}). Otherwise follow the steps
+below depending on which operating system you are using, \lst{Linux},
+\lst{OS X} or \lst{Windows}.
+
+\subsection{Linux}\label{ch:installation:installing-server:linux}
+
+Installing Apache depends on the Linux distribution you are using, for
+example, if you are using Ubuntu you can install it by executing the
+following in a shell:
+
+\medskip
+\begin{lstlisting}
+> sudo apt-get update
+> sudo apt-get install apache2
+> sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt
+> sudo service apache2 start
+\end{lstlisting}
+
+\medskip
+\noindent
+Once installed test that it works correctly by visiting
+\url{http://localhost} and test that PHP works correctly by visiting
+\url{http://localhost/info.php} (this address might be different from
+one distribution to another). Next, to make the \lst{easyinterface}
+directory visible, edit \lst{/etc/apache2/mods-enabled/alias.conf}
+and add the following lines:
+
+\medskip
+\begin{lstlisting}
+  Alias /ei "/path-to/easyinterface"
+
+  <Directory "/path-to/easyinterface">
+     Options FollowSymlinks MultiViews Indexes IncludesNoExec
+     AllowOverride All
+     Require all granted
+  </Directory>
+\end{lstlisting}
+\medskip
+\noindent
+To activate this change you need to restart Apache by executing the
+following in a shell:
+\medskip
+\begin{lstlisting}
+> sudo service apache2 restart
+\end{lstlisting}
+
+\medskip
+\noindent
+Now visit \url{http://localhost/ei} to check that \ei works
+correctly. If no error message is shown, you can proceed to the next
+section and start using the Web client.
+
+\subsection{OS X}\label{ch:installation:installing-server:os-x}
+
+OS X typically comes with Apache installed, and all you need is to
+configure it to recognize the \lst{easyinterface} directory. To do
+so, edit \lst{/etc/apache2/httpd.conf} add the following lines:
+
+\medskip
+\begin{lstlisting}
+  Alias /ei "/path-to/easyinterface"
+
+  <Directory "/path-to/easyinterface">
+     Options FollowSymlinks MultiViews Indexes IncludesNoExec
+     AllowOverride All
+     Require all granted
+  </Directory>
+\end{lstlisting}
+
+\medskip
+\noindent
+To activate this change you need to restart Apache by executing the
+following in a shell:
+
+\medskip
+\begin{lstlisting}
+> sudo apachectl restart
+\end{lstlisting}
+
+\medskip
+\noindent
+You can also restart Apache using
+\lst{System Preferences > Sharing > Web Sharing}.
+Now visit \url{http://localhost/ei} to check that \ei works
+correctly.
+
+\subsection{Microsoft Windows}\label{ch:installation:installing-server:windows}
+
+Apache Web Server for Microsoft Windows is available from a number of
+third party vendors.%
+\footnote{\url{http://httpd.apache.org/docs/current/platform/windows.html\#down}}
+We have tested \ei using WampServer.%
+\footnote{\url{http://www.wampserver.com/}}
+
+Install the WampServer, for example in \lst{c:\wamp}, and then edit
+the configuration file
+\lst{c:\wamp\bin\apache\apache.X.Y.Z\httpd.conf} and add the following
+lines to make the \lst{easyinterface} directory visible:
+
+\medskip
+\begin{lstlisting}
+  Alias /ei "\path-to\easyinterface"
+
+  <Directory "\path-to\easyinterface">
+     Options FollowSymlinks MultiViews Indexes IncludesNoExec
+     AllowOverride All
+     Require all granted
+  </Directory>
+\end{lstlisting}
+
+\medskip
+\noindent
+Next restart the WampServer by executing
+
+\medskip
+\begin{lstlisting}
+c:\wamp\wampserver.exe -restart
+\end{lstlisting}
+
+\medskip
+\noindent
+Now visit \url{http://localhost/ei} to check that \ei works
+correctly. If you have permission problems when accessing this address,
+try to remove the file \lst{easyinterface/.htaccess}.
+
+By default the server is configured to execute the demo applications
+in a Unix based operating system, for using them in Windows you should
+copy the configuration file
+\lst{$\mbox{server/config/eiserver.default.win.cfg}$} to
+\lst{$\mbox{server/config/eiserver.cfg}$}.
+
+The demo applications are simple bash scripts, and thus you need to
+install \href{http://win-bash.sourceforge.net/}{win-bash} if you want to
+use them. To do so, simply download the corresponding \lst{zip} file
+and extract it in \lst{c:\bash} (it is important to
+place it in \lst{c:\bash} since the configuration
+files use \lst{c:\bash\bash.exe} to
+execute the bash scripts).
+
+\section{Installing and Using \ei Clients}
+\label{ch:installation:installing-clients}
+
+The Web client can be used by visiting
+\url{http://localhost/ei/clients/web}. 
+

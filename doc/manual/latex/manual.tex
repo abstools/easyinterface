@@ -1,0 +1,88 @@
+\documentclass[12pt,a4paper,twoside,openany]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{fourier}
+\usepackage{inconsolata}
+\usepackage{marginnote}
+\usepackage{texlinks}
+\usepackage{adjustbox}
+\usepackage{mdframed}
+\usepackage{caption}
+\usepackage{xspace}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=true,
+ breaklinks=false,pdfborder={0 0 0},backref=false,colorlinks=false]
+ {hyperref}
+\usepackage[textsize=footnotesize]{todonotes}
+%\usepackage{showframe}
+\usepackage{tabularx}
+\usepackage{lipsum}
+
+
+%% \usepackage{titlesec}
+%% \titleformat{\chapter}[hang]{\Huge}{\thechapter\hspace{10pt}\textcolor{gray}{|}\hspace{10pt}}{0pt}{}
+%% \titlespacing*{\chapter}{0cm}{0cm}{1cm}
+
+\usepackage[margin=1in,marginparwidth=60pt]{geometry}
+
+\usepackage{paralist}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage{amsthm}
+\newtheorem{theorem}{THEOREM}[chapter]
+\newtheorem{example}[theorem]{EXAMPLE}
+
+\usepackage{color}
+\usepackage{xcolor}
+
+%%% Code Listings
+\usepackage{listings}
+\usepackage{pxfonts}
+
+\input{macros}
+
+\begin{document}
+
+\setcounter{page}{-1}
+\pagenumbering{roman}
+
+
+\input{titlepage}
+
+\input{abstract}
+\input{preface}
+
+%% \listoffigures
+%% \listoftables
+\tableofcontents
+\clearpage
+
+\pagenumbering{arabic}
+
+\input{introduction}
+\input{architecture}
+\input{quickguide}
+\input{server}
+\input{clients}
+\input{output}
+\input{evaluation}
+\input{conclusions}
+
+\newpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\input{installation}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End:

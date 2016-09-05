@@ -1,0 +1,261 @@
+{% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
+}
+
+\chapter{Evaluation}
+\label{ch:evaluation}
+
+The \ei toolkit has been successfully applied in the context of the
+\envisage~\cite{envisage} project, where the tools developed in the
+project have been installed on an \ei server, and they are accessible
+via a web-client that is available at following address:
+\url{http://www.abs-models.org}.
+
+The integration effort was extremely low in general: a tool with a
+basic GUI could be integrated in few minutes. In some cases, where the
+\ei output language has been used, the effort was higher but
+negligible when compared to developing GUIs from scratch.
+%
+We note that in the case of \envisage, the integration was expected to
+be more costly since \ei was developed in parallel to those
+tools. Using it for future projects should require even less effort.
+
+In what follows we briefly describe each tool, and explain which parts
+of the \ei output language were used.
+
+\section{Tools of the \envisage Project}
+\label{sec:evaluation:envisage}
+
+\tooldesc{Resource Analysis (SACO)}%
+{%
+%
+  A static analysis tool for inferring the resource usage of \abs
+  programs. It is parametric on the notion of \emph{resource} to
+  measure (e.g., memory, number of executed instructions, etc.), and
+  can infer different kinds of cost (i.e., usage) such as parallel
+  cost, peak cost, sequential cost, etc.
+%
+}
+{%
+%
+  For more details see~\cite{rasaco,Albert2014}.
+%
+}
+{%
+%
+  It uses the \ei output language to view the output graphically,
+  e.g., adding markers, drawing graphs using \lst{SVG}, defining
+  actions to view resource usage per method or per groups of objects,
+  etc.
+%
+}
+
+\tooldesc{Resource Analysis (SRA)}
+{%
+%
+  A static analysis tool that computes upper bounds on virtual machine
+  usage in a dialect of \abs, called \textsf{vml}, which has explicit
+  acquire and release operations of virtual machines.
+%
+}
+{%
+%
+  For more details see~\cite{rasra}.
+%
+}
+{%
+%
+  It uses the \ei output language to view the different parts of the
+  result in different consoles.
+%
+}
+
+\tooldesc{May-Happen-in-Parallel Analysis (SACO)} 
+{%
+%
+A static analysis tool that infers a set of pairs of instructions that
+may happen in parallel (MHP) in any execution of a given \abs
+program. This is a very important analysis on which other analysis of
+concurrent programs build.
+%
+}
+{%
+%
+For more details see~\cite{mhpsaco1,mhpsaco2,mhpsaco3,mhpsaco4}.
+%
+}
+{%
+%
+  It uses the \ei output language to view the output graphically, in
+  particular, it defined \emph{code line actions} such that when
+  clicking on a line, it highlights other lines that might happen in
+  parallel with it.
+%
+}
+
+\tooldesc{Deadlock Analysis (SACO)}
+{%
+%
+  A static analysis tool for proving deadlock freedom for \abs
+  programs. The crux of the analysis is that it integrates the MHP
+  information within dependency graph in order to discard unfeasible
+  cycles that otherwise would lead to false positives. It is both
+  precise and scalable.
+%
+}
+{%
+%
+For more details see~\cite{dasaco}.
+%
+}
+{%
+%
+  It uses the \ei output language to view the output graphically, in
+  particular, if there is a deadlock it highlight lines involved in
+  the potential deadlock.
+%
+}
+
+\tooldesc{Deadlock Analysis (DSA)}
+{%
+%
+  A modular static analysis tool for proving deadlock freedom for \abs
+  programs~\cite{johnsen10fmco}, that is based on \emph{behavioral types}.
+%
+}
+{%
+%
+For more details see~\cite{dadsa,Giachino2015}.
+%
+}
+{%
+%
+  It makes a minimal use of the \ei output language to view the output
+  or errors in the console.
+%
+}
+
+
+\tooldesc{ABS Smart Deployer}
+{%
+%
+  A tool that first processes the original \abs program to retrieve
+  relevant cost annotation and deploy annotations defined in an ad-hoc
+  domain specific declarative language. For each annotations, Smart
+  Deployer relies on the Zephyrus2 configuration optimizer to
+  concretely compute the objects that need to be deploy and then it
+  generates a new \abs class that specifies the deployment steps to
+  reach the desired target. This class can be used to trigger the
+  execution of the deployment, and to undo it in case the system needs
+  to downscale directly from the \abs code.
+%
+}
+{%
+%
+For more details see~\cite{abssd}.
+%
+}
+{%
+%
+  It makes a minimal use of \ei output language to view the output or
+  errors in the console.
+%
+}
+
+
+\tooldesc{ABS ErLang Simulator}
+{%
+%
+A simulator for \abs programs that is based on compiling \abs programs
+to corresponding ErLang programs.
+%
+}
+{%
+%
+For more details see~\cite{abses}.
+%
+}
+{%
+%
+  It uses the streaming and download features.  It also uses the \ei
+  output language to view the output graphically, e.g., resource
+  consumption graphs.
+%
+}
+
+\tooldesc{ABS-Haskell Compiler Simulator}
+{%
+%
+  A tool that compiles \abs programs to corresponding Haskell code,
+  and then executes them and stream the output back to the client.
+%
+}
+{%
+%
+For more details see~\cite{abshcs}.
+%
+}
+{
+%
+  It uses the streaming feature. 
+%
+}
+
+\tooldesc{Syntax/Type Checker}
+{%
+%
+A tool that checks the syntax and types of \abs programs.
+%
+}
+{%
+%
+For more details see~\cite{stc}.
+%
+}
+{%
+%
+  It uses the \ei output language to mark lines that have syntax or
+  type errors.
+%
+}
+
+
+\tooldesc{Test-Case Generation (aPET)} 
+{%
+%
+  A tool for static systematic testing for \abs which includes
+  state-of-the-art partial order reduction and deadlock-guided testing
+  techniques.
+%
+}
+{%
+%
+For more details see~\cite{apet,AlbertGI16,AlbertGI16a,AlbertAGZR14,AlbertAGM15,WBdBGZdGHMS14}.
+%
+}
+{%
+%
+  It uses the \ei output language to view the output graphically,
+  e.g., drawing execution traces using \lst{SVG} and adding test units
+  to the file-manager.
+%
+}
+
+\tooldesc{Systematic Testing (SYCO)}
+{%
+%
+  A tool for dynamic systematic testing for \abs which includes
+  state-of-the-art partial order reduction and deadlock-guided testing
+  techniques.
+%
+} 
+{%
+%
+For more details see~\cite{syco,AlbertGI16,AlbertGI16a,AlbertAGZR14,AlbertAGM15,WBdBGZdGHMS14}.
+%
+}
+{%
+%
+  It uses the \ei output language to view the output graphically, draw
+  execution traces using \lst{SVG}, etc.
+%
+}
