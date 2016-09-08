@@ -1,0 +1,195 @@
+{% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
+}
+
+\chapter{Conclusions, Related and Future Work}
+\label{ch:conclusions}
+
+
+In this work, we have addressed the problem of \emph{easily
+  constructing} GUIs for research prototype tools, and integrating
+them in common environments. This is crucial since
+%
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+%
+\item it reduces the effort dedicated to building GUIs, which is
+  usually tedious and complicated, and thus the main effort can be
+  dedicated to improving the functionality of the tools; and
+%
+\item it makes the tools continuously available to corresponding
+  research communities since modifying the GUI when a tool changes, if
+  needed, is immediate, and thus the dissemination of the
+  corresponding research is improved as well --- note that research
+  prototype tools are expected to change continuously, for example,
+  during a research project.
+%
+\end{inparaenum}
+
+Clearly, attempting to significantly reduce the effort required for
+building GUIs in general is not feasible, since tools produce
+different outputs and receive different input. However, as we have
+observed in this work, this become feasible when focusing on a set
+of related tools that have common input and output aspects. In this
+work, we have focused on the tools developed in the
+\envisage~\cite{envisage} project which include: static analyzers,
+test-case generators, compilers, simulators, etc. We have developed a
+toolkit called \ei that \emph{extremely simplifies} the way GUIs are
+constructed for such tools, and the way they are integrated in common
+environments as well.
+
+
+\ei is a toolkit that consists of two main components:
+%
+\begin{inparaenum}[(1)]
+%
+\item a \emph{server} where tools can be installed by providing simple
+  configuration files, and then can be accessed as services using some
+  protocol that we have defined; and
+%
+\item a \emph{client}, in the form of a web-based development
+  environment, that makes it easy to communicate with the server side
+  to execute a tool.
+%
+\end{inparaenum}
+%
+An important feature of the design of \ei is that once a tool is
+installed on an \ei server, it will automatically appear in all \ei
+clients that connect to this server, without any additional
+effort. Thus, this design allows installing new tools in a common
+environment with minimal effort, i.e., in few minutes.
+
+Another important outcome of this work is the \ei output
+language. It is text-based language that tools can use to present
+their output graphically, if the corresponding client support it.
+%
+Importantly, this language does not require any knowledge on GUI or
+Web programming. The advantage of using this output language is that
+it is interpreted by all \ei clients equally. Thus, the tool is
+modified once to use this language and the effect will take place in
+all clients (including ones that will be developed in the future).
+
+The \ei toolkit has been successfully used in the context of the
+\envisage project, where the tools developed by the different partners
+has been integrated in a common web-based environment. Some of the
+tools use the \ei language as well, and others, whose output is very
+simple, do not.
+
+\section{Future Work}
+
+We have identified several future work directions, that would make \ei
+a more powerful toolkit for building GUIs for research prototypes:
+
+\begin{itemize}
+
+\item Generating output in the \ei output language is currently done
+  by directly printing the corresponding XML on the standard output.
+  %
+  It would be useful to provide libraries, for different programming
+  languages, that abstract this level away. Namely, tools will not
+  print directly but rather would use methods/objects of such
+  libraries to generate the output, which in turn will generate the
+  corresponding XML.
+  %
+  Note that we have such a library for Prolog, which we use in tools
+  marked by \lst{SACO} in Section~\ref{sec:evaluation:envisage}.
+
+\item Developing more \ei clients, as the ones describes in
+  Section~\ref{sec:clients:other}, would make the toolkit adequate for
+  different scenarios. For example, an Eclipse plugin would allow
+  users to continue using their preferred development environment
+  instead of learning to use a new one.
+
+\item Developing a simpler web-client that allows to inline an \ei
+  environment inside HTML documents. This is useful for writing
+  interactive tutorials for example. Currently we have a simple
+  support for this as described in
+  Section~\ref{sec:clients:web:other}.
+
+\item Improving the handling of sessions (in the \ei server) to
+  provide tools with and easy way to store and reload sessions. To
+  take full advantage of this feature, the \ei output language should
+  be also extended to allow new kind of interaction that allows
+  specialized callbacks to the corresponding tools.
+
+\end{itemize}
+
+\noindent
+We plan to continue the work on \ei in the near future following the
+above directions, independently from the \envisage project.
+
+\section{Related Work}
+
+There are many powerful web-based IDEs that allow developers to
+develop their code online, and, in addition, some can be customized to
+connect external tools. In this section we overview some closely
+related ones.
+
+\lst{Orion}~\cite{orion} is a web-based IDE developed by the Eclipse
+Foundation.\footnote{\url{http://www.eclipse.org}}
+%
+It provides some powerful features like connecting to \texttt{git}
+repositories, syntax-highlighting, etc. Once can use it to develop and
+compile code in several programming languages like C, C++ or Java.
+%
+It also includes some plug-ins that can be activated like
+\emph{web-tools support} for editing \lst{HTML} and \lst{CSS},
+\emph{JSON editor} for editing \lst{JSON} records, etc.
+
+%% Ground Coding
+%%
+\lst{Coding Ground}~\cite{codingground} is a web-based IDE developed
+by TutorialsPoint.\footnote{\url{http://www.tutorialspoint.com}}
+%
+It was developed with the main objective of adding exercises to their
+tutorials, but since then it has evolved into an IDE where developers
+can edit, compile, execute, and share their code.
+%
+It supports more than 90 programming languages, but only one at a
+time. It does not allow integrating external tools.
+
+%% Cloud9
+%%
+\lst{Cloud9}~\cite{cloud9} is a web-based IDE that supports hundreds
+of programming languages, and allows creating collaborative workspaces
+with multiple real-time edition.
+%
+It has some advanced features like code completion, name refactoring,
+etc. It also provides support for using repositories like
+\texttt{git}, \texttt{mercurial} and \texttt{FTP} servers.
+%
+
+%% CODEBOARD
+%
+\lst{Codeboard}~\cite{codeboard} is web-based IDE to teach programming
+in the classroom. One can easily create and share exercises with
+students, analyze and inspect students' submissions, etc. One can
+customize it to connect external tools, however, their output can be
+shown only on the console area.
+
+
+The IDEs described above are very powerful, but focused on developing
+code. They do not address most of the objectives that we stated in
+Section~\ref{sec:intro:objectives}, in particular
+%
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+\item they do not provide an easy way to integrate external tools; and
+\item they do not provide a simple way to produce output or code
+  annotations as in our output language that is described in
+  Chapter~\ref{ch:eiol}.
+\end{inparaenum}
+
+%% RISE4FUN
+%
+An exception is the tool \lst{rise4fun}~\cite{rise4fun}, which is
+developed by Microsoft to allow making, among others, program analysis
+tools available online.
+%
+However, it is far simpler than \ei: 
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+\item tools are not integrated in a common environment, but rather
+  each has its own page; 
+\item the output can be shown only in a console area; and
+\item tools cannot easily receive parameters.
+\end{inparaenum}
+
+
+
