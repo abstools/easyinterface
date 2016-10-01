@@ -411,7 +411,6 @@ class EIApps {
     //echo $cmdline; 
     $outputLines = array();
     $sb_timeout = EIApps::get_timeout($sandboxProps);
-    $sb_timeclean = EIApps::get_timeclean($sandboxProps);
     $sb_logpath = EIApps::get_logpath($sandboxProps);
     $sb_maxproc = EIApps::get_maxproc($sandboxProps);
     $launcher = "./launcher.sh ".$sb_timeout." ".$sb_maxproc." ".$sb_logpath." ".$cmdline;
@@ -419,9 +418,6 @@ class EIApps {
     exec($launcher, $outputLines);
 
     $output =  implode("\n", $outputLines);
-//    $cleaner = "./clean.sh ".$sb_timeclean." ".$root_str." ".$sb_logpath. " > /dev/null 2>/dev/null &";
-
-//    exec($cleaner);
     return $output;
   }
 
@@ -430,14 +426,6 @@ class EIApps {
       return 30;
     } else {
       return $sandboxProps["timeout"];
-    }
-  }
-
-  private static function get_timeclean($sandboxProps){
-    if(!array_key_exists("timeclean",$sandboxProps)){
-      return 30;
-    } else {
-      return $sandboxProps["timeclean"];
     }
   }
 
