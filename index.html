@@ -85,7 +85,7 @@ $.post("server/eiserver.php",
 	 var title  = $(this).find("appinfo").find("title").text();
 	 var acronym= $(this).find("appinfo").find("acronym").text();
 	 var desc   = $(this).find("appinfo").find("short").text();
-	 $("#app-list").append("<li alt='"+desc+"'>("+acronym+") "+title+"</li>");
+	 $("#app-list").append("<li>("+acronym+") "+title+"<ul><li>"+desc+"</li></ul></li>");
        });
 
    }
