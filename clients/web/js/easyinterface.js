@@ -59,7 +59,7 @@ window.EasyInterface = (function() {
 	this.initFileManagerWidget();
 	this.initParametersWidget();
         this.initHelpWidget();
-	this.initGeneralSetting();
+//	this.initGeneralSetting();
 	this.initConsoleWidget();
 	this.initToolSelectorWidget();
 	this.initOutputManager();
