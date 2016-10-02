@@ -69,8 +69,32 @@ $.post("server/eiserver.php",
 
 
 
-});
+// get app list
+$.post("server/eiserver.php",
+  {
+    eirequest: { "command" : "app_info", "app_id" : "_ei_all" }
+  })
+ .done( function(data) {
+   var ap = $(jQuery.parseXML(data));
+   if(ap.find("ei_error").length) {
+     $("#eiserver").html(ap.find("ei_error").text());
+   } else {
+     $("#app-list").html("");
+     ap.find("ei_response").find("apps").find("app").each( 
+       function() {
+	 var title  = $(this).find("appinfo").find("title").text();
+	 var acronym= $(this).find("appinfo").find("acronym").text();
+	 var desc   = $(this).find("appinfo").find("short").text();
+	 $("#app-list").append("<li alt='"+desc+"'>("+acronym+") "+title+"</li>");
+       });
 
+   }
+ })
+ .error( function(data) {
+   $("#echo").html(data);
+ });
+});
+ 
 </script>
 </head>
 
@@ -99,6 +123,11 @@ recommended to read Chapter 2 of the <a href="docs/manual.pdf">User
 Manual</a>, which explains how to integrate your applications in
 EasyInterface.
 </p>
+
+<p>This server contains the following tools:
+  <ul id="app-list"><li>No visible tools.</li></ul>
+</p>
+
 
 </body>
 
