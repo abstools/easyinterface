@@ -33,6 +33,13 @@ h1 {
 	color: #3B3B3B;
 	font-size: 1.3em;
         font-weight: bold;
+ }
+ 
+ ul#app-list li {
+   list-style-type: none;
+    background: #dddddd;
+   margin: 5px 10px 5px -20px;
+   padding: 2px;
 }
 
 </style>
@@ -85,7 +92,7 @@ $.post("server/eiserver.php",
 	 var title  = $(this).find("appinfo").find("title").text();
 	 var acronym= $(this).find("appinfo").find("acronym").text();
 	 var desc   = $(this).find("appinfo").find("short").text();
-	 $("#app-list").append("<li>("+acronym+") "+title+"<ul><li>"+desc+"</li></ul></li>");
+	 $("#app-list").append("<li><b>("+acronym+") "+title+"</b><ul><li>"+desc+"</li></ul></li>");
        });
 
    }
