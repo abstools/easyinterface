@@ -68,7 +68,7 @@ class EIStream {
   }
 
   static function path($id){
-    $aux = sys_get_temp_dir()."/ei/".$id;
+    $aux = sys_get_temp_dir()."/ei/ei_".$id;
     $dir = str_replace("\\", "/", $aux);
     unset($aux);
     return $dir."/_ei_stream/";

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-timeclean=$1
-tmpdir=$2
-logfile=$3
+MIN=$(($1 * 60))
 
-sleep $timeclean
-rm -rf $tmpdir && echo "removed $tmpdir" >> $logfile || echo "ERROR: can not remove $tmpdir" >> $logfile
+find /tmp/ei/ -name "ei_*" -amin $MIN -type d -print -exec rm -rf {}/ \; 2> /dev/null
+
+find /tmp/ei/sessions/ -name "*" -amin $MIN -type d -print -exec rm -rf {}/ \; 2> /dev/null
+
