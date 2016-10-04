@@ -35,4 +35,4 @@ code/%.tex: code/%.cc
 #	ps2pdf -dMaxSubsetPct=100 -dCompatibilityLevel=1.2 -dSubsetFonts=true -dEmbedAllFonts=true $<
 
 clean:
-	@rm -f *.bbl *.blg *.dvi *~ *.ps *.aux *.log  *.bak *.toc *.lof *.lot *.out *.tdo
+	@rm -f *.bbl *.blg *.dvi *~ *.ps *.aux *.log  *.bak *.toc *.lof *.lot *.out *.tdo manual.pdf
