@@ -5,17 +5,13 @@ Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
 Order deny,allow
 Deny from all
 
-<Files "./index.html">
+
+<Files "eiserver.php">
 Allow from all
 Satisfy Any
 </Files>
 
-<Files "./">
-Allow from all
-Satisfy Any
-</Files>
-
-<Files "./INSTALL.md">
+<Files "Download.php">
 Allow from all
 Satisfy Any
 </Files>
