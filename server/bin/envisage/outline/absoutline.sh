@@ -8,9 +8,9 @@ if [ $? == 1 ]; then
     echo "<eiout>"
     echo "<eicommands>"
     echo "<printonconsole consoleid='Error'>"
-    echo "<content format='text'>"
+    echo "<content format='text'><![CDATA[ There are some errors!"
     cat /tmp/absoutline.stderr
-    echo "</content>"
+    echo "]]></content>"
     echo "</printonconsole>"
     echo "<dialogbox boxtitle='Execution Error' boxwidth='400'>"
     echo "<content format='html'>"
