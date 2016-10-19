@@ -36,7 +36,7 @@ window.Helps = (function() {
 	function() {
 	    var self = this;
 
-	    $(this.helpsHolder).append("<div><p>Below you find the helps of the different section</p><div style='height: 200px;' id='"+this.helpId+"'></div></div>");
+	    $(this.helpsHolder).append("<div><p>Below you find the helps of the different tools</p><div style='height: 200px;' id='"+this.helpId+"'></div></div>");
 	    this.accord = $(this.helpsHolder).find( "#"+this.helpId ).accordion({
 	        collapsible: true,
 	        heightStyle: "content",

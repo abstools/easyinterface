@@ -36,7 +36,7 @@ window.Parameters = (function() {
 	function() {
 	    var self = this;
 
-	    $(this.paramsHolder).append("<div><p>Below you find the parameters of the different section</p><div style='height: 200px;' id='"+this.paramsId+"'></div></div>");
+	    $(this.paramsHolder).append("<div><p>Below you find the parameters of the different tools</p><div style='height: 200px;' id='"+this.paramsId+"'></div></div>");
 	    this.accord = $(this.paramsHolder).find( "#"+this.paramsId ).accordion({
 	        collapsible: true,
 	        heightStyle: "content",
