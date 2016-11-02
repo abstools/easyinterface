@@ -1,46 +1,42 @@
 #! /bin/bash
 
 . envisage/envisage_settings.sh
-. default/parse_params.sh
+. misc/parse_params.sh
 
-# use minizinc 1.6 that is assumed to be stored in $MAINGENHOME/minizinc-1.6/bin
-PATH=$MAINGENHOME/minizinc-1.6/bin:$PATH
+execroot=$(getparam "execroot")
+files=$(getparam "files")
+outdir=$execroot/_ei_tmp
 
-abs=""
-spec=""
-json=""
+file=""
+orderedfiles=""
 
-for f in $files 
+for f in $files
 do
-	ext=${f##*.}
-	if [ $ext = "abs" ]; then
-		abs=$f
-	elif [ $ext = "spec" ]; then
-		spec=$f
-	elif [ $ext = "json" ]; then
-		json=$f
-	fi;
+    grep  "\[[\ ]*SmartDeploy[\ ]*:" $f > /dev/null
+    if [ $? == 0 ]; then
+	file=$f
+	orderedfiles="$f $orderedfiles"
+    else
+	orderedfiles="$orderedfiles $f"
+    fi
 done
 
+echo "<eiout>"
+echo "<eicommands>"
+echo "<printonconsole>"
+echo "<content format='text'><![CDATA["
 
-if [ !  -z  $abs  ] && [ !  -z $spec ] && [ !  -z $json ]; then
-	python $MAINGENHOME/abs_deployer/abs_deployer.py $abs $spec $json
-
+if [ $file == "" ]; then
+    echo "Not found"
 else
-	echo "<eiout>"
-	echo "<eicommands>"
-	echo "<dialogbox outclass='error' boxtitle='Error!'>"
-	echo " <content format='html'>"
-	echo
-	echo " <ul>"
-	echo "<li><span style='color: red'>Three input files (.abs, .spec, and .json) are required.</span></li>"
-	echo "</ul>"
-	echo "</content>"
-	echo "</dialogbox>"
-	echo "</eicommands>"
-	echo "</eiout>"
+    python $SMARTDEPLOYERHOME/abs_deployer/abs_deployer.py $orderedfiles 2> $outdir/smartdeployer.stderr
+    if [ ! $? == 0 ]; then
+	cat $outdir/smartdeployer.stderr
+    fi
 fi
 
-
-
+echo "]]></content>"
+echo "</printonconsole>"
+echo "</eicommands>"
+echo "</eiout>"
 
