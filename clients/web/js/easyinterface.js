@@ -58,7 +58,7 @@ window.EasyInterface = (function() {
 	this.initCodeAreaWidget();
 	this.initFileManagerWidget();
 	this.initParametersWidget();
-        this.initHelpWidget();
+        this.initHelpWidget(options.generalHelp);
 //	this.initGeneralSetting();
 	this.initConsoleWidget();
 	this.initToolSelectorWidget();
@@ -221,7 +221,8 @@ window.EasyInterface = (function() {
 
 	     //
 	initHelpWidget:
-	function() {
+	function(generalHelp) {
+	  
 	    var self = this;
 	    this.helps = new Helps(this.helpsHolder, {});
 
@@ -246,7 +247,10 @@ window.EasyInterface = (function() {
 		    }
 		}
 	    });
-
+	  if(generalHelp){
+	    var general = $.parseXML(generalHelp);
+	    this.helps.addSection("General Help", "generalhelp",$(general).find("apphelp"));
+	  }
 	},
 
 	//

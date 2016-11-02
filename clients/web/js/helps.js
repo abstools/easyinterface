@@ -5,7 +5,6 @@ window.Helps = (function() {
     var helpsId = 0;
 
     function Helps(place,options) {
-
 	helpsId++;
 	
 	this.helpId = "OPTS-"+helpsId;
@@ -28,7 +27,7 @@ window.Helps = (function() {
 	
 	//
 	setOptions: 
-	function() {
+	function(options) {
 	},
 
 	//
@@ -43,6 +42,7 @@ window.Helps = (function() {
 	        active: 0,
 		icons: { header: "ui-icon-circle-arrow-e", activeHeader: "ui-icon-circle-arrow-s" }
 	    });
+
 	},
 
 	//
@@ -63,7 +63,6 @@ window.Helps = (function() {
 
 	    this.sectionInfoById[sectionId] = sectionInfo;
 	    this.secId++;
-
 	    if ( XML && XML.length > 0 ) this.addHelpFromXML(sectionId,XML);
 	    
 
@@ -75,10 +74,12 @@ window.Helps = (function() {
 	  var sectionInfo = this.sectionInfoById[sectionId];
 	  var outclass =  help.attr( _ei.outlang.syntax.outclass ) || "info";
 	  var contentXML = help.find("> "+_ei.outlang.syntax.content);
+	  
 	  if (contentXML.length ==0){
 	    help.append($("<content format='text'>No Help</content>"));
 	    contentXML =  help.find("> "+_ei.outlang.syntax.content);
 	  }
+
 	    var content = new DocContent({ 
 	      content: contentXML,
 	      outclass: outclass
