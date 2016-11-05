@@ -11,11 +11,7 @@ echo "<eicommands>"
 
 java -jar $ABSFRONTEND $root ${@:2} 2> $tmpdir/abssyntaxchecker.stderr
 
-if [ $? == 0 ]; then
-    echo "<printonconsole>"
-    echo "<content format='text'>Your program compiles correctly!!</content>"
-    echo "</printonconsole>"
-else
+if [ -s  $tmpdir/abssyntaxchecker.stderr ] ; then
     echo "<printonconsole>"
     echo "<content format='text'>There are some compilation errors! See markers in the code area!!</content>"
     echo "</printonconsole>"
@@ -29,6 +25,10 @@ else
     }
 }
 '
+else
+    echo "<printonconsole>"
+    echo "<content format='text'>Your program compiles correctly!!</content>"
+    echo "</printonconsole>"
 fi
 
 echo "</eicommands>"
