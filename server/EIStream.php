@@ -51,7 +51,7 @@ class EIStream {
     if($aux === FALSE)
       return "<ei_stream state='unknown' />";
     exec("bin/misc/killproc.sh ".$aux);
-    exec("touch ".EIStream::path($id)."terminated");
+    exec("touch ".EIStream::path($exec_id)."terminated");
     return "<ei_stream state='stopped' />";
   }
 
