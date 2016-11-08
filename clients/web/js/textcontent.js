@@ -43,8 +43,20 @@ window.TextContent = (function() {
      });
      $(self.streamBttn).hide();
      
-     if(self.isStream())
+
+     self.refreshBttn = $("<button class='ei-console-refresh-button'>Refresh</button>");
+     $(self.refreshBttn).button({ 
+       icons: { primary: "ui-icon-arrowrefresh-1-s"}, 
+       text: "refresh" 
+     }).click( function() { 
+       self.doc.requestChunks(self.doc,self.stref);
+     });
+     $(self.refreshBttn).hide();
+
+     if(self.isStream()){
        self.content.prepend(self.streamBttn);
+       self.content.prepend(self.refreshBttn);
+     }
    }
 
 
@@ -114,6 +126,7 @@ window.TextContent = (function() {
 	 if(!this.isStream())
 	    return;
 	 this.streamBttn.show();
+	 this.refreshBttn.show();
 	 this.doc = doc;
 	 this.enableStreamButton();
        },
@@ -122,6 +135,7 @@ window.TextContent = (function() {
 	  if(!this.isStream())
 	    return;
 	 this.streamBttn.hide();
+	 this.refreshBttn.hide();
 	 this.stData.isStream = false;
 	 return;
 	 //self.contentArray[num].content.removeStreamButton();

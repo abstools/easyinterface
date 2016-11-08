@@ -171,7 +171,7 @@ window.DocContent = (function() {
 	activeStreamButton:
        function(num){
 	 var self = this;
-	 this.contentArray[num].content.activeStreamButton(self);
+	 this.contentArray[num].content.activeStreamButton(self,num);
        },
 
       removeStreamButton:

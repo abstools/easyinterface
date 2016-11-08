@@ -312,13 +312,21 @@ pre {
   float: right;
   height: 40px;
 }
+
 .ei-console-stream-button {
   float: right;
   position: relative;
   left: 10px;
   bottom: 10px;
-
 }
+
+.ei-console-refresh-button {
+  float: right;
+  position: relative;
+  left: 10px;
+  bottom: 10px;
+}
+
 
 .lint-error, .outclass-error {
   font-family: arial;

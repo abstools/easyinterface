@@ -35,6 +35,7 @@ window.HTMLContent = (function() {
      $(self.content).find(".data").append( $(options.content).prop('outerHTML') );
 
      self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
+
      $(self.streamBttn).button({ 
        icons: { primary: "ui-icon-stop"}, 
        text: "stream" 
@@ -44,8 +45,19 @@ window.HTMLContent = (function() {
      });
      $(self.streamBttn).hide();
 
-     if(self.isStream())
+     self.refreshBttn = $("<button class='ei-console-refresh-button'>Refresh</button>");
+     $(self.refreshBttn).button({ 
+       icons: { primary: "ui-icon-arrowrefresh-1-s"}, 
+       text: "refresh" 
+     }).click( function() { 
+       self.doc.requestChunks(self.doc,self.stref);
+     });
+     $(self.refreshBttn).hide();
+
+     if(self.isStream()){
        self.content.prepend(self.streamBttn);
+       self.content.prepend(self.refreshBttn);
+     }
    }
 
 
@@ -95,11 +107,13 @@ window.HTMLContent = (function() {
 
 	// STREAM BUTTON
        activeStreamButton:
-       function(doc){
+       function(doc,ref){
 	 if(!this.isStream())
 	    return;
 	 this.streamBttn.show();
+	 this.refreshBttn.show();
 	 this.doc = doc;
+	 this.stref= ref;
 	 this.enableStreamButton();
        },
        removeStreamButton:
@@ -107,6 +121,7 @@ window.HTMLContent = (function() {
 	  if(!this.isStream())
 	    return;
 	 this.streamBttn.hide();
+	 this.refreshBttn.hide();
 	 this.stData.isStream = false;
 	 return;
 	 //self.contentArray[num].content.removeStreamButton();
