@@ -77,7 +77,6 @@ window.Tools = (function() {
 	//
 	setActiveTool:
 	function(toolId) {
-	  console.log("tool",toolId);
 	  if( !this.tools[toolId])
 	    return;
 	  if( _ei.inlineSetting.active && this.tools[this.currToolId] ){

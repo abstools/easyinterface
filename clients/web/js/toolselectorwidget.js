@@ -54,7 +54,6 @@ window.ToolSelector = (function() {
 	  var val = this.selector.val();
 	  if(!val)
 	    val = $("option",this.selector).value();
-	  console.log(val,"-------");
 	  return val;
 	}
     }
