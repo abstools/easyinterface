@@ -46,6 +46,16 @@ window.ToolSelector = (function() {
 	addTool:
 	function(toolId, toolDesc) {
 	    this.selector.append("<option value='"+toolId+"'>"+toolDesc+"</option>");
+	},
+
+	//
+	getTool:
+	function(){
+	  var val = this.selector.val();
+	  if(!val)
+	    val = $("option",this.selector).value();
+	  console.log(val,"-------");
+	  return val;
 	}
     }
 

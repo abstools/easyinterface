@@ -240,13 +240,30 @@ pre {
 }
 
 /* the outline area */
+.ei-outline-setting {
+  float: left; 
+  width: 20%;
+  height: 100%;
+}
 .ei-outline-holder {
   position:relative;
   overflow: auto;
   border:1px solid #a6c9e2;
   border-radius:5px;
-  float: left; 
-  width: 20%;
+  width: 100%;
+  height: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ei-setting-holder {
+  position:relative;
+  overflow: auto;
+  border:1px solid #a6c9e2;
+  border-radius:5px;
+  padding: 6px;
+  width: 100%;
   height: 100%;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;

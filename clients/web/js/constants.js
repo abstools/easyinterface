@@ -136,6 +136,9 @@ var _ei = {
     server: "",
     app: "absoutline"
   },
+  inlineSetting:{
+    active: !false
+  },
   general_settings : {
     show_svg_in_new_window: "no",
     file_selection_mode: "file"

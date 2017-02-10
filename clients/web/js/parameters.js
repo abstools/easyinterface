@@ -10,7 +10,7 @@ window.Parameters = (function() {
 	
 	this.paramsId = "OPTS-"+parametersId;
 	this.paramsHolder = place;
-	this.accord = null;
+        this.accord = null;
 	this.sectionInfoById = new Array();
 	this.secId = 0;
 	this.setOptions(options);
@@ -457,7 +457,7 @@ window.Parameters = (function() {
 	//
 	setActiveParameSet:
 	function(sectionId) {
-	    if ( sectionId != undefined ) {
+	  if ( sectionId != undefined ) {
 		this.accord.accordion({active: this.sectionInfoById[sectionId].secId });
 	    } else {
 		this.accord.accordion({active: false});
@@ -475,6 +475,24 @@ window.Parameters = (function() {
 		    r[p]=sectionParams[p].getValue();
 	    }
 	    return r;
+	},
+
+
+	//
+	placeParamSet:
+	function(toolId,holder){
+	  var tagId = this.sectionId_to_sectionTag( toolId );
+	  this.accord.find("#"+tagId).append($(holder).contents());
+	},
+	     
+	//
+	getParamSet:
+	function(toolId,holder){
+	  var tagId = this.sectionId_to_sectionTag( toolId );
+	  var cont = this.accord.find("#"+tagId).contents();
+	  cont.show();
+	  $(holder).append(cont);
+	  
 	}
     };
 

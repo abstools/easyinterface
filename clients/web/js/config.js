@@ -14,7 +14,11 @@ var loadConfig = function(){
 
     if(!data.outline)
       _ei_data.outline = "on";
+    
+    if(!data.inlineSetting)
+      _ei_data.inlineSetting = "on";
 
+    
     if(!data.language)
       _ei_data.language = "text/x-csrc";
   }

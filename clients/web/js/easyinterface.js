@@ -48,11 +48,13 @@ window.EasyInterface = (function() {
         this.helpButtonHolder = this.holder.find("#help");
 	this.optionsButtonHolder = this.holder.find("#options");
 	this.applyButtonHolder = this.holder.find("#apply");
-	this.toolSelectHolder = this.holder.find("#toolselector");
+        this.toolSelectHolder = this.holder.find("#toolselector");
+      	this.settingHolder = this.holder.find("#setting");
 	this.outlineHolder = this.holder.find("#outline");
 	this.outlineButtonHolder = this.holder.find("#refreshoutline");
 	this.clearButtonHolder = this.holder.find("#clearanno");
         this.upSectionHolder = this.holder.find("#up");
+        this.rightSectionHolder = this.holder.find("#up-right");
 	// create/installl the different widgets
 	this.initCmdEngine();
 	this.initCodeAreaWidget();
@@ -63,10 +65,27 @@ window.EasyInterface = (function() {
 	this.initConsoleWidget();
 	this.initToolSelectorWidget();
 	this.initOutputManager();
-      if(_ei.outline.active)
-	this.initOutlineWidget();
-	this.initTools();
-	this.filemanager.setProperties(this.outline,this.tools);
+        if(_ei.outline.active)
+	  this.initOutlineWidget();
+        this.initTools();
+        this.filemanager.setProperties(this.outline,this.tools);
+        // check Right
+        if(_ei.outline.active && _ei.inlineSetting.active){
+	  //set heights
+	  this.outlineHolder.css("height","49%");
+	  this.settingHolder.css("height","49%");
+        }else if(_ei.outline.active){
+  	  //remove inlineSetting
+	  this.settingHolder.remove();
+	}else if(_ei.inlineSetting.active){
+	  //remove outline
+	  this.outlineHolder.remove();
+	}else{
+	  // codearea expand
+	  this.rightSectionHolder.remove();
+	  this.codeareaHolder = this.codeareaHolder.css("width","78%");
+	}
+      
 	// connect the buttons to the corresponding operations
 	this.applyButtonHolder.button(
 	    {
@@ -77,13 +96,19 @@ window.EasyInterface = (function() {
 		var ids = [self.codearea.getCurrentTabId()];
 		self.tools.apply(ids); 
 	    } );
-
+      if( !_ei.inlineSetting.active ) {
 	this.optionsButtonHolder.button( 
 	    {
 		icons: {
 		    primary: "ui-icon-gear"
 		}
-	    } ).click(function() { self.parametersHolder.dialog( "open" ); } );
+	    } ).click(function() {
+	      self.parametersHolder.dialog( "open" );
+	    } );
+        }else{
+	  this.optionsButtonHolder.remove();
+	}
+
         this.helpButtonHolder.button( 
 	    {
 		icons: {
@@ -136,12 +161,13 @@ window.EasyInterface = (function() {
 	    _ei.language = options.language || "text/x-csrc";
 	    _ei.serverPath = options.apps || serverPath;
 	    _ei.exampleServerPath = options.examples || examplesPath;
+
 	    _ei.outline.active = (options.outline=="on")? true : false;
+	    _ei.inlineSetting.active = (options.inlineSetting=="on")? true : false;
 	    if(_ei.outline.active){
 	      _ei.outline.app = options.outlineapp || "outline";
-	    _ei.outline.server = options.outlineserver || _ei.serverPath[0].server;
-	  }
-
+	      _ei.outline.server = options.outlineserver || _ei.serverPath[0].server;
+	    }
 	},
 
 	//
@@ -352,7 +378,8 @@ window.EasyInterface = (function() {
 	function() {
 	    var self = this;
 	    this.tools = new Tools({
-		"parameters": this.parameters,
+	        "parameters": this.parameters,
+		"inlineParameters": this.settingHolder,
 		"selector": this.toolSelector,
 		"filemanager": this.filemanager,
 		"outline": this.outline,
@@ -400,7 +427,8 @@ window.EasyInterface = (function() {
 		      self.initTool( $(this),currentServer.server );
 		    });// */
 	      });
-	  }}
+	    }}
+	  this.tools.ready();
 	},
 
 	initTool:
@@ -486,8 +514,11 @@ window.EasyInterface = (function() {
 	  var self = this;
 	  var RE = new ResizeEffect({holder:self.holder});
 	  RE.addHorizontalEffect(self.filemanagerHolder,self.codeareaHolder);
-	  if(_ei.outline.active)
-	    RE.addHorizontalEffect(self.codeareaHolder,self.outlineHolder);
+	  if(_ei.outline.active || _ei.inlineSetting.active)
+	    RE.addHorizontalEffect(self.codeareaHolder,self.rightSectionHolder);
+	  if(_ei.outline.active && _ei.inlineSetting.active){
+	    RE.addVerticalEffect(self.settingHolder,self.outlineHolder);
+	  }
 	  RE.addVerticalEffect(self.upSectionHolder,self.consoleHolder);
 	},
 	removeOutline:

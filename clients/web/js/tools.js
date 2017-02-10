@@ -10,8 +10,9 @@ window.Tools = (function() {
 	this.filemanager = null;
 	this.outline = null;
 	this.cmdengine = null;
-	this.console = null;
-	this.setOptions(options);
+        this.console = null;
+        this.inlineParams = null;
+        this.setOptions(options);
     };
 
     Tools.prototype = {
@@ -25,13 +26,20 @@ window.Tools = (function() {
 	setOptions:
 	function(options) {
 	    this.parameters = options.parameters;
+	    this.inlineParams = options.inlineParameters;
 	    this.selector = options.selector;
 	    this.filemanager = options.filemanager;
 	    this.outline = options.outline;
 	    this.cmdengine = options.cmdengine;
 	    this.outputmanager = options.outputmanager;
 	    this.helps = options.helps;
-	    this.selector.setToolsObj( this );
+	  this.selector.setToolsObj( this );
+	},
+
+	//
+	ready:
+	function(){
+	  this.setActiveTool(this.selector.getTool());
 	},
 
 	//
@@ -69,9 +77,17 @@ window.Tools = (function() {
 	//
 	setActiveTool:
 	function(toolId) {
-	  if( !this.tools[toolId]) return;
-	    this.currToolId = toolId;
-	    this.parameters.setActiveParameSet( toolId );
+	  console.log("tool",toolId);
+	  if( !this.tools[toolId])
+	    return;
+	  if( _ei.inlineSetting.active && this.tools[this.currToolId] ){
+	    this.parameters.placeParamSet(this.currToolId,this.inlineParams);
+	  }
+	  this.currToolId = toolId;
+	  this.parameters.setActiveParameSet( toolId );
+	  if( _ei.inlineSetting.active){
+	    this.parameters.getParamSet(toolId,this.inlineParams);
+	  }
 	},
 
 	apply:
