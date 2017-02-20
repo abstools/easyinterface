@@ -1324,7 +1324,7 @@ window.FileManager = (function() {
 	    for (var i = 0, f; f = selFiles[i]; i++) {
 	      var tmpContent = readRFile(f); 
 	    }
-	    $("#RfilesSelector").replaceWith($("#RfilesSelector").clone());		  
+	   // $("#RfilesSelector").replaceWith($("#RfilesSelector").clone());		  
 	  };
 
 	  $("#addRFiles-"+site,div).click(function(event){ handleButtonAdd(event);});
