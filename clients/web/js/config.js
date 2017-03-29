@@ -16,7 +16,7 @@ var loadConfig = function(){
       _ei_data.outline = "on";
     
     if(!data.inlineSetting)
-      _ei_data.inlineSetting = "on";
+      _ei_data.inlineSetting = "off";
 
     
     if(!data.language)
