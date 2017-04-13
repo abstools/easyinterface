@@ -45,9 +45,9 @@ $KOAT2COFLOCO_DIR/koat2cfg.pl $File.koat  $Cost_model | $KOAT2COFLOCO_DIR/cfg2ce
 if [[ "$printCEs" == "yes" ]] 
    then
    echo "###### ITS generated with Llvm2kittel ####################"
-   cat $File.koat | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'
+   cat $File.koat | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/&/\&amp;/g'
    echo "###### Cost Relations System ####################"
-   cat $File.ces | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'
+   cat $File.ces | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'| sed 's/&/\&amp;/g'
    echo "###### Solution ####################"
 fi
 timeout 180s $COFLOCO_DIR/cofloco -i $File.ces  $* | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'
