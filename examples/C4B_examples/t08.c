@@ -1,4 +1,4 @@
-void start(int y, int z)
+void t08(int y, int z)
 {
   while (z>y) {
     y=y+1;

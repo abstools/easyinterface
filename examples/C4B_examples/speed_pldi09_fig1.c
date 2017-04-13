@@ -1,4 +1,4 @@
-void start(int n)
+void speed_pldi09_fig1(int n)
 {
   int x=0;
   int y=0;

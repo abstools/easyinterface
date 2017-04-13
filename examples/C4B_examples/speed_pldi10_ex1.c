@@ -2,7 +2,7 @@
 void tick(int cost);
 int nondet();
 
-void start(int n)
+void speed_pldi10_ex1(int n)
 {
   int i;
   int j;

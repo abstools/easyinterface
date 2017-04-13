@@ -1,6 +1,6 @@
 int nondet();
 
-void start(int n)
+void speed_pldi10_ex3(int n)
 {
   while (n>0) {
     n=n-1;

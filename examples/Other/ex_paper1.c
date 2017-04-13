@@ -2,7 +2,7 @@
 int nondet();
 void tick(int c);
 
-void p1(int x,int y,int z){
+void ex_paper1(int x,int y,int z){
 assert(x>0);
 assert(y>0);  
  while(x>0) {

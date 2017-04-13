@@ -1,7 +1,7 @@
 int nondet();
 void tick(int cost);
 
-void start(int n){
+void Loopus2014_ex1(int n){
 int a = n, b = 0;
 while (a > 0){
 	a--; b++;

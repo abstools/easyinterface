@@ -1,4 +1,4 @@
-void start(int x, int y)
+void t28(int x, int y)
 {
   while (x > y) {
     x--;

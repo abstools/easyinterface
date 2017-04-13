@@ -2,7 +2,7 @@
 void tick(int cost);
 int nondet();
 
-void xnu(int len)
+void Loopus2015_original(int len)
 {
 int beg=0;int end=0;int i=0;
  while(i < len){

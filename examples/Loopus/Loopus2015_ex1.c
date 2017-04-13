@@ -2,7 +2,7 @@
 
 int nondet();
 
-void foo(int n) {
+void Loopus2015_ex1(int n) {
  int x = n;
  int r = 0;
  while(x > 0) {

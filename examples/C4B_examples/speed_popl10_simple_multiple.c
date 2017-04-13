@@ -1,4 +1,4 @@
-void start(int n, int m)
+void speed_popl10_simple_multiple(int n, int m)
 {
   int x=0;
   int y=0;

@@ -1,7 +1,7 @@
 int *nondet;
 void tick(int c);
 
-void p3(int x,int y, int z){
+void exp_paper3(int x,int y, int z){
  while(x>0) {
    if(nondet[x]){
      while(nondet[y] && y>0 ){

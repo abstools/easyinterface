@@ -1,6 +1,6 @@
 int nondet();
 
-void start(int x, int n, int y, int m)
+void speed_popl10_nested_multiple(int x, int n, int y, int m)
 {
   while (x<n) {
     while (y<m) {

@@ -1,4 +1,4 @@
-void start(int n)
+void t47(int n)
 {
   int flag = 1;
 

@@ -1,6 +1,6 @@
 int nondet();
 
-void start(int x, int y)
+void t10(int x, int y)
 {
   while (x>y) {
     if (nondet()>0)

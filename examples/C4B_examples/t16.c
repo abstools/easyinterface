@@ -1,6 +1,6 @@
 #include "assert.h"
 
-void start(int x, int y)
+void t16(int x, int y)
 {
   int z;
 

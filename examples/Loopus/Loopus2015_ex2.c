@@ -2,7 +2,7 @@
 
 int nondet();
 
-void foo(int n, int m1,int m2) {
+void Loopus2015_ex2(int n, int m1,int m2) {
  assert(n>=0);
  assert(m1>=0);
  assert(m2>=0);

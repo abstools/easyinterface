@@ -1,4 +1,4 @@
-void start(int n)
+void speed_pldi10_ex4(int n)
 {
   int flag=1;
 

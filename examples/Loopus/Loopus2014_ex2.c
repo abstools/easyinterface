@@ -1,6 +1,6 @@
 int nondet();
 
-void start(int m){
+void Loopus2014_ex2(int m){
 int i=m, n = 0;   //stack = emptyStack();
 	while (i > 0){
 	i--;

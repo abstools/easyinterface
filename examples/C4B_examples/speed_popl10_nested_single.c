@@ -1,6 +1,6 @@
 int nondet();
 
-void start(int n)
+void speed_popl10_nested_single(int n)
 {
   int x=0;
 

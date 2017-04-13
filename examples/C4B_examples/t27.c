@@ -1,4 +1,4 @@
-void start(int n, int y)
+void t27(int n, int y)
 {
   while (n<0) {
     n++;

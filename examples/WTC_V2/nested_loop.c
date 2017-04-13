@@ -1,6 +1,6 @@
 int nondet();
 
-void nestedLoop(int n, int m, int N){
+void nested_loop(int n, int m, int N){
   int i, j, k;
   if(0<=n && 0<=m && 0<=N){
     i = 0;

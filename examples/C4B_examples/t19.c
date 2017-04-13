@@ -1,4 +1,4 @@
-void start(int i, int k)
+void t19(int i, int k)
 {
   while (i > 100)
     i--;

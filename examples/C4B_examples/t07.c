@@ -1,6 +1,6 @@
 
 
-void start(int x, int y)
+void t07(int x, int y)
 {
   while (x>0) {
     x=x-1;

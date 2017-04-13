@@ -1,6 +1,6 @@
 #include "assert.h"
 
-void start(int n, int m)
+void peed_pldi09_fig4_4(int n, int m)
 {
   int i=n;
 

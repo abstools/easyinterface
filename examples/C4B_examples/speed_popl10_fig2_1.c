@@ -1,4 +1,4 @@
-void start(int x, int y, int n, int m)
+void speed_popl10_fig2_1(int x, int y, int n, int m)
 {
   while (n>x) {
     if (m>y)

@@ -1,7 +1,7 @@
 int nondet();
 
 
-void bin_search_StepSize2 (int r, int s) {
+void Loopus2011_ex2(int r, int s) {
 int c = 4; int n; int f = 0; int d = 0;
 do {
   n = nondet();

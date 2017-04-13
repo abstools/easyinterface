@@ -1,4 +1,4 @@
-void start(int x, int y, int n, int m)
+void t11(int x, int y, int n, int m)
 {
   while (n>x) {
     if (m>y) 

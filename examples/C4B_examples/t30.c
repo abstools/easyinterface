@@ -1,4 +1,4 @@
-void start(int x, int y)
+void t30(int x, int y)
 {
   int t=0;
 

@@ -1,7 +1,7 @@
 int nondet();
 
 
-void ex1 (int n){
+void Loopus2011_ex1(int n){
 int i = 0; int j;
 
  while(i < n){
