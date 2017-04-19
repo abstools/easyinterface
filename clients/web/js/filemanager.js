@@ -168,14 +168,18 @@ window.FileManager = (function() {
 		    "Apply": {
 		      "label": "Run",
 		      "action": function (obj) {
-			self.tools.apply(self.getSelectedId());
+			var fmId = parseInt(obj.attr('fmId'));
+			var Ids = self.getSelectedId(fmId);
+			self.tools.apply(Ids);
 		      }
 		    },
 		    "Outline": {
 		      "label": "Refresh Outline",
 		      "separator_after":true,
 		      "action": function (obj) {
-			self.outline.refresh(self.getSelectedId());
+			var fmId = parseInt(obj.attr('fmId'));
+			var Ids = self.getSelectedId(fmId);
+			self.outline.refresh(Ids);
 		      }
 		    },
 		    "CreateFile": {
@@ -894,10 +898,14 @@ window.FileManager = (function() {
 
 		    //
     getSelectedId:
-    function(){
+    function(first){
       var arr = $.map(this.jstree.jstree('get_selected'),function(I,k){
- 	return parseInt($(I).attr('fmId'));
+	var a = parseInt($(I).attr('fmId'))
+	if(first === undefined || first != a)
+ 	  return a;
       });
+      if(first !== undefined)
+	arr.unshift(first);
       return arr;
     },
 

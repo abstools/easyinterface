@@ -46,7 +46,6 @@ window.Console = (function() {
 
 	  if ( this.tabs ) {
 	    $(this.winInfoById).each(function(k,v){
-	      console.log(k,v,self);
 	      if(v.streamRef)
 		v.streamRef.off(true);
 	    });
