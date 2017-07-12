@@ -129,7 +129,7 @@ var _ei = {
       }
   },
   debug: true,
-  outline: false,
+  outline: true,
   file_ext: ".c",
   pprefix: "-",
   outline: {
