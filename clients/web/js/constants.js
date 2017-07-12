@@ -130,7 +130,7 @@ var _ei = {
   },
   debug: true,
   outline: true,
-  file_ext: ".abs",
+  file_ext: ".c",
   pprefix: "-",
   outline: {
     server: "",

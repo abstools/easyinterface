@@ -1,0 +1,58 @@
+#!/bin/bash
+
+HOME2="/home/aeflores";
+LLVM2KITTEL_DIR="$HOME2/Systems/llvm2kittel";
+KOAT2COFLOCO_DIR="$HOME2/Systems/cofloco/interfaces/C2ces";
+COFLOCO_DIR="$HOME2/Systems/cofloco";
+
+
+echo "<eiout>"
+echo "<eicommands>"
+echo "<printonconsole>"
+echo "<content format='text'>"
+#echo "$*"
+   
+
+File=$1;
+shift
+Cost_model="";
+Loop_cost_model="";
+printCEs=false;
+
+if [[ ("$#" -ge "1") && ("$1" == "-print_ces")]]
+   then
+   printCEs="yes"
+   shift
+fi
+
+
+if [[ ("$#" -ge "1") && ("$1" == "-tick_cost")]]
+   then
+   Cost_model="tick_cost"
+   shift
+   else
+   Loop_cost_model="loop_cost_model"
+fi
+
+
+clang -c  $File -emit-llvm -o $File.o 2> $File.error
+
+cat $File.error
+$LLVM2KITTEL_DIR/llvm2kittel $File.o -complexity-tuples -division-constraint exact >$File.koat 
+
+$KOAT2COFLOCO_DIR/koat2cfg.pl $File.koat  $Cost_model | $KOAT2COFLOCO_DIR/cfg2ces.pl stdin  $Loop_cost_model -o $File.ces
+
+if [[ "$printCEs" == "yes" ]] 
+   then
+   echo "###### ITS generated with Llvm2kittel ####################"
+   cat $File.koat | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g' | sed 's/&/\&amp;/g'
+   echo "###### Cost Relations System ####################"
+   cat $File.ces | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'| sed 's/&/\&amp;/g'
+   echo "###### Solution ####################"
+fi
+timeout 180s $COFLOCO_DIR/cofloco -i $File.ces  $* | sed 's/</\&lt;/g' | sed 's/>/\&gt;/g'
+
+echo "</content>"
+echo "</printonconsole>"
+echo "</eicommands>"
+echo "</eiout>"

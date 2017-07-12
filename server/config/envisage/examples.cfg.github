@@ -1,5 +1,0 @@
-<examples>
-<exset id="set1">
- <github name="github" owner="abstools" repo="absexamples" branch="master" path="collaboratory" />
-</exset>
-</examples>
