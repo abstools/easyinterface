@@ -1,79 +1,279 @@
 {% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
 }
+
 \chapter{\ei Server}
 \label{ch:server}
 
-This chapter describes the server side of the \ei framework, that we
-refer to as the \ei server (or simply the server).
+This chapter describes the server side of the \ei toolkit which, as
+explained in Section~\ref{sec:architecture:server}, mainly aims at
+providing a uniform way to access local tools, i.e., those installed
+on the machine where the server runs.  The \ei server achieves this
+by:
 %
-As explained in Section~\ref{ch:overview:arch:server}, the goal of
-this server is to provide a uniform way to access local applications
-and examples (i.e., those installed on the machine where the server
-runs).
+\begin{enumerate}[\upshape(\itshape i\upshape)]
+\item providing a way to describe, using XML based configuration
+  files, how to execute a local tool and which parameters it takes, as
+  well as how to define sets of related examples; and
+%
+\item providing a JSON based protocol that can be used to request
+  information on those tools and examples, execute tools, etc.
+\end{enumerate}
+%
+In the rest of this chapter we give specifications for the above two
+points. In particular, in Section~\ref{sec:server:config} we describe
+how to configure the server, and what is the expected corresponding
+functionality, and in Section~\ref{sec:server:access} we describe how
+to send requests to the server and how the server should react on
+these requests.
+%
+Any implementation must respect these specifications, in particular,
+we describe such an implementation in Section~\ref{sec:server:impl}.
 
-
-The \ei server achieves the above goal by:
-%
-(1) providing a way to describe, using XML based configuration files,
-how to execute a local application and which parameters it takes, as
-well as define sets of related examples; and
-%
-(2) providing a JSON based protocol that can be used to request
-information on those applications and examples, execute applications,
-etc.
-%
-Section~\ref{ch:server:config} describes the syntax of the server
-configuration file; and Section~\ref{ch:server:protocol} describes the
-protocol that can be used to communicate with the server.
-%
-This chapter does not cover issues related to installation, for such
-documentation see
-\texttt{\href{http://github.com/abstools/easyinterface}{INSTALL.md}}.
 
 
 \section{Configuring the \ei Server}
-\label{ch:server:config}
+\label{sec:server:config}
+
+In Section~\ref{sec:server:config:cmdlntmp} we first describe the
+notion of command-line templates, which is crucial for describing how
+to execute a tool, in Section~\ref{sec:server:config:workflow} we
+describe the work-flow of a tool, and then in
+Section~\ref{sec:server:config:xml} we describe the syntax and
+semantics of the server configuration.
+
+\subsection{Command-line Templates}
+\label{sec:server:config:cmdlntmp}
+
+A command-line template is a syntactic object that describes how to
+run a tool from a command-line, in the context of an \ei server. It
+is, in principle, a string that corresponds to a command-line, but
+also includes \emph{template parameters} that are replaced by
+corresponding values before executing the command-line.
+%
+The following is an example to such template:
+
+\medskip
+\begin{lstlisting}
+(*/path-to/app*) _ei_files -m _ei_outline  _ei_parameters
+\end{lstlisting}
+
+\medskip
+\noindent
+In this template, anything that starts with \xmlstructtemplate{_ei} is
+a template parameter that is replaced by some corresponding value, and
+\lst{$\mbox{/path-to/app}$} is the tool's executable.
+% 
+When the server receives a request for executing the corresponding
+tool, the request includes several data that should be passed to the
+tool. For example, the following are typical data that should be
+passed to a tool:
+% 
+\begin{enumerate}
+\item files to be processed (e.g., a program to be analyzed);
+\item entities selected from the program outline (e.g., methods); and
+\item values for the different parameters.
+\end{enumerate}
+% 
+The server passes this data to the tool by replacing the
+template parameters with corresponding data as follows:
+% 
+\begin{enumerate}
+\item the files are stored locally (e.g., in \lst{/tmp}), and
+  \xmlstructtemplate{_ei_files} is replaced by a list file names (each
+  with an absolute path, separated by a space);
+\item \xmlstructtemplate{_ei_outline} is replaced by a list of
+  selected entities (e.g., method names); and
+\item \xmlstructtemplate{_ei_parameters} is replaced by the list of
+  parameters generated from those provided in the request.
+\end{enumerate}
+% 
+This results in, for example, the following instance of the template:
+
+\medskip
+\begin{lstlisting}
+(*/path-to/app*) /tmp/ei_FAJw1B/a.c /tmp/ei_FAJw1B/b.c -m a.main -v 1 -d 3 -a
+\end{lstlisting}
+
+\medskip 
+\noindent
+which is then executed and its output is redirected to the client.
+
+The following is the full-list of template parameters that should be
+supported by the server:
+
+\begin{itemize}
+\item \xmlstructtemplate{_ei_root}: this parameter is replaced by a
+  path to a temporal directory that corresponds to the current
+  execution request. This directory is created by the server, and all
+  information related to the corresponding request is stored under
+  this directory. In addition, this directory should be writable such
+  that the tool can use it to write temporal information as well. This
+  directory must include the following sub-directory:
+%
+  \begin{enumerate}[\upshape(\itshape i\upshape)]
+%
+  \item \lst{$\mbox{\_ei\_files}$}: it is used to store the files
+    received from the client before passing them to the tool -- see
+    template parameter \xmlstructtemplate{_ei_files} below;
+%
+  \item \lst{$\mbox{\_ei\_download}$}: can be used by a tool to leave
+    files that can be downloaded later -- see
+    sections~\ref{sec:server:config:workflow} and
+    \ref{sec:server:access:download};
+%
+  \item \lst{$\mbox{\_ei\_stream}$}: can be used by a tool to store
+    partial output such that clients can fetch it later periodically
+    -- see sections~\ref{sec:server:config:workflow} and
+    \ref{sec:server:access:stream}; and
+%
+  \item \lst{$\mbox{\_ei\_tmp}$}: can be used by tools to write
+    temporal files, i.e., it is like \lst{/tmp} in UNIX but for this
+    specific execution in order to avoid conflicts between different
+    requests.
+%
+  \end{enumerate}
+
+\item \xmlstructtemplate{_ei_files}: this parameter should replaced by
+  a list of files that are received from the client (each with an
+  absolute path, separated by a space). The server should store the
+  files under the directory
+  \xmlstructtemplate{_ei_root}\lst{$\mbox{/\_ei\_files}$}, using the
+  same structure as passed by the client.
+
+%% \item \xmlstructtemplate{_ei_stream} is replaced by the local
+%%   temporary directory name, where stream aplications have to save
+%%   all files; 
+
+%% \item \xmlstructtemplate{_ei_download} is replaced by the local
+%%   temporary directory name, where aplications have to save
+%%   all downloadable files. These files will be accessible from the
+%%   url
+%%   \\http://domain/.../ei/server/Download.php?file=FILENAME\&id=\xmlstructtemplate{_ei_execid}; 
+%%
+\item \xmlstructtemplate{_ei_outline}: this parameter should be
+  replaced by a list of selected outline entities (separated by space)
+  that passed by the client;
+%%
+\item \xmlstructtemplate{_ei_parameters}: this parameter should be
+  replaced by a corresponding list of parameters that are passed by
+  the client (see \xmlstructref{server}{parameters} in
+  Section~\ref{sec:server:config:xml} to understand how the parameters
+  are constructed);
+%%
+\item \xmlstructtemplate{_ei_sessionid}: should be replaced by a
+  session identifier that corresponds to a user, this makes it
+  possible to track information of a user along several requests (see
+  next item). The server is supposed to provide support for this
+  sessions mechanism; 
+%%
+\item \xmlstructtemplate{_ei_sessiondir}: should be replaced by a path
+  to a temporal directory that corresponds to the session
+  \xmlstructtemplate{_ei_sessionid}. Tools can use this directory to
+  store data related to the corresponding session.
+%%
+\item \xmlstructtemplate{_ei_clientid}: should be replaced by the
+  client identifier, i.e., \lst{webclient}, \lst{eclipse},
+  \lst{shell}, etc.
+  %% See Chapter~\ref{ch:clients} for a list of clients and their
+  %% corresponding identifiers.
+%
+\item \xmlstructtemplate{_ei_outformat}: should be replaced by either
+  \lst{eiol} or \lst{txt}, which indicates if the client supports the
+  \ei output language or just plain text format. This value is passed
+  by the client as we will see later. This makes it possible to
+  provide output depending on the formats supported by the client.%
+%
+\item \xmlstructtemplate{_ei_execid}: should be replaced by an
+  execution identifier that corresponds to the current execution of
+  the tool, this identifier is mainly used to fetch information left
+  in the \lst{$\mbox{\_ei\_download}$} and \lst{$\mbox{\_ei\_stream}$}
+  directories (see sections~\ref{sec:server:config:workflow},
+  \ref{sec:server:access:download} and
+  \ref{sec:server:access:stream}).
+\end{itemize}
+
+\subsection{Work-flow of Tools}
+\label{sec:server:config:workflow}
+
+In this section we describe the possible work-flows of tools installed
+in an \ei server. These work-flows are different in the way the output
+is passed to the client, and they can be combined together as well.
+
+\subsubsection{Default Work-flow}
+
+The simplest work-flow of tool is the one in which once a tool is
+executed, anything that it prints on the standard output will be
+forwarded to the client who requested to execute the tool. This output
+could be plain text, or uses the \ei output language.
+
+\subsubsection{Download Output}
+
+In this work-flow a tool can leave files in the directory under
+\xmlstructtemplate{_ei_root}\lst{$\mbox{/\_ei\_download}$}, and then
+clients can send special requests for downloading such files (see
+Section~\ref{sec:server:access:download}).
+%
+This is particularly useful when such files are large or not in text
+format.
+%
+Note that the tool should provide the client with the
+\xmlstructtemplate{_exec_id} (using the default work-flow) as it is
+required for downloading these files.
+%
+
+\subsubsection{Streaming Output}
+
+In this work-flow a tool can leave processes that generate output
+chunks in the background, such that clients can fetch these chunks
+periodically later -- see Section~\ref{sec:server:access:stream}. The
+tool should adhere to the following rules:
+%
+\begin{itemize}
+
+\item When the background processes are started, their \emph{process
+    ids} (as in the underlying operating system) should be written to
+  the file
+  \xmlstructtemplate{_ei_root}\lst{$\mbox{/\_ei\_stream/pid}$}. This
+  way clients can request to stop these processes later before the
+  timeout forced by the server expires;
+
+\item Before the background processes terminate, they should create an
+  empty file
+  \xmlstructtemplate{_ei_root}\lst{$\mbox{/\_ei\_stream/terminated}$}. This
+  way clients can consult if the background processes have terminated
+  already; and
+
+\item Output chunk should be written to files in the directory
+  \xmlstructtemplate{_ei_root}\lst{$\mbox{/\_ei\_stream}$}, the file
+  names are not important, but rather their extension: the server
+  allows retrieving these chunks (in order of creation) by their
+  extension.
+
+\end{itemize}
+%
+Note that the tool should provide the client with the
+\xmlstructtemplate{_exec_id} (using the default work-flow) as it is
+required for queries that correspond to the above points.
+%
+
+
+\subsection{The Syntax of the Configuration File}
+\label{sec:server:config:xml}
 
 This section describes how to configure the \ei server.
 %
-Section~\ref{ch:server:config:file} explains where the configuration
-file should be placed, and Section~\ref{ch:server:config:xml}
-describes the (valid) content of this file.
-%
-Before proceeding to the next sections, it is very recommended to read
-Chapter~\ref{ch:quickguide} to get a general idea on how the
-configuration file looks like, etc.
-
-
-\subsection{Name and Path of the Configuration File}
-\label{ch:server:config:file}
-
-By default the server looks for the configuration file
-\texttt{server/config/eiserver.cfg}, and if no such file exists it
-uses \texttt{server/config/eiserver.default.cfg}.
-%
-The default installation comes with a predefined
-\texttt{sever/config/eiserver.default.cfg} that includes some demo
-applications and corresponding examples. It is very recommended not
-make substantial changes to \texttt{eiserver.default.cfg}, and instead
-create your own \texttt{eiserver.cfg}. This way you can always have a
-correct configuration file at hand from which you can copy, etc.
-
-\subsection{The Syntax of the Configuration File}
-\label{ch:server:config:xml}
-
 The content of the configuration file should adhere to the
 \xmlstructref{server}{eiserver} XML structure that is described below.
 %
-Inside this tag you can define applications, examples, etc. The best
-way to understand how to do so is follow the links in the definition
-of \xmlstructref{server}{eiserver}.
+Inside this tag we can define tools, examples, etc. The best way to
+read this XML is by following the links in the definition of
+\xmlstructref{server}{eiserver}.
 
-\subsubsection*{General Comments about XML Structures} 
+\subsubsection{General Comments about XML Structures} 
 
-For the purpose of better organization of the configuration files, we
-provide a way to split them into several files and import one file
-into another one. Any XML structure
+For the purpose of better organization of the configuration files, the
+server should provide a way to split them into several files and
+import one file into another one. Any XML structure
 
 \medskip
 \begin{lstlisting}
@@ -84,11 +284,11 @@ into another one. Any XML structure
 
 \medskip
 \noindent
-can be also written as
+should be possible to write as
 
 \medskip
 \begin{lstlisting}
-<tagname src=$\xmlstructref{server}{cfgfilename}$/>
+<tagname src=$\xmlstructref{server}{cfgfilename}$ />
 \end{lstlisting}
 
 \medskip
@@ -97,9 +297,12 @@ where the file \xmlstructref{server}{cfgfilename} includes the actual
 XML structure (of the first form above). It will be automatically
 imported when needed. However, if the XML structure (the first form)
 has an attribute \lst{id} then it must appear as an attribute in the
-second form as well.
+second form as well. This is useful for loading a partial XML
+structure, e.g., that refers to a tool with a specific identifier,
+instead of loading the whole XML and looking for that part.
 
-\subsubsection*{The Main XML Tag of the Configuration File}
+
+\subsubsection{The Main XML Tag of the Configuration File}
 
 %% EISERVER
 \bigskip
@@ -107,19 +310,21 @@ second form as well.
 {server}
 {eiserver}
 {%
-This XML tag is the root of the configurations file.
+This XML tag is the root of the configuration file.
 %
 The \xmlstructref{server}{settings} section is used for setting some
-global parameters; \xmlstructref{server}{examples} defines which sets
-of examples are available on the server; and the
-\xmlstructref{server}{apps} section defines which applications are
-available on the server.
+global parameters; \xmlstructref{server}{sandbox} is used for setting
+some limits on resources when executing a tool; 
+\xmlstructref{server}{examples} defines which sets of examples are
+available on the server; and \xmlstructref{server}{apps} defines which
+tools are available on the server.
 %
+The \xmlstructattr{version} attribute indicates the version of the
+configuration syntax, which is $1.0$ by default.
 }
 
 
-
-\subsubsection*{General Settings}
+\subsubsection{General Settings}
 
 %% SETTINGS
 \bigskip
@@ -128,12 +333,54 @@ available on the server.
 {settings}
 {%
 %
-  This tag does not include anything yet. It is reserved for future
-  use, where we plan to put general settings.
+  The purpose of this tag is to provide general settings for the
+  server, it is mainly implementation dependent.
 %
 }
 
-\subsubsection*{Examples Settings}
+%% SETPROP
+\bigskip
+\xmlstruct
+{server}
+{setprop}
+{%
+%
+  This tag describes a settings property, the actual properties are
+  left open and will be instantiated depending on the implementation.
+%
+}
+
+\subsubsection{Sandbox Settings}
+
+%% SANDBOX
+\bigskip
+\xmlstruct
+{server}
+{sandbox}
+{%
+%
+  This tag is used for setting limits on resources when executing a
+  tool.
+%
+}
+
+%% SANDBOXPROP
+\bigskip
+\xmlstruct
+{server}
+{sandboxprop}
+{%
+%
+  This tag describes a sandbox property, the actual properties are
+  left open and will be instantiated depending on the
+  implementation. However, it must include a property with name
+  \xmlstructvalue{timeout} which indicates the maximum time (in
+  seconds) that a tool can run before it is forced to terminate by the
+  server.
+%
+}
+
+\subsubsection{Examples Settings}
 
 %% EXAMPLES
 \bigskip
@@ -156,9 +403,9 @@ available on the server.
 {exset}
 {%
 %
-  This tag declare a set of examples, which are defined a collection
-  of \xmlstructref{server}{exelement} (a file, a directory, or a link to a
-  github repository).
+  This tag declares a set of examples, which are defined by a
+  collection of \xmlstructref{server}{exelement} (a file, a directory,
+  or a link to a GitHub repository).
 %
   The attribute \xmlstructattr{id} is a unique identifier that is used
   to refer to this set when communicating with the server.
@@ -174,7 +421,7 @@ available on the server.
 {%
 %
   An example element, which can be a file \xmlstructref{server}{file}, a
-  folder \xmlstructref{server}{folder}, or a link to a github repository
+  folder \xmlstructref{server}{folder}, or a link to a GitHub repository
   \xmlstructref{server}{github}.
 %
 }
@@ -188,7 +435,7 @@ available on the server.
 {file}
 {%
 %
-  This tags declares a file, where the \xmlstructattr{name} attribute
+  This tag declares a file, where the \xmlstructattr{name} attribute
   is its name and \xmlstructattr{url} is a link to its content. Note
   that \xmlstructattr{name} is not necessarily the same as the one in
   \xmlstructattr{url}.
@@ -219,17 +466,17 @@ available on the server.
 {github}
 {%
 %
-  Declares a reference to the public github repository
+  Declares a reference to the public GitHub repository
   \xmlstructattr{repo} which is owned by the user
   \xmlstructattr{owner}. Optionally one can also refer to a specific
-  \xmlstructattr{branch}, which \texttt{master} by default, and to a
-  specific path \xmlstructattr{githubpath} (a directory or a single
-  file) which is a the root directory by default.
+  \xmlstructattr{branch}, which is \lst{master} by default, and to a
+  specific \xmlstructattr{path} (a directory or a single file) which
+  is the root of the repository by default.
 %
 }
 
 
-\subsubsection*{Applications Settings}
+\subsubsection{Tools Settings}
 
 %% APPS
 \bigskip
@@ -238,8 +485,8 @@ available on the server.
 {apps}
 {%
 %
-  This tag declares a list of applications (to be added to the
-  server). Each such application is defined by one \xmlstructref{server}{app}
+  This tag declares a list of tools (to be added to the
+  server). Each such tool is defined by one \xmlstructref{server}{app}
   environment.  
 %
 } 
@@ -252,34 +499,43 @@ available on the server.
 {app}
 {%
 %
-  This tag defines an application, where the meaning of the different
+  This tag defines a tool, where the meaning of the different
   parts is as follows:
 %
   \begin{itemize}
 
   \item \xmlstructattr{id} is a unique identifier used to refer to
-    this application when communicating with the server.
+    this tool when communicating with the server.
 
-  \item \xmlstructattr{visible} indicates if this application should
-    be listed when the list of available applications is requested ---
-    by default it is \texttt{true}. 
+  \item \xmlstructattr{visible} indicates if this tool should
+    be listed when the list of available tools is requested ---
+    by default it is \xmlstructvalue{true}. 
     %
-    Note that even if an application is not visible, it can be used
-    like any other application by those who know its
+    Note that even if a tool is not visible, it can be used
+    like any other tool by those who know its
     \xmlstructattr{id}.
 
-  \item \xmlstructref{server}{appinfo} provides some general information about
-    the application, e.g., title, logo, etc.
+  \item \xmlstructref{server}{appinfo} provides general information
+    about the tool, e.g., title, logo, etc.
 
   \item \xmlstructref{server}{apphelp} provides enough information on how the
-    application can be used, etc. It is mainly used in the help
+    tool can be used, etc. It is mainly used in the help
     sections of the different clients.
 
-  \item \xmlstructref{server}{execinfo} defines how the application can be
-    executed (e.g., from a command-line).
+  \item \xmlstructref{server}{sandbox} provides limits on resources
+    when executing this tool. They override the ones defined directly
+    in the \xmlstructref{server}{eiserver} environment.
+
+  \item \xmlstructref{server}{execinfo} defines how the tool can be
+    executed from a command-line.
 
   \item \xmlstructref{server}{parameters} defines the set parameters accepted
-    by the application.
+    by the tool.
+
+  \item \xmlstructref{server}{profiles} defines sets of default values
+    for the different parameters. This is intended to allow users to
+    select a predefined set of values for the parameters instead of
+    setting them manually.
 
   \end{itemize}
 %
@@ -294,14 +550,14 @@ available on the server.
 {appinfo}
 {%
 %
-  This tag provides general information about an application:
+  This tag provides general information about a tool:
 %
   \begin{itemize}
-  \item \xmlstructref{server}{acronym} is an acronym for the application,
+  \item \xmlstructref{server}{acronym} is an acronym for the tool,
     e.g., COSTA;
-  \item \xmlstructref{server}{title} is the full name of the application;
+  \item \xmlstructref{server}{title} is the full name of the tool;
   \item \xmlstructref{server}{logo} is an image corresponding to the logo of
-    the application; and
+    the tool; and
   \item \xmlstructref{server}{desc} is a description of the tool.
   \end{itemize}
 %
@@ -329,7 +585,7 @@ available on the server.
 {title}
 {%
 %
-  Plain text describing a title, e.g., for an application. It is
+  Plain text describing a title, e.g., for a tool. It is
   typically more informative than an acronym (see
   \xmlstructref{server}{acronym}).
 %
@@ -344,9 +600,9 @@ available on the server.
 {logo}
 {%
 %
-  A link to an image --- in some standard format, .e.g.,
+  A link to an image --- in some standard format, e.g.,
   \xmlstructvalue{png}, \xmlstructvalue{jpg} or \xmlstructvalue{gif}
-  --- to be used by clients as a logo (e.g., for an application).
+  --- to be used by clients as a logo (e.g., for a tool).
 %
 }
 
@@ -359,7 +615,7 @@ available on the server.
 {desc}
 {%
 %
-  This is a description of some entities, e.g., of an application, a
+  This is a description of some entities, e.g., of a tool, a
   parameter, a parameter option, etc. It consists of two parts, the
   first one is a short description, and the second is a detailed
   description. In both cases it should be plain text. Clients will
@@ -376,13 +632,12 @@ available on the server.
 {apphelp}
 {%
 %
-  A (formatted) text that provides enough information on how an
-  application can be used, etc. It can be provided in several formats,
-  e.g., html or plain text, by using several
-  \xmlstructref{server}{content} tags. Clients are supposed to pick
-  the appropriate format if more than one is available. It is
-  recommended to always include a content in plain text since it can
-  be viewed in any client.
+  A (formatted) text that provides enough information on how a tool
+  can be used, etc. It can be provided in several formats, e.g., HTML
+  or plain text, by using several \xmlstructref{server}{content}
+  tags. Clients are supposed to pick the appropriate format if more
+  than one is available. It is recommended to always include a content
+  in plain text since it can be viewed in any client.
 %
 }
 
@@ -396,9 +651,12 @@ available on the server.
 {%
 %
   A text given in a specific \xmlstructattr{format}, e.g.,
-  \xmlstructvalue{"text"}, \xmlstructvalue{"html"}, etc. If the
-  attribute \xmlstructattr{format} is not provided, then it is assumed
-  to be \xmlstructvalue{"text"} format (plain text).
+  \xmlstructvalue{text}, \xmlstructvalue{html}, etc. If the attribute
+  \xmlstructattr{format} is not provided, then it is assumed to be
+  \xmlstructvalue{text} format (plain text). 
+%% See the
+%%   \xmlstructref{eiout}{content} tag of the \ei output language as
+%%   well.
 %
 }
 
@@ -410,7 +668,7 @@ available on the server.
 {execinfo}
 {%
 %
-  Provides information on how to execute an application. Currently it
+  Provides information on how to execute a tool. Currently it
   includes only the command-line template
   \xmlstructref{server}{cmdlineapp}.
 %
@@ -424,99 +682,30 @@ available on the server.
 {cmdlineapp}
 {%
 %
-  Describes how to run an application from a command-line, where
-  \xmlstructref{server}{cmdtemplate} is a template describing the
-  command-line. It is best explained by an example. Consider the
-  following template example
-
-  \bigskip
-  ~~~
-  \fbox{\small\texttt{/path-to/app \xmlstructtemplate{_ei_files} -m \xmlstructtemplate{_ei_outline}  \xmlstructtemplate{_ei_parameters}}}
-  
-  \bigskip
-  \noindent
-  In this template, anything that starts with \xmlstructtemplate{_ei}
-  is a template parameter that will be replaced by some corresponding
-  value, and \texttt{/path-to/app} is the application
-  executable.
-  % 
-  When the server receives a request for executing the corresponding
-  application, the request includes several data that should passed to
-  the application. For example, the following are typical data that
-  should be passed to an application:
-  %
-  \begin{enumerate}
-  \item files to be processed (e.g., program to be analyzed);
-  \item entities selected from the program outline (e.g., methods); and
-  \item values for the different parameters.
-  \end{enumerate}
-  %
-  The server passes this data to the application by replacing the
-  template parameters with corresponding data as follows:
-  % 
-  \begin{enumerate}
-  \item the files are stored locally (e.g., in \texttt{/tmp}), and
-    \xmlstructtemplate{_ei_files} is replaced by a list file names
-    (each with an absolute path, separated by a space);
-  \item \xmlstructtemplate{_ei_outline} is replaced by a list of
-    selected entities (e.g., method names); and
-  \item \xmlstructtemplate{_ei_parameters} is replaced by the list of
-    parameters generated from those provided in the request.
-  \end{enumerate}
-  % 
-  This result in, for example, the following instance of the template:
-
-  \bigskip
-  \hspace{0.7cm}
-  \fbox{\texttt{/path-to/app \xmlstructtemplate{/tmp/ei_FAJw1B/a.c /tmp/ei_FAJw1B/b.c} -m \xmlstructtemplate{a.main} \xmlstructtemplate{-v 1 -d 3 -a}}}
-
-  \bigskip 
-  \noindent
-  which is then executed and its output is redirected to the
-  client. The server does some security checks to guarantee that the
-  command-line is not harmful. % TODO refer to the security section when available
-
-  \bigskip 
-  \noindent
-  The following is a list of template parameters that can be used:
-
-%%
-  \begin{itemize}
-  \item \xmlstructtemplate{_ei_files} is replaced by a list of file
-    names (separated by space) in the local file system;
-
-  \item \xmlstructtemplate{_ei_root} is replaced by the local
-    temporary directory name, where all files have been saved;
-
-  \item \xmlstructtemplate{_ei_stream} is replaced by the local
-    temporary directory name, where stream aplications have to save
-    all files; 
-%%
-  \item \xmlstructtemplate{_ei_outline} is replaced by a list of
-    selected entities (separated by space);
-%%
-  \item \xmlstructtemplate{_ei_parameters} is replaced by a
-    corresponding list of parameters (see \xmlstructref{server}{parameters});
-%%
-  \item \xmlstructtemplate{_ei_sessionid} is replaced by a session
-    identifier, this makes it possible to track the information of a
-    user along several request;
-%%
-  \item \xmlstructtemplate{_ei_clientid} is replaced by the client
-    identifier, i.e., \texttt{webclient}, \texttt{eclipse}, etc.,
-    which makes it possible to provide output depending on the
-    client. See Chapter~\ref{ch:clients} for a list of clients and
-    their corresponding identifiers.
+  Describes how to run a tool from a command-line. It can be used in
+  two modes:
 %
-  \item \xmlstructtemplate{_ei_execid} is replaced by a execution
-    identifier, this makes it possible to track the information of a
-    concrete execution, especially for stream applications;
-  \end{itemize}
+\begin{itemize}
+
+\item if the attribute \xmlstructattr{path} is not specified, then
+  command-line template \xmlstructref{server}{cmdtemplate} is
+  instantiated and then executed;
+
+\item if the attribute \xmlstructattr{path} is specified, then
+  command-line template \xmlstructref{server}{cmdtemplate} is
+  instantiated and passed to the program specified by
+  \xmlstructattr{path} in the standard input.
+\end{itemize}
+%
+The second possibility is more safe, since it does not allow clients
+to manipulate the command-line in order to execute undesired
+programs. However, the server should provide enough guarantees that
+this does not happen in the first option as well.
 %
 }
 
 
-\subsubsection{Application Parameters}
+\subsubsection{Tool Parameters}
 
 %% PARAMETERS
 \bigskip 
@@ -526,27 +715,27 @@ available on the server.
 {%
 %
   Defines a list of parameters that are accepted by a corresponding
-  application. Each parameter is defined by one
-  \xmlstructref{server}{param} environment.
+  tool. Each parameter is defined by one \xmlstructref{server}{param}
+  environment.
   %
   The \xmlstructattr{prefix} attribute is used to specify a string
   that will be attached to each parameter name when passed to the
-  application.
+  tool.
   % 
   For example, if \xmlstructattr{prefix}=\xmlstructvalue{"{-}{-}"} and
-  there is a parameter called 'level' with value X, then '{-}{-}level
-  X' will be passed to the application.  The default value of
-  \xmlstructattr{prefix} is \xmlstructvalue{"-"}. It can also be set
-  to an empty string if there is no need for a prefix.
+  there is a parameter called \lst{level} with value \lst{X}, then
+  ``\lst{--level X}'' will be passed to the tool.  The default value
+  of \xmlstructattr{prefix} is \xmlstructvalue{"-"}. It can also be
+  set to an empty string if there is no need for a prefix.
   %
   The \xmlstructattr{check} attribute is used to indicate if the
   server should verify that the values of the parameters are valid
   (w.r.t. the specified values). The default value of
-  \xmlstructattr{check} is \xmlstructvalue{"true"}.
+  \xmlstructattr{check} is \xmlstructvalue{true}.
   %
   The attributes \xmlstructattr{prefix} and \xmlstructattr{check} are
-  inherited by each parameter \xmlstructref{server}{param}, which in turn can
-  override then as well.
+  inherited by each parameter \xmlstructref{server}{param}, which in
+  turn can override them.
 %
 }
 {}%
@@ -558,7 +747,7 @@ available on the server.
 {param}
 {%
 %
-  Defines a parameter accepted by a corresponding application. There
+  Defines a parameter accepted by a corresponding tool. There
   are several types of parameters supported:
 \begin{itemize}
 \item \xmlstructref{server}{selectone} defines a parameter that takes one
@@ -585,7 +774,7 @@ available on the server.
 
   \begin{itemize}
   \item \xmlstructattr{name} is the name of the parameter, it must be
-    unique among all parameters of an application;
+    unique among all parameters of a tool;
 
   \item \xmlstructattr{prefix} and \xmlstructattr{check} can be used
     to override the corresponding attributes of
@@ -598,12 +787,12 @@ available on the server.
 
   \item \xmlstructref{server}{defaultvalue} specifies the default value. If
     not specified then the first \xmlstructref{server}{option} is considered
-    as the default one; and
+    to be the default one.
 
-  \item \xmlstructattr{widgetid} specifies the preferred layout when
-    used in a client with a graphical interface (e.g., combo-box,
-    radio button, etc.). This is client dependent, see
-    Chapter~\ref{ch:clients} for more information.
+  %% \item \xmlstructattr{widgetid} specifies the preferred layout when
+  %%   used in a client with a graphical interface (e.g., combo-box,
+  %%   radio button, etc.). This is client dependent, see
+  %%   Chapter~\ref{ch:clients} for more information.
 
   \end{itemize}
 %
@@ -632,27 +821,25 @@ available on the server.
 {flag}
 {%
 %
-  Defines a parameter that can take \texttt{true} or \texttt{false}
+  Defines a parameter that can take \lst{true} or \lst{false}
   values. The meaning of the attributes and inner environments is as
   in \xmlstructref{server}{selectone}.  The attribute
   \xmlstructattr{explicit} is used to specify how this parameter
-  should be passed to the application. For example, assume the
-  parameter name is \texttt{f}, then:
+  should be passed to the tool. For example, assume the parameter name
+  is \texttt{f}, then:
   % 
   \begin{itemize}
   %  
   \item when \xmlstructattr{explicit} is \xmlstructvalue{false}, the
-    parameter is passed as ``\texttt{-f}'' if its value is
-    \texttt{true} and not passed at all if its value is
-    \texttt{false}.
+    parameter is passed as ``\texttt{-f}'' if its value is \lst{true}
+    and not passed at all if its value is \lst{false}.
 
   \item when \xmlstructattr{explicit} is \xmlstructvalue{true} the
-    parameter is explicitly passed to the application, i.e., using
-    ``\texttt{-f X}'' where \texttt{X} is the selected value. The
-    posible values are \xmlstructvalue{true} and
-    \xmlstructvalue{false}. However, they you can redefine them
-    overwritten (only when \xmlstructattr{explicit} is
-    \xmlstructvalue{true}) using the attributes
+    parameter is explicitly passed to the tool, i.e., using
+    ``\texttt{-f X}'' where \texttt{X} is the selected value. By
+    default the possible values are \lst{true} and \lst{false},
+    however, you can redefine them (only when \xmlstructattr{explicit}
+    is \xmlstructvalue{true}) using the attributes
     \xmlstructattr{trueval} and \xmlstructattr{falseval}.
   % 
   \end{itemize}
@@ -682,13 +869,15 @@ available on the server.
   \xmlstructvalue{false}, i.e., single-line.
 %
 \item \xmlstructattr{passinfile} is used to indicate that the actual
-  value should be saved into a file, and what is passed to the
-  application is the file name instead of the actual text. 
+  value should be saved into a file, and what is passed to the tool is
+  the file name instead of the actual text.
   % 
   This should be used for safety, when there is a risk that the
   free-text can be harmful to the command-line (although the server
-  does some checks to avoid this).
+  should do some checks to avoid this).
 %
+\item \xmlstructattr{type} restricts the value that can be provided to
+  a specific type.
 \end{itemize}
 %
 The meaning of the other attributes and inner environments is as in
@@ -716,13 +905,86 @@ Defines an option (i.e., a possible value) for a parameter.
 Defines a default value for a parameter.
 }
 
+\subsubsection{Tool Profiles}
 
+%% PROFILES
+\bigskip
+\xmlstruct
+{server}
+{profiles}
+{%
+%
+  This tag declares a list of profiles. Each such profiles is defined
+  by one \xmlstructref{server}{profile} environment.
+%
+}
+
+%% PROFILE
+\bigskip
+\xmlstruct
+{server}
+{profile}
+{%
+%
+  This tag defines a profile which is a list of
+  \xmlstructref{server}{profileparam}
+  parameters. \xmlstructref{server}{desc} gives a description
+  of this profile. The semantics of applying a profile is as follows:
+%
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+\item all parameters of the tool are set to their default value; and
+\item the values of the parameters indicated in this profile are set
+  to their corresponding values.
+\end{inparaenum}
+%
+}
+
+
+%% PROFILEPARAM
+%%
+\bigskip
+\xmlstruct
+{server}
+{profileparam}
+{%
+%
+  This tag is used to define a value for a parameter in the context of
+  a profile. The attributes \xmlstructattr{name} and \xmlstructattr{value} refers
+  to the parameter name and value respectively.
+
+  It has two forms that are used depending on the type of parameter as
+  follows.
+%
+  \begin{itemize}
+%
+  \item for \xmlstructref{server}{selectone} parameters we use the
+    first form. The corresponding \xmlstructref{server}{profile}
+    should include only one \lst{setparamvalue} for such parameter;
+%
+  \item for \xmlstructref{server}{selectmany} parameters we use the
+    first form. The corresponding \xmlstructref{server}{profile} can
+    include one \lst{setparamvalue} tag for each value (since such
+    parameters take several values);
+%
+  \item for \xmlstructref{server}{flag} parameters we use the first
+    form. The \xmlstructattr{value} must be \xmlstructvalue{false} or
+    \xmlstructvalue{true}. In addition one can use the values of the
+    corresponding \xmlstructattr{trueval} or \xmlstructattr{falseval}
+    attributes.
+%
+  \item for \xmlstructref{server}{textfield} parameters we use the
+    second form, where $\xmlstructref{server}{text}$ refer to the
+    value of this parameter.
+    \end{itemize}
+}
+
+\subsubsection{Others}
 
 \bigskip
 \noindent
 \xmlstructdef{server}{textformat}
 
-( \lst{"text"} | \lst{"html"} | \lst{"svg"})
+( \lst{$\mbox{text}$} | \lst{html} | \lst{svg} )
 
 \bigskip
 \noindent
@@ -740,7 +1002,7 @@ Defines a default value for a parameter.
 \noindent
 \xmlstructdef{server}{bool}
 
-( \lst{"true"} | \lst{"false"} )
+( \lst{true} | \lst{false} )
 
 \bigskip
 \noindent
@@ -762,6 +1024,12 @@ Defines a default value for a parameter.
 
 \bigskip
 \noindent
+\xmlstructdef{server}{profilename}
+
+[a-z,A-Z,0-9,-,\_]+
+
+\bigskip
+\noindent
 \xmlstructdef{server}{url}
 
 A valid \texttt{http} or \texttt{https} URL.
@@ -771,7 +1039,7 @@ A valid \texttt{http} or \texttt{https} URL.
 \xmlstructdef{server}{paramprefix}
 
 Can be any string that matches [a-z,A-Z,0-9,-,\_]+, typically
-\lst{"-"} or \lst{"--"}.
+\lst{-} or \lst{--}.
 
 \bigskip
 \noindent
@@ -783,26 +1051,26 @@ Free text.
 \noindent
 \xmlstructdef{server}{githubpath}
 
-A path to a file or a directory in a github repository (relative to
+A path to a file or a directory in a GitHub repository (relative to
 the root of the repository).
 
 \bigskip
 \noindent
 \xmlstructdef{server}{githubbranch}
 
-A valid branch name for a github repository.
+A valid branch name for a GitHub repository.
 
 \bigskip
 \noindent
 \xmlstructdef{server}{githubuser}
 
-A valid github username.
+A valid GitHub user name.
 
 \bigskip
 \noindent
 \xmlstructdef{server}{githubrepo}
 
-A valid github repository.
+A valid GitHub repository.
 
 \bigskip
 \noindent
@@ -820,47 +1088,75 @@ A valid github repository.
 \noindent
 \xmlstructdef{server}{cfgfilename}
 
-A path to a configuration file. Should be relative to
-\texttt{server/config}.
+A path to a configuration file. Depending on the implementation, it
+might be restricted to relative to some configuration directory.
+
+\bigskip
+\noindent
+\xmlstructdef{server}{type}
+
+( \lst{bool} | \lst{int} | \lst{float} | \lst{string} | \lst{word} )
+where \lst{word} means a string without whitespaces
+
+
+
+
+\bigskip
+\noindent
+\xmlstructdef{server}{toolexe}
+
+A path describing an executable (of a tool).
 
 \bigskip
 \noindent
 \xmlstructdef{server}{cmdtemplate}
 
-The explanation is given in \xmlstructref{server}{cmdlineapp}.
+A command-line template as explained in
+Section~\ref{sec:server:config:cmdlntmp}.
 
 \section{Communicating with the \ei Server}
-\label{ch:server:protocol}
+\label{sec:server:access}
 
 This section describes the protocol to be used for communicating with
-the \ei server. If you are not developing an \ei client, then this
-section is not relevant for you.
-
-The \ei server is a collection of PHP scripts running on top of an
-HTTP server. Communicating with the server is done through HTTP POST
-requests. 
+the \ei server. The server should receive requests using the HTTP POST
+protocol~\cite{rfc2616}. The advantage of using this protocol is that one can
+build the \ei server on top of an HTTP server, and thus take advantage
+of the underlying machinery for serving clients concurrently.
 %
-In particular, the request should include an attribute called
-``\texttt{eirequest}'' (the actual value of ``\texttt{eirequest}'' is
-a JSON record that we will described in the next sections). The
-following is an example of how one can communicate with the server
-using jQuery:
+In addition, if one is not interested in building the \ei server on
+top of an HTTP server, there are numerous libraries, for different
+languages, for HTTP POST communication that one can use (this is true
+for the client side as well).
 
-\bigskip
+
+The HTTP POST request should include a single attribute called
+\lst{eirequest}. The actual value of \lst{eirequest} is a JSON record
+that as described in the next sections.
+%
+The following is an example of how one can communicate with the
+server, that we have implemented, using JavaScript and
+jQuery~\cite{jquery}:
+
+\medskip
 \begin{lstlisting}
-var req = ...; // the actual JSON record of the request
+var req;
+
+(*// here we set variable 'req' to the JSON record*)
+(*// that represents the request*)
+
 $\$$.post("http://localhost/ei/server/eiserver.php",
 {
   eirequest: req
 },
 function(data) { 
-  // do something with data
+  // do something with the response 'data'
 });
 \end{lstlisting}
 
-\bigskip
+\medskip
 \noindent
-The response of the server is an XML of the following form:
+The response of the server should be an XML structure of the following
+form:
 
 \bigskip
 \begin{lstlisting}
@@ -884,92 +1180,102 @@ Where
   environment.
 %
 \item \lst{ei_output} includes the response to the request, i.e., if
-  we request to execute an application the output of that application
+  we request to execute a tool the output of that tool
   goes inside this tag.
 %
 \item \lst{ei_error} includes error messages that are related to the
-  request.
+  request (not to the tool).
 %
 \end{itemize}
 %
 Typically, \lst{ei_output} and \lst{ei_error} are mutually exclusive,
-i.e., only one can appear in the response. 
-
-\bigskip 
+i.e., only one can appear in the response.%
 %
-In the next section we describe the format of the request to (1)
-obtain information on the available applications; (2) execute an
-application; and (3) retrieve example sets.
+In the next sections we describe the format of the different requests
+that one can make to the \ei server.
 
-\subsection{Retrieve Information on Available Applications}
+\subsection{Retrieve Information on Available Tools}
+\label{sec:server:access:rettools}
 
-To retrieve information on a given application, or all visible
-applications on the server, use the following request:
+To retrieve information on a given tool, or all visible tools on the
+server, the request should adhere to the following format:
 
 \bigskip
 \begin{lstlisting}
 {
-  command: CMD,
-  app_id: ID
+  (*"command"*): CMD,
+  (*"app\_id"*): ID
 }
 \end{lstlisting}
 
 \bigskip
 \noindent
-where (1) \texttt{CMD} can be \texttt{app\_info},
-\texttt{app\_parameters}, or \texttt{app\_details}; and (2)
-\texttt{ID} is either the special value \texttt{\_ei\_all} (i.e., all
-applications) or an application identifier as specified in
-\xmlstructref{server}{app}.
+where 
+\begin{enumerate}[\upshape(\itshape i\upshape)]
+%
+\item \lst{CMD} can be \lst{$\mbox{app\_info}$},
+  \lst{$\mbox{app\_parameters}$}, or \lst{$\mbox{app\_details}$}; and
+%
+\item \lst{ID} is either the special value \lst{$\mbox{\_ei\_all}$}
+  (i.e., all tools) or a tool identifier as specified in
+  \xmlstructref{server}{app}.
+%
+\end{enumerate}
 %
 A successful request will return (inside the \lst{ei_output} tag) the
 XML structure \xmlstructref{server}{apps} (that is defined in the
 configuration file) after filtering out some information as we explain
 next.
 %
-First any application that does not match \texttt{ID} is removed (if
-\texttt{ID} is \texttt{\_ei\_all} then only non-visible applications
-are removed). Then, for the remaining applications:
+First any tool that does not match \lst{ID} is removed (if \lst{ID} is
+\lst{$\mbox{\_ei\_all}$} then only non-visible tools are
+removed). Then, for the remaining tools:
 %
 \begin{itemize}
 %
-\item if \texttt{CMD} equals \texttt{app\_info}, it returns only the
-  \xmlstructref{server}{appinfo} of each application;
+\item If \lst{CMD} equals \lst{$\mbox{app\_info}$}, it returns only
+  the \xmlstructref{server}{appinfo} of each tool;
 %
-\item if \texttt{CMD} equals \texttt{app\_parameters}, it returns only the
-  \xmlstructref{server}{parameters} of each application; and
+\item If \lst{CMD} equals \lst{$\mbox{app\_parameters}$}, it returns
+  only the \xmlstructref{server}{parameters} and
+  \xmlstructref{server}{profiles} of each tool; and
 %
-\item if \texttt{CMD} equals \texttt{app\_details}, it returns
-  everything except \xmlstructref{server}{execinfo} of each
-  application.
+\item If \lst{CMD} equals \lst{$\mbox{app\_details}$}, it returns
+  everything except \xmlstructref{server}{execinfo} and
+  \xmlstructref{server}{sandbox} of each tool.
 %
 \end{itemize}
 %
-Note that \xmlstructref{server}{execinfo} is never returned as it
-reveals information on how to execute an application locally.
+Note that \xmlstructref{server}{execinfo} and
+\xmlstructref{server}{sandbox} are never returned as they reveal
+information on how to execute a tool locally, etc.
 
 
 
-\subsection{Execute an Application}
+\subsection{Execute a tool}
+\label{sec:server:access:exectool}
 
 Next we describe, by mean of an example, the form of a request for
-executing an application. Suppose we are interested in executing an
-application with identifier \texttt{myapp} where, in addition, we
-would like to pass it some values for the parameters, files to
-process, outline entities, and the identifier of the client who is
-making the request. Such a request has the following form:
+executing a tool. Suppose we are interested in executing a tool with
+identifier \lst{myapp} where, in addition, we would like to pass it
+some values for the parameters, files to process, outline entities,
+the identifier of the client who is making the request and which
+output format it supports.
+%
+Such a request has the following form:
 
 \bigskip
 \begin{lstlisting}
 {
-  command: (*"execute"*),
-  app_id: (*"myapp"*),
-  (*parameters*): {
+  (*"command"*): (*"execute"*),
+  (*"app\_id"*): (*"myapp"*),
+  (*"parameters"*): {
     (*"l"*): (*[ "true" ]*),
     (*"f"*): (*[ "false" ]*),
     (*"s"*): (*[ "yes" ]*),
     (*"x"*): (*[ "1", "2" ]*), 
     (*"\_ei\_clientid"*): (*"webclient"*),
+    (*"\_ei\_outformat"*): (*"eiol"*),
     (*"\_ei\_outline"*): (* [ "ent1", "ent2", ... ]*),
     (*"\_ei\_files"*): [
                   {
@@ -977,22 +1283,26 @@ making the request. Such a request has the following form:
                     (*type*): (*"dir"*),
                   },
                   {
-                    (*path*): (*"dir2/file1.c"*),
+                    (*path*): (*"dir2"*),
+                    (*type*): (*"dir"*),
+                  },
+                  {
+                    (*path*): (*"dir1/file1.c"*),
                     (*type*): (*"text"*),
-                    (*content*): (*"This is the content of dir2/file1.c"*)
+                    (*content*): (*"This is the content of the file"*)
                   },
                   {
                     (*path*): (*"dir2/file2.c"*),
                     (*type*): (*"text"*),
-                    (*content*): (*"This is the content of dir2/file2.c"*)
+                    (*content*): (*"This is the content of the file"*)
                   },
                   {
-                    (*path*): (*"dir3/file1.c"*),
+                    (*path*): (*"dir2/file3.c"*),
                     (*type*): (*"text"*),
-                    (*content*): (*"This is the content of dir3/file1.c"*)
+                    (*content*): (*"This is the content of the file"*)
                   }
                 ]
-  }
+     }
 }
 \end{lstlisting}
 
@@ -1002,75 +1312,224 @@ Let us explain the different parts of this request:
 %
 \begin{itemize}
 %
-\item \texttt{command} must have the value \texttt{``execute''};
+\item The field \lst{command} must have the value \lst{execute};
 %
-\item \texttt{app\_id} should refer to the identifier of the
-  application that we want to execute (it can be visible or not);
+\item The filed \lst{$\mbox{app\_id}$} should refer to the identifier
+  of the tool that we want to execute, it can be visible or not;
 %
-\item \texttt{parameters} is a JSON record that includes all the
-  information, e.g., application parameters and files, that we want to
-  pass over, as we explain below.
+\item The filed \lst{$\mbox{parameters}$} is a JSON record that
+  includes all the information, e.g., tool parameters and files, that
+  we want to pass over, as we explain below.
 \end{itemize}
 %
 Before explaining the details of the parameters record, it is
 recommend that you refresh your memory with the details of the
-command-line template as described
-in~\xmlstructref{server}{cmdlineapp}. The parameters record includes
-the following information:
+command-line template as described in
+Section~\ref{sec:server:config:cmdlntmp}. The parameters record
+includes the following information:
 %
 \begin{itemize}
 %
-\item \emph{Application parameters:} any field (of the JSON record)
-  whose name does not start with \texttt{\_ei} is a parameter that is
-  supposed to be defined in the \xmlstructref{server}{parameters}
-  environment of the corresponding application. The value of such
-  field is a list of elements that represent the value of the
-  parameter. If the parameter is supposed to take a single value then
-  the list must have a single element.
+\item \emph{Tool parameters:} any field of record whose name does not
+  start with ``\lst{$\mbox{\_ei}$}'' is a parameter that is supposed
+  to be defined in the \xmlstructref{server}{parameters} environment
+  of the corresponding tool. The value of such field is a list of
+  elements that represent the value of the parameter. If the parameter
+  is supposed to take a single value then the list must have a single
+  element.
 %
-\item \emph{Files}: the field \texttt{\_ei\_files} represent the files
-  that we want to pass to the application. Its value is an array of
-  JSON records where each record represent a text file or a directory
-  (binary files are not supported yet). The \texttt{path} field of the
-  record refers to the file or directory name, it is relative to the
-  root of the temporary directory where the server saves these
-  files. The \texttt{type} field indicates the type of the file. In
-  the case of text files, the field \texttt{content} represent the
-  actual content of the file.
+\item \emph{Files}: the field \lst{$\mbox{\_ei\_files}$} represents
+  the files that we want to pass to the tool. Its value is an array of
+  JSON records where each record represents a text file or a
+  directory. 
+  %
+  The \lst{$\mbox{path}$} field of the record refers to the file or
+  directory name, it is relative to the root of the temporary
+  directory where the server saves these files. 
+  %
+  The \lst{$\mbox{type}$} field indicates the type of the file. In the
+  case of text files, the field \lst{$\mbox{content}$} represents the
+  actual content of the file. Note that binary files can be supported
+  as well by encoding them to text representation, we leave this
+  feature implementation dependent.
 %
-\item \emph{Outline entities}: the filed \texttt{\_ei\_outline} is a
-  list of elements representing the selected entities from the
+\item \emph{Outline entities}: the filed \lst{$\mbox{\_ei\_outline}$}
+  is a list of elements representing the selected entities from the
   outline.
 %
-\item \emph{Client identifier}: the field \texttt{\_ei\_clientid}
-  indicates the identifier of the client who has performed the
-  request.
+\item \emph{Client identifier}: the field
+  \lst{$\mbox{\_ei\_clientid}$} indicates the identifier of the client
+  who has performed the request.
 %
+\item \emph{Supported output format}: the field
+  \lst{$\mbox{\_ei\_outformat}$} indicates the supported output
+  format, it can be \lst{eiol} or \lst{txt}.
 \end{itemize}
 
 
 
 \subsection{Retrieve Example Sets}
+\label{sec:server:access:retexs}
 
-To retrieve the example sets use the following request:
+To retrieve example sets we use the following request:
 
 \bigskip
 \begin{lstlisting}
 {
-  command: "exset_details",
-  app_id: ID
+  (*"command": "exset\_details",*)
+  (*"exset\_id": ID*)
 }
 \end{lstlisting}
 
 \bigskip
 \noindent
-where \texttt{ID} is either the special value \texttt{\_ei\_all}
+where \lst{ID} is either the special value \lst{$\mbox{\_ei\_all}$}
 (i.e., all example sets) or an examples set identifier as specified in
 \xmlstructref{server}{exset}.
 %
 A successful request will return (inside the \lst{ei_output} tag) the
-XML structure \xmlstructref{server}{examples} (that is defined in the
-configuration file) after filtering out those example sets that do not
-match the value of \texttt{ID}, i.e, if \texttt{ID} is
-\texttt{\_ei\_all} then it returns all example sets, otherwise only
-the indicated one.
+XML structure \xmlstructref{server}{examples} after filtering out
+those example sets that do not match the value of \lst{ID}, i.e, if
+\lst{ID} is \lst{$\mbox{\_ei\_all}$} then it returns all example sets,
+otherwise only the indicated one.
+
+\subsection{Download Output Files}
+\label{sec:server:access:download}
+
+Assuming that a tool has left a file in the directory
+\xmlstructtemplate{_ei_root}\lst{$\mbox{/\_ei\_download}$}, we can
+download it later using the following request to the same server on
+which that tool was executed:
+
+\medskip
+\begin{lstlisting}
+{
+  (*"command": "download",*)
+  (*"exec\_id": EXECID,*)
+  (*"file": FILENAME*)
+}
+\end{lstlisting}
+
+\medskip
+\noindent
+Here \lst{EXECID} is the corresponding execution identifier (see
+Section~\ref{sec:server:config:cmdlntmp}), and \lst{FILENAME} is the
+name of the file to be downloaded.
+
+\subsection{Manage Output Streams}
+\label{sec:server:access:stream}
+
+
+Assuming that a tool has left some processes in the background which
+generate some output chunks into
+\xmlstructtemplate{_ei_root}\lst{$\mbox{/\_ei\_stream}$}, we can
+retrieve those chunks using the following request to the same server on
+which that tool was executed:
+
+\medskip
+\begin{lstlisting}
+{
+  (*"command": "get\_stream",*)
+  (*"exec\_id": EXECID,*)
+  (*"extention": EXT*)
+}
+\end{lstlisting}
+
+\medskip
+\noindent
+Here \lst{EXECID} is the corresponding execution identifier (see
+Section~\ref{sec:server:config:cmdlntmp}), and \lst{EXT} is the
+extension of the files that represent the chunks to be retrieve --
+note that a tool can generate chunks with different extensions and
+retrieve them separately.
+%
+The server responds to this request by sending back the following XML
+structure for each generated chunk (each chunk corresponds to one file
+with the extension \lst{EXT}):
+
+\medskip
+\begin{lstlisting}
+<ei_stream state=[STATE]>
+  [CHUNKCONTENT]
+</ei_stream>
+\end{lstlisting}
+
+\medskip 
+\noindent
+Apart from the content of the corresponding chunk, the attribute
+\xmlstructattr{state} indicates the state of the background processes
+as follows:
+%
+\begin{itemize}
+  \item \lst{nostream}: if there is no stream with identifier \lst{EXECID};
+  \item \lst{terminated}: if the corresponding background processes
+    have terminated normally.
+  \item \lst{stopped}: if the corresponding background processes have
+    been stopped (see \lst{kill_stream} request below);
+  \item \lst{running}: if the corresponding background processes are
+    still running.
+  \item \lst{empty}: if there is no new content generated for the
+    corresponding stream. Note that the corresponding background
+    processes are still running in this case.
+  \item \lst{unknown}: if some other unexpected  error has occured.
+\end{itemize}
+%
+%
+In addition, clients can request to stop the background processes
+using the following request:
+
+\medskip
+\begin{lstlisting}
+{
+  (*"command": "kill\_stream",*)
+  (*"exec\_id": EXECID,*)
+}
+\end{lstlisting}
+
+\medskip 
+\noindent
+where \lst{EXECID} is the corresponding execution identifier. The
+response to such request is as above with a \xmlstructattr{state}
+\lst{terminated} or \lst{stopped}, but has no content.
+
+\section{Implementation}
+\label{sec:server:impl}
+
+We have implemented an \ei server as a collection of PHP programs that
+run on top of an HTTP server, e.g., Apache. 
+%
+It implements the specification as described in this chapter. It is
+part of the GitHub repository
+\url{http://github.com/abstools/easyinterface}, under the directory
+\lst{server}.
+
+By default the server uses \lst{$\mbox{server/config/eiserver.cfg}$}
+as a configuration file, and if no such file exists it uses
+\lst{$\mbox{server/config/eiserver.default.cfg}$}.
+%
+The default installation comes with a default
+\lst{$\mbox{sever/config/eiserver.default.cfg}$} that includes some
+demo tools and corresponding examples.
+%
+It is recommended not to modify
+\lst{$\mbox{server/config/eiserver.default.cfg}$}, but rather create
+your own configuration file
+\lst{$\mbox{server/config/eiserver.cfg}$}. This way you can always
+have a correct configuration file at hand from which you can copy,
+etc.
+%
+Note that all references to configuration files, when including them
+via the \lst{src} attribute, should be relative to
+\lst{$\mbox{server/config}$}.
+
+When installing a tool, it is recommended that, instead of refereeing
+to the tool's executable directly, to write a bash-script wrapper that
+execute the tool and place this script under
+\lst{$\mbox{server/bin}$}. This way we have more control on the
+installed tools.
+%
+Note that when refereeing to these wrappers, in the configuration
+files, it is enough to use paths relative to \lst{$\mbox{server/bin}$}
+(the server switches to the directory \lst{$\mbox{server/bin}$} before
+executing the command-line).
+

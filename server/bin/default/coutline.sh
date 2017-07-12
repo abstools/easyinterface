@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo $@ > /tmp/xxx
-rootdir=$1
+rootdir=$1/_ei_files
 shift
 
 for f in $@; do 

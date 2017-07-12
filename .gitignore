@@ -1,0 +1,12 @@
+# documentation
+*.pdf
+
+# custom config
+clients/web/webclient.cfg
+server/config/eiserver.cfg
+**/examples.cfg
+**/absfrontend.jar
+**/ENVISAGE_CONFIG
+
+# emacs files
+*~

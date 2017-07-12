@@ -2,16 +2,17 @@
 
 class EIStream {
 
-  static function get($exec_id) {
+  static function get($exec_id,$ext) {
     $p = EIStream::path($exec_id);
     if(!EIStream::isStream($exec_id)){
       return "<ei_stream state='nostream' />";
     }
     if(EIStream::finish($exec_id))
-      $state = "finish";
+      $state = "terminated";
     else
       $state = "running";
-    exec("ls ".$p."*.ei", $files);
+    echo $ext;
+    exec("ls ".$p."*.".$ext, $files); // TODO: security on extension
     sort($files, SORT_NATURAL );
 
     $output_f = "";
@@ -25,7 +26,7 @@ class EIStream {
 	$empty = false;
 
 	$output_f .= $aux;
-	$output_f .= "\n";
+	$output_f .= "";
 
       }
       unlink($f);
@@ -33,10 +34,10 @@ class EIStream {
     }
     $output ="";
     if($empty)
-      $state .= " nonewfiles";
+      $state .= " empty";
     else{
       $output .= "<content><![CDATA[\n";
-      $output .= htmlspecialchars ($output_f);
+      $output .= $output_f;
       $output .= "]]></content>\n";
     }
     return "<ei_stream state='".$state."' >\n".$output."</ei_stream>";
@@ -44,13 +45,13 @@ class EIStream {
 
   static function kill( $exec_id ) {
     if(!EIStream::isStream($exec_id) || EIStream::finish($exec_id))
-      return "<ei_stream state='finish' />";
+      return "<ei_stream state='terminated' />";
 
     $aux = EIStream::getPID($exec_id);
     if($aux === FALSE)
       return "<ei_stream state='unknown' />";
     exec("bin/misc/killproc.sh ".$aux);
-    exec("touch ".EIStream::path($id)."terminated");
+    exec("touch ".EIStream::path($exec_id)."terminated");
     return "<ei_stream state='stopped' />";
   }
 
@@ -67,7 +68,7 @@ class EIStream {
   }
 
   static function path($id){
-    $aux = sys_get_temp_dir()."/easyinterface_".$id;
+    $aux = sys_get_temp_dir()."/ei/ei_".$id;
     $dir = str_replace("\\", "/", $aux);
     unset($aux);
     return $dir."/_ei_stream/";

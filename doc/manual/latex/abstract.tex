@@ -1,0 +1,74 @@
+{% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
+}
+
+\newpage
+
+\thispagestyle{empty}
+
+\begin{center}
+{\bf \Huge Abstract}
+\end{center}
+
+\vspace{1cm}
+During the lifetime of a research project, different partners develop
+several research prototype tools that share many common aspects.
+%
+This is equally true for researchers as individuals and as groups:
+during a period of time they often develop several related tools to
+pursue a specific research line.
+%
+Making research prototype tools easily accessible to the community is
+of utmost importance to promote the corresponding research, get
+feedback, and increase the tools' lifetime beyond the duration of a
+specific project.
+%
+One way to achieve this is to build graphical user interfaces (GUIs)
+that facilitate trying tools; in particular, with web-interfaces one
+avoids the overhead of downloading and installing the tools.
+
+Building GUIs from scratch is a tedious task, in particular for
+web-interfaces, and thus it typically gets low priority when
+developing a research prototype. Often we opt for copying the GUI of
+one tool and modifying it to fit the needs of a new related tool.
+%
+Apart from code duplication, these tools will ``live'' separately,
+even though we might benefit from having them all in a common
+environment since they are related.
+
+This work aims at simplifying the process of building GUIs for
+research prototypes tools. In particular, we present \ei, a toolkit
+that is based on novel methodology that provides an easy way to make
+research prototype tools available via common different environments
+such as a web-interface, within Eclipse, etc.
+%
+It includes a novel text-based output language that allows to present
+results graphically without requiring any knowledge in GUI/Web
+programming. For example, an output of a tool could be (a structured
+version of) ``\emph{highlight line number 10 of file ex.c}'' and
+``\emph{when the user clicks on line 10, open a dialog box with the
+  text ...}''. The environment will interpret this output and converts
+it to corresponding visual effects. The advantage of using this
+approach is that it will be interpreted equally by all environments of
+\ei, e.g., the web-interface, the Eclipse plugin, etc.
+%
+
+\ei has been developed in the context of the \envisage~\cite{envisage}
+project, and has been evaluated on tools developed in this project,
+which include static analyzers, test-case generators, compilers,
+simulators, etc. \ei is open source and available at
+GitHub\footnote{\eigithub}.
+
+
+\vspace{1cm}
+
+
+\begin{center}
+{\bf \Large Keywords}
+\end{center}
+
+\vspace{0.5cm}
+   
+Generic User Interfaces, Web Programming.
+
+   
+

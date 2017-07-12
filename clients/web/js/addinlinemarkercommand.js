@@ -41,13 +41,18 @@ window.AddInLineMarkerCommand = (function() {
 	//
 	"do":
 	function() {
-	    this.inlinemarker.do();
+	    $(this.inlinemarker).each(function(){
+	      this.do();
+	    });
 	},
 
 	//
 	"undo":
 	function() {
-	    this.inlinemarker.undo();
+	    $(this.inlinemarker).each(function(){
+	      this.undo();
+	    });
+	  //this.codearea.removeLineWidget(this.dest,this.lines);
 	}
     }
 

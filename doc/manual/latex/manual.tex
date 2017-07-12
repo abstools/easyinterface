@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper,openany]{book}
+\documentclass[12pt,a4paper,twoside,openany]{book}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -7,170 +7,82 @@
 \usepackage{marginnote}
 \usepackage{texlinks}
 \usepackage{adjustbox}
-\usepackage{enumerate}
 \usepackage{mdframed}
-\usepackage[margin=15mm,includefoot]{geometry}  %% no header
+\usepackage{caption}
+\usepackage{xspace}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=true,
+ breaklinks=false,pdfborder={0 0 0},backref=false,colorlinks=false]
+ {hyperref}
+\usepackage[textsize=footnotesize]{todonotes}
+%\usepackage{showframe}
+\usepackage{tabularx}
+\usepackage{lipsum}
 
-\usepackage[draft]{fixme}
+
+%% \usepackage{titlesec}
+%% \titleformat{\chapter}[hang]{\Huge}{\thechapter\hspace{10pt}\textcolor{gray}{|}\hspace{10pt}}{0pt}{}
+%% \titlespacing*{\chapter}{0cm}{0cm}{1cm}
+
+\usepackage[margin=1in,marginparwidth=60pt]{geometry}
 
 \usepackage{paralist}
-\usepackage{enumitem}
-\setlist{leftmargin=8mm,noitemsep} 
 
 \usepackage{amsmath}
 \usepackage{amssymb}
+
 \usepackage{amsthm}
+\newtheorem{theorem}{THEOREM}[chapter]
+\newtheorem{example}[theorem]{EXAMPLE}
 
 \usepackage{color}
 \usepackage{xcolor}
-\usepackage{tikz}
-\usetikzlibrary{calc,shapes,patterns,decorations.pathreplacing}
-\tikzset{
-    every node/.style={align=center}, 
-    sepline/.style={draw,thick,black!25},
-    header/.style={rectangle,draw,minimum height=4.5mm}, 
-    callTo/.style={draw,thick,->},
-    constraint/.style={left}, 
-    cost/.style={ellipse,draw,thin,inner sep=0.3mm},
-    callfrom/.style={ellipse,minimum height=1mm,inner sep=0.5mm,fill=black,draw},
-    baseCall/.style={draw,rounded corners},
-    ending/.style={ellipse,draw,inner sep=1mm},
-    fullexec/.style={rectangle,rounded corners, draw}, 
-    label/.style={circle,draw,minimum height=8mm, font=\Large},
-    bigbrace/.style={draw,decoration={brace,mirror}, decorate}
-}
-
 
 %%% Code Listings
 \usepackage{listings}
 \usepackage{pxfonts}
 
-
-\lstset{
-  basicstyle=\ttfamily,
-  columns=fullflexible,
-  keepspaces=true,
-  commentstyle=\color{gray}\upshape
-}
-
-\lstdefinelanguage{XML}
-{
-  linewidth=0.97\textwidth,
-  tabsize=3,
-  frame=shadowbox,
-  basicstyle=\small\ttfamily\color{black}\bfseries,
-  rulesepcolor=\color{gray},
-  xleftmargin=10pt,
-  %framexleftmargin=15pt,
-  breaklines=true,
-  showstringspaces=false,
-  mathescape=true,
-  escapeinside={(*}{*)}, 
-  morestring=[b]",
-  morecomment=[s]{<?}{?>},
-  stringstyle=\color{green},
-  keywords=[0]{eiserver,apps,app,appinfo,acronym,title,logo,
-               desc,short,long,apphelp,content,execinfo,
-               cmdlineapp,parameters,serverapp,selectone,selectmany,flag,hidden,permission,allowed,excluded,user,textfield,widgets,widget,widgetinfo,able,type_param,settings,eiout,eicommands,eiactions,eicommand,eiaction,line,lines,printonconsole,highlightlines,dialogbox,writefile,setcss,addmarker,addinlinemarker,oncodelineclick,onclick,cssproperty,cssproperties,option,default,elements,selector,examples,exset,file,folder,github,tagname,initialtext,ei\_response,ei\_server\_output,ei\_output,ei\_error,category},
-  keywordstyle=[0]\color{blue}\bf,
-  keywords=[1]{id,visible,src,format,prefix,url,widgetid,name,max_size,method,check,value,version,from,to,fromch,toch,dest,autoclean,outclass,consoleid,consoletitle,color,filename,boxtitle,boxheight,boxwidth,path,repo,owner,branch,explicit,multiline,passinfile,selectable,icon,text,overwrite,trueval,falseval},
-  keywordstyle=[1]\color{orange},
-  keywords=[2]{_ei_files,_ei_dirs,_ei_root,_ei_parameters,_ei_ppoints,_ei_outline,_ei_sessionid,_ei_clientid},
-  keywordstyle=[2]\adjustbox{margin=0.4ex, bgcolor=red!20}
-}
-\lstset{language=XML}
-
-
-\lstdefinestyle{script}
-{mathescape=false, numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt, language=bash, morekeywords={esac,in}}
-
-\lstdefinestyle{shell}
-{language=bash,keywords={}}
-
-
-
-%\adjustbox{cframe=<color> <thickness> <inner sep> <outer margin>}{<text>}
-\let\lst\lstinline
-\usepackage{caption}
-
-
-\usepackage{xspace}
-
-\usepackage[unicode=true,pdfusetitle,
- bookmarks=true,bookmarksnumbered=false,bookmarksopen=true,
- breaklinks=false,pdfborder={0 0 0},backref=false,colorlinks=false]
- {hyperref}
-
-\usepackage{titlesec}
-\titleformat{\chapter}[hang]{\Huge}{\thechapter\hspace{10pt}\textcolor{gray}{|}\hspace{10pt}}{0pt}{}
-
-\usepackage[draft]{fixme}
-
-
-
-\newcommand{\xmlstructrefwb}[1]{\hyperlink{\detokenize{#1}}{\mbox{\textcolor{red}{\uppercase{\small\ttfamily\bfseries #1}}}}}
-\newcommand{\xmlstructattr}[1]{{\small\ttfamily\color{orange}\bfseries #1}}
-\newcommand{\xmlstructvalue}[1]{{\small\ttfamily\color{green}\bfseries #1}}
-\newcommand{\xmlstructtemplate}[1]{{\small\ttfamily\bfseries\adjustbox{margin=0.4ex, bgcolor=red!20}{\detokenize{#1}}}}
-\newcommand{\xmlstructdef}[2]{\hypertarget{\detokenize{#1:#2}}{\mbox{\textcolor{red}{\textbf{\textsf{\uppercase{\ttfamily\bfseries #2}}}}}}}
-\newcommand{\xmlstructref}[2]{\hyperlink{\detokenize{#1:#2}}{\mbox{[\textcolor{red}{\uppercase{\small\ttfamily\bfseries #2}}]}}}
-\newcommand{\xmlstruct}[3]{
-\begin{mdframed}[linewidth=1pt]
-
-\xmlstructdef{#1}{#2}\hfill
-
-\lstinputlisting{xml/#1/#2.tex}
-
-\noindent
-\colorbox{yellow}{\textsc{Description:}}
-\medskip
-
-\noindent
-#3
-\end{mdframed}
-}
-
-\newcommand{\abs}[0]{\textsc{ABS}\xspace}
-\newcommand{\ei}[0]{\textsc{EasyInterface}\xspace}
-\newcommand{\eiol}[0]{\textsc{EIOL}\xspace}
-\newcommand{\eigithub}[0]{\url{http://github.com/abstools/easyinterface}\xspace}
-\newcommand{\envisage}{\textsf{Envisage}\xspace}
-
-% web client
-
-\newcommand{\applybutton}[0]{\begingroup\setlength{\fboxsep}{0pt}\colorbox{blue!20}{\texttt{Apply}}\endgroup\xspace}
-\newcommand{\refreshoutline}[0]{\begingroup\setlength{\fboxsep}{0pt}\colorbox{blue!20}{\texttt{Refresh Outline}}\endgroup\xspace}
-\newcommand{\settingbutton}[0]{\begingroup\setlength{\fboxsep}{0pt}\colorbox{blue!20}{\texttt{Settings}}\endgroup\xspace}
-\newcommand{\helpbutton}[0]{
-\begingroup
-\setlength{\fboxsep}{0pt}%  
-\colorbox{blue!20}{\texttt{Help}}\xspace
-\endgroup
-}
-
-
-\titlespacing*{\chapter}{0cm}{0cm}{1cm}
+\input{macros}
 
 \begin{document}
 
-\pagestyle{empty} % Removes page numbers
+\setcounter{page}{-1}
+\pagenumbering{roman}
+
+
 \input{titlepage}
 
-
+\input{abstract}
 \input{preface}
 
-
+%% \listoffigures
+%% \listoftables
 \tableofcontents
+\clearpage
 
-\input{overview}
+\pagenumbering{arabic}
+
+\input{introduction}
+\input{architecture}
 \input{quickguide}
 \input{server}
 \input{clients}
 \input{output}
+\input{evaluation}
+\input{conclusions}
+
+\newpage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\input{installation}
+
 
 \end{document}
 
 %%% Local Variables:
 %%% mode: latex
-%%% TeX-master: t
+%%% TeX-master: "manual"
 %%% End:

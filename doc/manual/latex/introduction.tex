@@ -1,0 +1,245 @@
+{% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
+}
+
+\chapter{Introduction}
+
+During the lifetime of a research project, different partners
+typically develop several research prototype tools that share many
+common aspects.
+%
+For example, in the \envisage~\cite{envisage} project, in the context
+of which this work was developed, several tools for processing \abs
+programs~\cite{johnsen10fmco} have been developed: static analyzers,
+test-case generators, compilers, simulators, etc.
+%
+This observation is equally true for researchers as individuals and as
+groups: during a period of time they develop several related tools to
+pursue a specific research line. For example, in the
+\costa\footnote{\url{http://costa.ls.fi.upm.es}} group, we have
+developed many program analysis and test-case generation tools for
+several programming languages and abstract models.
+
+Making research prototype tools available to the corresponding
+research communities is of utmost importance for several reasons: to
+promote the corresponding research; to make the community aware of the
+corresponding project or research group; to get valuable feedback; to
+increase the tools' lifetime beyond the duration of a specific
+project; etc. However, making tools available is not enough, they
+should also be easy to use since otherwise users would avoid using
+them, in particular if they require some technical skills to install
+or use them.
+%
+One way to achieve this is to build graphical user interfaces (GUIs)
+that facilitate using the tools; in particular, web-interfaces in
+order to avoid the overhead/risk of downloading and installing the
+tools locally.
+
+Building GUIs is a tedious task, in particular if they have to be
+developed from scratch. Building web-interfaces is even more difficult
+since web-based applications are typically more difficult to debug.
+%
+Thus, the task of building GUIs for research prototype tools typically
+gets a lower priority in the development process, and the effort is
+instead directed to improving the functionality of the tools, rather
+than their corresponding GUIs. In addition, due to these difficulties,
+researchers often opt for copying the GUI of one tool and modifying it
+to fit the needs of a new related tool.
+%
+Apart from code duplication, these tools will ``live'' separately,
+even though they might benefit from having them all in a common
+environment since they are related and, for example, a user who is
+interested in one tool will be easily exposed to other related tools
+when accessing the common environment.
+
+Clearly many of the difficulties, and the corresponding effort, in
+building GUIs are unavoidable in general.  This is because
+%
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+%
+\item tools produce different outputs that are presented graphically
+  in different ways to the user; and
+%
+\item the input --- and the interaction with the user --- is different
+  from one tool to another.
+%
+\end{inparaenum}
+%
+However, if we consider a set of related tools, e.g., those developed
+in a given research project, it is easy to identify many common
+aspects in their input and output. These common aspects can be then
+used as a bases for building a GUI construction toolkit that provide
+%
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+%
+\item an easy way to integrate tools in a common environment; and 
+%
+\item an easy way to present the output using a predefined set of
+  graphical widgets that cover the common aspects of the output.
+%
+\end{inparaenum}
+%
+Despite of the fact that such a toolkit is limited when compared to
+general GUI libraries, in the sense that it can be mostly used for
+tools that fit in the identified common aspects, researches would
+prefer this approach if it extremely simplifies the task of building a
+GUI for a new tool, e.g., if it allows building such a GUI in few
+hours and without the need for deep modifications to the corresponding
+code.
+%
+Building such a toolkit is the main objective of this work.
+
+\section{Objectives}
+\label{sec:intro:objectives}
+
+The main objective of this work is to develop a toolkit that can be
+used to easily develop GUIs for research prototype tools, and,
+moreover, integrating them in a common environment. We focus on tools
+that have the following common aspects:
+%
+\begin{itemize}
+%
+\item A request to a tool corresponds to executing a program from a
+  command-line, where the input is passed as command-line parameters
+  (including file names) and the output is printed on the standard
+  output. Note that this does not limit us to command-line tools,
+  since, for example, if the tool runs as a server we can write a
+  command-line wrapper that forwards the requests to the server and
+  prints the server's response on the standard output.
+%
+\item The tools are, in principle, supposed to process programs, e.g.,
+  static analysis tools. Thus, they receive as parameters
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+\item file names that represent programs; and
+\item possibly a list of program entities (e.g., method names, class
+  names) which indicate some information to the tool (e.g., for static
+  analysis tools it might indicate where to start the analysis from).
+\end{inparaenum}
+%
+\item The output of the tool mainly includes information that is
+  related to some parts of the input program. For example, associating
+  information to a program line, drawing graphs that represent some
+  property of the program such as resource consumption, etc.
+\end{itemize}
+%
+Note that the above aspects where not chosen arbitrarily, but they
+rather cover tools developed in the \envisage~\cite{envisage} project,
+in the context of which this work was developed, and the tools (and
+research lines) of the \costa group to which the author of this work
+belongs. Later, the reader will see that our toolkit is not actually
+limited to tools that satisfy the above conditions, but rather it is
+more general.
+
+As regards the capabilities of the toolkit that we want to develop, we
+aim at developing one that complies with the following objectives:
+%
+\begin{itemize}
+%
+\item[\objdef{simplegui}] Using the toolkit for developing
+  \emph{simple} GUIs for existing tools, and integrating them in a
+  common environment, should not take more than few minutes, and,
+  moreover, \emph{without} requiring any modification to the tool's
+  code at all.
+%
+\item[\objdef{complexgui}] Developing more sophisticated GUIs might
+  require mild modifications to the tool's code, and by no mean deep
+  modifications --- requiring deep modifications would make it less
+  likely that the toolkit will be used.
+%
+\item[\objdef{outputlang}] Using the toolkit for presenting the output
+  graphically should not require any knowledge on GUI or WEB
+  programming. The user should describe the output in a natural
+  language, e.g., ``\emph{highlight line number 10 of file ex.c}'' (or
+  a structured version of such statement, e.g., using XML or JSON, to
+  be able to parse it easily).
+%
+\item[\objdef{commonenv}] The toolkit must provide common environments
+  in which tools can be integrated. The most important environment is
+  the web-based one (i.e., it runs in a web browser). In addition, the
+  design should allow developing more environments in the future
+  without modifying the toolkit or existing integrated tools.
+%
+\item[\objdef{commonenvtrans}] The common environments should be
+  completely transparent to the integrated tools. This means that the
+  work for integrating the tool or modifying it to produce graphical
+  output should be done only once, and it should work in all
+  environments equally (including future ones).
+%
+\item[\objdef{security}] The toolkit should be secure, it should not
+  pose any security risks both to developers and users of to the
+  corresponding tools.
+  % 
+\end{itemize}
+%
+To evaluate the developed toolkit, it should be used to build GUIs for
+the tools of the \envisage project, and, moreover, integrating them in
+a common environment.
+
+\section{Contributions}
+
+In this work we have developed \ei, a toolkit for easily building
+GUIs for research prototype tools that comply with the objectives and
+requirements stated in Section~\ref{sec:intro:objectives}. 
+%
+In particular, we developed a new methodology for building GUIs for
+research prototype tools that consists of the following:
+
+\begin{itemize}
+
+\item A server side where tools are installed. Adding a tool to the
+  server is done by adding a configuration file (which is very easy to
+  write) describing how to run it, etc.
+
+\item A protocol that allows connecting to the server for, among many
+  other things that we will see later, executing a tool on a
+  particular input and getting back the result. In some sense, this
+  allows converting the tools installed on the server to services.
+
+\item A web-based development environment that allows users to use the
+  tools installed on an \ei servers transparently, in addition to
+  the functionality of a normal development environment.
+  
+\item An output text-based language that can be used to describe how
+  the output should be shown graphically, and corresponding
+  interpreters in the development environments to convert these
+  descriptions to graphical effects.
+
+\item An extensive evaluation by using \ei to integrate the tools of
+  the \envisage project in a common development environment.
+
+\end{itemize}
+%
+\ei is open source and available at GitHub\footnote{\eigithub}.
+
+\section{The Structure of This Document}
+
+This document is structured as follows. 
+%
+In Chapter~\ref{ch:architecture} we describe the overall architecture
+of \ei and how its different components interact.
+%
+In Chapter~\ref{ch:quickguide} we describe how to integrate a new
+tool in \ei in details. The purpose of this chapter is to allow the
+reader to briefly get familiar with the concrete details before moving
+on to the next chapters.
+%
+In Chapter~\ref{ch:server} we describe the \ei server specifications,
+and a corresponding implementation.
+%
+In Chapter~\ref{ch:clients} we describe the available clients
+(web-interface, etc). 
+%
+In Chapter~\ref{ch:eiol} we describe the syntax and semantics of the
+\ei output language. 
+%
+In Chapter~\ref{ch:evaluation} we describe the evaluation that we have
+done in the context of the \envisage project.
+%
+Finally, in Chapter~\ref{ch:conclusions}, we conclude and discuss
+future and related work.
+%
+In addition, we include the installation guide of \ei as
+Appendix~\ref{ch:installation}.
+
+
+
+

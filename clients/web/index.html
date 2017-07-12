@@ -30,6 +30,9 @@
   <!-- Markdown -->
   <script src="./lib/markdown/markdown.js"></script>
 
+  <!-- Dygraph -->
+  <script src="./lib/dygraph/dygraph-combined.js"></script>
+
   <!-- jsTree stuff -->
   <script type="text/javascript" src="./lib/jstree/jquery.jstree.js"></script>
   <link type="text/css" rel="stylesheet" href="./lib/jstree/_docs/syntax/!style.css"/>
@@ -65,6 +68,7 @@
   <script src="./js/htmlcontent.js"></script>
   <script src="./js/svgcontent.js"></script>
   <script src="./js/textcontent.js"></script>
+  <script src="./js/dygraphcontent.js"></script>
   <script src="./js/printonconsolecommand.js"></script>
   <script src="./js/markerwidget.js"></script>
   <script src="./js/addinlinemarkercommand.js"></script>
@@ -72,12 +76,14 @@
   <script src="./js/addmarkercommand.js"></script>
   <script src="./js/highlightlineswidget.js"></script>
   <script src="./js/highlightlinescommand.js"></script>
+  <script src="./js/changecontentcommand.js"></script>
   <script src="./js/setcsscommand.js"></script>
   <script src="./js/writefilecommand.js"></script>
-  <script src="./js/streamcommand.js"></script>
+  <script src="./js/downloadcommand.js"></script>
   <script src="./js/dialogboxcommand.js"></script>
   <script src="./js/onclickaction.js"></script>
   <script src="./js/codelineaction.js"></script>
+  <script src="./js/timelineaction.js"></script>
   <script src="./js/outputmanager.js"></script>
 
   <link type="text/css" rel="stylesheet" href="./css/ei.default.css"/>
@@ -86,12 +92,14 @@
 
 $( function() {
 
- // for now we stop if we detect Safari browser
+ // - for now we stop if we detect Safari browser
  //
- if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') == -1) {
-    $("#ei_1").html("<span style='color: red; font-weight:bold;'>Safari browser is not supported yet</span>, please use Google Chrome, Firefox or Internet explorer.");
-  return;
-  }
+ //  Just tried in "Safari 9.1.2 (11601.7.7)" and it works fine -Samir
+ //
+ //if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+ //   $("#ei_1").html("<span style='color: red; font-weight:bold;'>Safari browser is not supported yet</span>, please use Google Chrome, Firefox or Internet explorer.");
+ // return;
+ // }
 
   var baseURI = document.baseURI;             
   var n = baseURI.lastIndexOf("clients/web");
@@ -106,13 +114,17 @@ $( function() {
   if(_ei_data.title){
     document.title = _ei_data.title;
   }
-  new EasyInterface({
+  eeei= new EasyInterface({
     holder: $("#ei_1"),
     theme: "./html/eitheme.resizable.html",
     apps: _ei_data.apps,
     examples: _ei_data.examples,
+    outline: _ei_data.outline,
+    inlineSetting: _ei_data.inlineSetting,
+    language: _ei_data.language,
     outlineapp: _ei_data.outlineapp,
     outlineserver: _ei_data.outlineserver,
+    generalHelp: _ei_data.generalHelp
   });
  });
 </script>

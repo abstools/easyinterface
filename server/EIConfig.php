@@ -13,10 +13,14 @@ class EIConfig {
   static private $appHelpXML       = null;
   static private $appExecXML       = null;
   static private $appParametersXML = null;
+  static private $appProfilesXML = null;
 
   static private $examplesXML       = null;
   static private $exsetIds          = null;
   static private $exsetXML          = null;
+
+  static private $sandboxXML        = null;
+  static private $sandboxProps      = null;
 
 
   static function init() {
@@ -25,9 +29,12 @@ class EIConfig {
     EIConfig::$appHelpXML = array();
     EIConfig::$appExecXML = array();
     EIConfig::$appParametersXML = array();
+    EIConfig::$appProfilesXML = array();
     EIConfig::$exsetXML = array();
-    if ( file_exists(EIConfig::$cfgDir . "/eiserver.cfg") )
+    EIConfig::$sandboxXML = array();
+    if(file_exists(EIConfig::$cfgDir."/eiserver.cfg")){
        EIConfig::$cfgFile = "/eiserver.cfg";
+    }
   }
 
 
@@ -104,6 +111,35 @@ class EIConfig {
 	throw new Exception("Cannot find the app '" . $id . "'" );
       EIConfig::$appXML[$id] = EIConfig::expand_xml( $appXML );
     }
+  }
+
+  /* load_sandboxXML:
+     Loads the XML structure of the sandbox properties.
+   */
+  static private function load_sandboxXML(){
+     EIConfig::load_cfgXML();
+    if (  EIConfig::$cfgXML->sandbox ){
+      EIConfig::$sandboxXML = EIConfig::expand_xml( EIConfig::$cfgXML->sandbox );
+    }else{
+      EIConfig::$sandboxXML = simplexml_load_string("<sandbox></sandbox>");
+    }
+  }
+
+  /* get_sandboxProps()
+   */
+  static function get_sandboxProps(){
+    if(EIConfig::$sandboxProps == null){
+      EIConfig::load_sandboxXML();
+      $propsXML = EIConfig::$sandboxXML->sandboxprop;
+      $sandboxProps = array();
+      foreach( $propsXML as $prop){
+	$name = $prop->attributes()->name;
+	$value = $prop->attributes()->value;
+	$sandboxProps[(string)$name]=(string)$value;
+      }
+      EIConfig::$sandboxProps = $sandboxProps;
+    }
+    return EIConfig::$sandboxProps;
   }
   
   /* get_appVisible(id)
@@ -193,6 +229,20 @@ class EIConfig {
       }
     }
     return EIConfig::$appParametersXML[$id];
+  }
+
+  /* get_appProfilesXML( $id )
+   */
+  static function get_appProfilesXML( $id ) {
+    if ( ! array_key_exists(  $id, EIConfig::$appProfilesXML ) ) {
+      EIConfig::load_appXML( $id );
+      if ( EIConfig::$appXML[$id]->profiles ) {
+	EIConfig::$appProfilesXML[$id] = EIConfig::expand_xml( EIConfig::$appXML[$id]->profiles );
+      } else {
+	EIConfig::$appProfilesXML[$id] = simplexml_load_string("<profiles></profiles>");
+      }
+    }
+    return EIConfig::$appProfilesXML[$id];
   }
 
   /* get_appParametersARRAY

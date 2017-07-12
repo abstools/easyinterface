@@ -10,8 +10,9 @@ window.Tools = (function() {
 	this.filemanager = null;
 	this.outline = null;
 	this.cmdengine = null;
-	this.console = null;
-	this.setOptions(options);
+        this.console = null;
+        this.inlineParams = null;
+        this.setOptions(options);
     };
 
     Tools.prototype = {
@@ -25,13 +26,20 @@ window.Tools = (function() {
 	setOptions:
 	function(options) {
 	    this.parameters = options.parameters;
+	    this.inlineParams = options.inlineParameters;
 	    this.selector = options.selector;
 	    this.filemanager = options.filemanager;
 	    this.outline = options.outline;
 	    this.cmdengine = options.cmdengine;
 	    this.outputmanager = options.outputmanager;
 	    this.helps = options.helps;
-	    this.selector.setToolsObj( this );
+	  this.selector.setToolsObj( this );
+	},
+
+	//
+	ready:
+	function(){
+	  this.setActiveTool(this.selector.getTool());
 	},
 
 	//
@@ -51,7 +59,7 @@ window.Tools = (function() {
 	    };
 
 	    // add parameters section of the current analysis
-	    this.parameters.addSection(acronym,toolId,tool.find("parameters"));
+	    this.parameters.addSection(acronym,toolId,tool.find("parameters"),tool.find("profiles"));
 	    this.helps.addSection(acronym,toolId,tool.find("apphelp"));
 	    // add an entry in the tool selector
 	    this.selector.addTool(toolId,acronym);
@@ -69,8 +77,16 @@ window.Tools = (function() {
 	//
 	setActiveTool:
 	function(toolId) {
-	    this.currToolId = toolId;
-	    this.parameters.setActiveParameSet( toolId );
+	  if( !this.tools[toolId])
+	    return;
+	  if( _ei.inlineSetting.active && this.tools[this.currToolId] ){
+	    this.parameters.placeParamSet(this.currToolId,this.inlineParams);
+	  }
+	  this.currToolId = toolId;
+	  this.parameters.setActiveParameSet( toolId );
+	  if( _ei.inlineSetting.active){
+	    this.parameters.getParamSet(toolId,this.inlineParams);
+	  }
 	},
 
 	apply:
@@ -78,13 +94,17 @@ window.Tools = (function() {
 	    var self = this;
 
 	    if ( !toolId ) toolId = this.currToolId;
+	  if( !this.tools[toolId]) return;
 	    var toolInfo = this.tools[ toolId ];
 
 	    var files = self.filemanager.getEiFiles(fileIds);
-
-	  //get the outline Info	    
-	    var entriesInfo = self.outline.getSelected();
-
+	    var entriesInfo;
+	  if(_ei.outline.active){
+	    //get the outline Info	    
+	    entriesInfo = self.outline.getSelected();
+	  }else{
+	    entriesInfo = new Array();
+	  }
 
 	    // get the current value of all parameters
 	    var parametersInfo = this.parameters.getParams(toolId);

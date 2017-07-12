@@ -1,6 +1,8 @@
 {% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
 }
 
+\thispagestyle{empty}
+
 \newcommand*{\plogo}{} % Generic publisher logo
 
 \begingroup % Create the command for including the title page in the document
@@ -11,10 +13,10 @@
 \parbox[b]{0.75\textwidth}{ % Paragraph box which restricts text to less than the width of the page
 
 {\noindent\Huge\bfseries \ei User Manual}\\[1\baselineskip] % Title
-{\large \textit{\url{http://github.com/abstools/easyinterface}}}\\[8\baselineskip] % Tagline or further description
+{\large \textit{\url{http://github.com/abstools/easyinterface}}}\\[1\baselineskip] % Tagline or further description
+{\includegraphics[scale=0.2]{fig/ei-logo.png}}\\[3\baselineskip]
 
-
-{\Large \textsc{Jesus Dom\'enech}}\\[0.5\baselineskip]
+{\Large \textsc{Jes\'us Dom\'enech}}\\[0.5\baselineskip]
 {\Large \textsc{Samir Genaim}} % Author name
 
 \vspace{0.5\textheight} % Whitespace between the title block and the publisher

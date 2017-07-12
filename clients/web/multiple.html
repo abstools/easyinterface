@@ -1,0 +1,146 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+
+  <!-- jquery stuff -->
+  <title>Easy Interface</title>
+  <link rel="stylesheet" href="./lib/jquery-ui/css/redmond/jquery-ui.css" />
+  <script src="./lib/jquery-ui/js/jquery.js"></script>
+  <script src="./lib/jquery-ui/js/jquery-ui.js"></script>
+
+  <script src="./js/resize-effect.js"></script>
+  <link rel="stylesheet" href="./css/resize-effect.css" />
+
+  <!-- codemirror stuff -->
+  <script src="./lib/codemirror/lib/codemirror.js"></script>
+  <script src="./lib/codemirror/mode/abs/abs.js"></script>
+  <script src="./lib/codemirror/addon/dialog/dialog.js"></script>
+  <script src="./lib/codemirror/addon/search/searchcursor.js"></script>
+  <script src="./lib/codemirror/addon/search/search.js"></script>
+  <link rel="stylesheet" href="./lib/codemirror/lib/codemirror.css">
+  <link rel="stylesheet" href="./lib/codemirror/doc/docs.css">
+  <link rel="stylesheet" href="./lib/codemirror/addon/dialog/dialog.css">
+
+  <!-- GitHub Api -->
+  <!-- Careful! we require getBlob to be sync!!! -->
+  <script src="./lib/githubapi/github.js"></script>
+
+  <!-- Markdown -->
+  <script src="./lib/markdown/markdown.js"></script>
+
+  <!-- Dygraph -->
+  <script src="./lib/dygraph/dygraph-combined.js"></script>
+
+  <!-- jsTree stuff -->
+  <script type="text/javascript" src="./lib/jstree/jquery.jstree.js"></script>
+  <link type="text/css" rel="stylesheet" href="./lib/jstree/_docs/syntax/!style.css"/>
+  <script type="text/javascript" src="./lib/jstree/_docs/syntax/!script.js"></script>
+  <script type="text/javascript" src="./lib/jstree/_lib/jquery.hotkeys.js"></script>
+
+  <!-- jquery.sng -->
+  <script type="text/javascript" src="./lib/jquery.svg/jquery.svg.js"></script>
+  <script type="text/javascript" src="./lib/jquery.svg/jquery.svgdom.js"></script>
+  <link type="text/css" rel="stylesheet" src="./lib/jquery.svg/jquery.svg.css" />
+
+  <!-- the ei stuff -->
+  <script src="./js/config.js"></script>
+
+  <script src="./js/constants.js"></script>
+  <script src="./js/misc.js"></script>
+  <script src="./js/set.js"></script>
+  <script src="./js/easyinterface.js"></script>
+  <script src="./js/codearea.js"></script>
+  <script src="./js/filemanager.js"></script>
+  <script src="./js/console.js"></script>
+  <script src="./js/checkboxwidget.js"></script>
+  <script src="./js/combowidget.js"></script>
+  <script src="./js/textareawidget.js"></script>
+  <script src="./js/parameters.js"></script>
+  <script src="./js/helps.js"></script>
+  <script src="./js/tools.js"></script>
+  <script src="./js/toolselectorwidget.js"></script>
+  <script src="./js/outline.js"></script>
+  <script src="./js/cmdengine.js"></script>
+
+  <script src="./js/doccontent.js"></script>
+  <script src="./js/htmlcontent.js"></script>
+  <script src="./js/svgcontent.js"></script>
+  <script src="./js/textcontent.js"></script>
+  <script src="./js/dygraphcontent.js"></script>
+  <script src="./js/printonconsolecommand.js"></script>
+  <script src="./js/markerwidget.js"></script>
+  <script src="./js/addinlinemarkercommand.js"></script>
+  <script src="./js/inlinedmarkerwidget.js"></script>
+  <script src="./js/addmarkercommand.js"></script>
+  <script src="./js/highlightlineswidget.js"></script>
+  <script src="./js/highlightlinescommand.js"></script>
+  <script src="./js/changecontentcommand.js"></script>
+  <script src="./js/setcsscommand.js"></script>
+  <script src="./js/writefilecommand.js"></script>
+  <script src="./js/downloadcommand.js"></script>
+  <script src="./js/dialogboxcommand.js"></script>
+  <script src="./js/onclickaction.js"></script>
+  <script src="./js/codelineaction.js"></script>
+  <script src="./js/timelineaction.js"></script>
+  <script src="./js/outputmanager.js"></script>
+
+  <link type="text/css" rel="stylesheet" href="./css/ei.default.css"/>
+
+<script>
+
+$( function() {
+
+ // for now we stop if we detect Safari browser
+ //
+ if (navigator.userAgent.indexOf('Safari') > -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+    $("#ei_1").html("<span style='color: red; font-weight:bold;'>Safari browser is not supported yet</span>, please use Google Chrome, Firefox or Internet explorer.");
+  return;
+  }
+
+  var baseURI = document.baseURI;             
+  var n = baseURI.lastIndexOf("clients/web");
+
+  if ( n != -1 ) {
+    eiserverURI = baseURI.slice(0,n).concat("server/eiserver.php");
+  } else {
+    eiserverURI = "/ei/server/eiserver.php";
+  }
+
+  loadConfig();
+  if(_ei_data.title){
+    document.title = _ei_data.title;
+  }
+  eeei= new EasyInterface({
+    holder: $("#ei_1"),
+    theme: "./html/eitheme.resizable.html",
+    apps: _ei_data.apps,
+    examples: _ei_data.examples,
+    outline: _ei_data.outline,
+    language: _ei_data.language,
+    outlineapp: _ei_data.outlineapp,
+    outlineserver: _ei_data.outlineserver,
+  });
+
+  eeei2= new EasyInterface({
+    holder: $("#ei_2"),
+    theme: "./html/eitheme.resizable.html",
+    apps: _ei_data.apps,
+    examples: _ei_data.examples,
+    outline: _ei_data.outline,
+    language: _ei_data.language,
+    outlineapp: _ei_data.outlineapp,
+    outlineserver: _ei_data.outlineserver,
+  });
+ });
+</script>
+</head>
+<body>
+<div class="easyinterface ui-widget ui-corner-all" id="ei_1"></div>
+
+<div class="easyinterface ui-widget ui-corner-all" id="ei_2"></div>
+</body>
+</html>
+
+

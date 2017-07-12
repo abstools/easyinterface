@@ -57,7 +57,7 @@ window.Console = (function() {
 	  this.consHolder = this.place;              // the jquery element where the console should be place
 	  this.tabCounter = 0;                  // current number of tabs in the console
 	  this.currTabId = 0;                   // the id of the currently visible tab
-	  this.winInfoById = new Array();       // an array the keeps the win (i.e tab) info by id
+	  this.winInfoById = {};       // an array the keeps the win (i.e tab) info by id
 	  this.winInfoByPos = new Array();      // an array the keeps the win (i.e tab) info by position
 	  this.winId = 0;
 	  

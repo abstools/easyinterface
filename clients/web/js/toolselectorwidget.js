@@ -35,11 +35,26 @@ window.ToolSelector = (function() {
 	function( tools ) {
 	    this.tools = tools;
 	},
+	//
+	selectTool:
+	function(toolId){
+	  this.selector.val(toolId);
+	  this.selector.change();
+	},
 
 	//
 	addTool:
 	function(toolId, toolDesc) {
 	    this.selector.append("<option value='"+toolId+"'>"+toolDesc+"</option>");
+	},
+
+	//
+	getTool:
+	function(){
+	  var val = this.selector.val();
+	  if(!val)
+	    val = $("option",this.selector).value();
+	  return val;
 	}
     }
 

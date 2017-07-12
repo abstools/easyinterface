@@ -21,12 +21,13 @@ window.PrintOnConsoleCommand = (function() {
 	var consolTitle = c.attr( _ei.outlang.syntax.consoletitle );
 	var consoleId = c.attr( _ei.outlang.syntax.consoleid ) || ei_info.defaultConsoleId;
 	var content = c.find("> "+_ei.outlang.syntax.content);
-
 	return new PrintOnConsoleCommand({
 	    console: ei_info.console,
 	    consoleId: consoleId,
 	    consoleTitle: consolTitle,
 	    content: content,
+	    server: ei_info.server,
+	    outputmanager: ei_info.outputmanager,
 	    outclass: outclass
 	});
     };
@@ -36,11 +37,14 @@ window.PrintOnConsoleCommand = (function() {
 	this.consoleId = options.consoleId;
 	this.consoleTitle = options.consoleTitle;
 	this.format = options.format;
-
 	this.content = new DocContent({ 
+	    server: options.server,
+	    outputmanager: options.outputmanager,
+	    console: options.console,
 	    content: options.content,
 	    outclass: options.outclass
 	}).getDOM();
+
 	this.added = false;
     };
 
@@ -50,8 +54,10 @@ window.PrintOnConsoleCommand = (function() {
 	//
 	"do":
 	function() {
+
 	    if ( !this.added ) {
 		if ( ! this.console.existWin( this.consoleId ) ) {
+		 
 		    this.console.createWin(this.consoleId, this.consoleTitle);
 		}
 		this.console.addContentToWin(this.consoleId, this.content);

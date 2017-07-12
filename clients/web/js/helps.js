@@ -5,7 +5,6 @@ window.Helps = (function() {
     var helpsId = 0;
 
     function Helps(place,options) {
-
 	helpsId++;
 	
 	this.helpId = "OPTS-"+helpsId;
@@ -28,7 +27,7 @@ window.Helps = (function() {
 	
 	//
 	setOptions: 
-	function() {
+	function(options) {
 	},
 
 	//
@@ -36,13 +35,14 @@ window.Helps = (function() {
 	function() {
 	    var self = this;
 
-	    $(this.helpsHolder).append("<div><p>Below you find the helps of the different section</p><div style='height: 200px;' id='"+this.helpId+"'></div></div>");
+	    $(this.helpsHolder).append("<div><p>Below you find the helps of the different tools</p><div style='height: 200px;' id='"+this.helpId+"'></div></div>");
 	    this.accord = $(this.helpsHolder).find( "#"+this.helpId ).accordion({
 	        collapsible: true,
 	        heightStyle: "content",
 	        active: 0,
 		icons: { header: "ui-icon-circle-arrow-e", activeHeader: "ui-icon-circle-arrow-s" }
 	    });
+
 	},
 
 	//
@@ -63,7 +63,6 @@ window.Helps = (function() {
 
 	    this.sectionInfoById[sectionId] = sectionInfo;
 	    this.secId++;
-
 	    if ( XML && XML.length > 0 ) this.addHelpFromXML(sectionId,XML);
 	    
 
@@ -75,10 +74,12 @@ window.Helps = (function() {
 	  var sectionInfo = this.sectionInfoById[sectionId];
 	  var outclass =  help.attr( _ei.outlang.syntax.outclass ) || "info";
 	  var contentXML = help.find("> "+_ei.outlang.syntax.content);
+	  
 	  if (contentXML.length ==0){
 	    help.append($("<content format='text'>No Help</content>"));
 	    contentXML =  help.find("> "+_ei.outlang.syntax.content);
 	  }
+
 	    var content = new DocContent({ 
 	      content: contentXML,
 	      outclass: outclass

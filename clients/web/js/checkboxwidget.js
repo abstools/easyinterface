@@ -20,31 +20,43 @@ window.CheckBoxWidget = ( function() {
 	this.env.append("<div class='params-left-col'></div>");
 
 	var x = $("<div class='params-mid-col'></div>");
-
+      var longdesc = "";
 	for(var i=0; i<widgetInfo.options.length; i++) {
+	  if(longdesc!="")
+	    longdesc += "<br/>";
 
 	    var input = $("<div><div class='desc'>"+widgetInfo.options[i].desc.short+"</div>"+
 			  "<div class='selector'>"+
 		          "<input class='ui-widget ui-state-default ui-corner-all' type='checkbox' value='"+
-			  widgetInfo.options[i].value+"'"+
+			  widgetInfo.options[i].value[0]+"'"+
 			  ( widgetInfo.options[i].selected ? " checked='checked'" : "")+
 			  "/>"+
 			  "</div></div>"
 	                 );
-
+	  if(widgetInfo.options[i].desc.long){
+	    longdesc += widgetInfo.options[i].desc.long;
+	  }
 	    // this.env.append("<span style='width: 200px; display: inline'>");
-	    this.options[i] = input.find("input");
+	    this.options[i] = {};
+	  this.options[i].obj = input.find("input");
+	  this.options[i].value =widgetInfo.options[i].value;
+	  this.options[i].default = widgetInfo.options[i].selected;
 	    x.append(input);
 
 	    if ( widgetInfo.callback ) {
-		this.options[i].change( function() {
+		this.options[i].obj.change( function() {
 		    widgetInfo.callback( $(this).prop("value"), $(this).prop("checked") );
 		});
 	    }
 	}
 
 	this.env.append(x);
-	this.env.append("<div class='params-right-col'></div>");
+      if(longdesc!= ""){
+	var y = $("<div class='params-right-col'><span class='ui-icon ui-icon-info'></span></div>");
+	this.env.append(y); 
+	y.tooltip({ items: y.find("span"), content: longdesc });
+      }
+
 
     };
 
@@ -72,14 +84,17 @@ window.CheckBoxWidget = ( function() {
 	    var widgetValue = new Array();
 	    var j=0;
 	    for(var i=0; i<this.options.length; i++) {
-		if ( this.options[i].prop("checked") ) {
-		    widgetValue[j] = this.options[i].prop("value");
+		if ( this.options[i].obj.prop("checked") ) {
+		    widgetValue[j] = this.options[i].value[0];
 		    j++;
+		}else if ( ! this.isBoolean ){
+		  widgetValue[j] = this.options[i].value[1];
+		  j++;
 		}
 	    }
 
 	    if ( this.isBoolean && widgetValue.length == 0 )
-		widgetValue[0] = "no";
+		widgetValue[0] = this.options[i].value[1];
 
 	    return widgetValue;
 	},
@@ -88,10 +103,20 @@ window.CheckBoxWidget = ( function() {
 	    var self = this;
 	    var i = 0;
 	    this.env.find("input").each(function (k,v){
-		self.widgetInfo.options[k].selected ?
-		    $(v).attr("checked","checked") : 
-		    $(v).removeAttr("checked");		
+	      if(self.options[k].default){
+		$(v).prop("checked",true);//"checked"); 
+	      }else
+	      $(v).removeAttr("checked");		
 	    });
+		
+	},
+	setValue:
+	function(newvalue) {
+	  var self = this;
+	  for(var i=0; i<newvalue.length; i++){
+	    $(this.env.find("input[type='checkbox']")[i]).prop("checked",newvalue[i]==self.options[i].value[0]);
+	  }
+		
 	}
     }
 

@@ -1,42 +1,50 @@
 {% -*- mode: LaTeX; TeX-PDF-mode: t; TeX-master: "manual"; -*-
 }
 
-\chapter{Quick Guide to \ei}
+\chapter{\ei in a Nutshell}
 \label{ch:quickguide}
 
-This chapter provides a quick introduction on \emph{how to integrate
-  an application in the \ei framework}. In particular, we develop a
-simple application, integrate it in the \ei server, and try it out
-through the web-client.
+
+The purpose of this chapter is to give the reader the experience of
+how GUIs can be developed using the \ei toolkit, before moving to the
+specifications and implementations details of the different components
+in the next chapters.
 %
-The presentation is incremental, we start with a simple application
-and in each step we add more features to demonstrate the different
-parts of the \ei framework.
+This, we believe, would help the reader to better understand the
+details of chapters~\ref{ch:server}-\ref{ch:eiol}.
+
+In the rest of this chapter we develop a simple tool, integrate it in
+the \ei server, and try it out through the web-client.
+%
+The presentation in this chapter is incremental, we start with a
+simple tool and in each step we add more features to demonstrate the
+different parts of \ei.
 %
 In our explanation we assume that a Unix based operating system is
 used, however, we comment on how to do the analog operations on
 Windows when they are different.
 %
-Note that in this chapter we only use the web-client, for other
-clients refer to Chapter~\ref{ch:clients}.
-%
-We assume that \ei is already installed and working, which can be done
-following the instructions available in
-\texttt{\href{http://github.com/abstools/easyinterface}{INSTALL.md}}.
+
 %
 
-Let us start by trying some demo applications that are available by
+\section{Getting Started}
+
+
+We assume that \ei is already installed and working, which can be done
+following the instructions in Appendix~\ref{ch:installation}.
+%
+Let us start by trying some demo tools that are available by
 default in the web-client.
 %
 If you visit \url{http://localhost/ei/clients/web}, you should get a
-page similar to the one shown in Figure~\ref{fig:webclient} on
-Page~\pageref{fig:webclient}.
+page similar to the one shown in Figure~\ref{fig:arch:client} (see
+Page~\pageref{fig:arch:client}).
 %
 At the top part of this page you can see a button with the label
 \applybutton, and to its right a combo-box with several items
 \texttt{Test-0}, \texttt{Test-1}, etc. These items correspond to
-applications available in the web-client, and we will refer to it as
-the applications menu.
+tools available in the web-client, and we will refer to it as
+the tools menu.
 %
 To the left of \applybutton there is a button with the label
 \settingbutton, if you click it you will see that each \texttt{Test-i}
@@ -44,48 +52,56 @@ has also some parameters that can be set to some values.
 %
 Note that, by default, the web-client is configured to connect to the
 \ei server at \url{http://localhost/ei/server} and ask for all
-applications, together with their corresponding parameters, that are
+tools, together with their corresponding parameters, that are
 available at that server.
 %
-Note also that application \texttt{Test-i} actually corresponds to the
+Note also that tool \texttt{Test-i} actually corresponds to the
 bash-script \texttt{server/bin/default/test-i.sh}, and that its
-configuration file is \texttt{server/config/default/test-i.cfg} (later
-you will understand the details of such configuration files).
+corresponding configuration file is
+\texttt{server/config/default/test-i.cfg} (later we will go over the
+details of these configuration files).
 %
 
-If you select an application, from the combo-box, and click on
-\applybutton, the web-client sends a request to the server to execute
-this application. The request includes also the current values of the
-parameters (those in the settings section) and the file that is
-currently active in the code editor area.
+If you select a tool, from the combo-box, and click on \applybutton,
+the web-client sends a request to the server to execute this tool. The
+request includes also the current values of the parameters (those in
+the settings section) and the file that is currently active in the
+code editor area.
 %
 The server, in turn, executes the corresponding program, i.e., the
 bash-script \texttt{server/bin/default/test-i.sh} in this case, and
-redirects its output back to the web-client.  
+redirects its output back to the web-client.
 %
 The web-client will either print this output in the console area, or
 view it graphically if it uses the \ei output language. Execute the
-demo applications just to get an idea on which graphical output we are
+demo tools just to get an idea on which graphical output we are
 talking about (e.g., highlight text, markers).
+
+In the rest of this chapter we explain, step by step, how to add a
+tool to \ei.
 %
-In the rest of this chapter we explain, step by step, how to add your
-own application to \ei.
+Note that all files that we create in the next sections are already
+available in the directory \texttt{docs/manual/myapp}, each step in a
+sub-directory named \texttt{step-i} with two files \texttt{myapp.cfg}
+and \texttt{myapp.sh}, so instead of creating them you can just copy
+them to the appropriate places.
 
 
-\section{Add Your First Application to the \ei Server}
 
-When we add an application to the \ei server it will appear
-automatically in the applications menu of the web-client (unless you
-have changed the configuration of the web-client already!).
+\section{Adding a Tool to \ei}
+
+When we add a tool to the \ei server it will automatically appear in
+the tools menu of the web-client (unless you have changed the
+configuration of the web-client already!).
 %
-Let us add a simple ``Hello World'' application.
+Let us add a simple ``Hello World'' tool.
 
 We start by creating a bash-script that represents the executable of
-our application (it could be any other executable). We will place this
-bash-script in the directory \texttt{server/bin/default} together with
-the \texttt{test-i.sh} scripts, however, this is not obligatory and it
-can be placed anywhere in the file system as far as the HTTP server
-can access it.
+our tool (it could be any other executable), and placing it in the
+directory \texttt{server/bin/default} together with the
+\texttt{test-i.sh} scripts, however, this is not obligatory and it can
+be placed anywhere in the file-system as far as the server has enough
+permissions to access it.
 %
 Create a file \texttt{myapp.sh} in \texttt{server/bin/default} with
 the following content:
@@ -99,12 +115,12 @@ echo "Hello World!"
 
 \medskip
 \noindent
-As you can see, it is a simple program that prints "Hello World!" on
-the standard output. Later we will see how to pass input to this
-application and how to generate more sophisticated output.
+As you can see, it is a simple program (bash script) that prints
+"Hello World!" on the standard output. Later we will see how to pass
+input to this tool and how to generate more sophisticated output.
 %
 Change the permissions of \texttt{myapp.sh} by executing the following
-(on Windows this is typically not needed):
+command (on Windows this is typically not needed):
 
 \medskip
 \begin{lstlisting}
@@ -116,7 +132,7 @@ Change the permissions of \texttt{myapp.sh} by executing the following
 Execute \texttt{myapp.sh} (in a shell) to make sure that it works
 correctly before proceeding to the next step.
 
-Next we will configure the server to recognize our application.
+Next we will configure the server to recognize our tool.
 %
 Create a file \texttt{myapp.cfg} in the directory
 \texttt{server/config/default} with the following content (we could
@@ -128,15 +144,15 @@ in \texttt{default}):
 <app visible="true">
   <appinfo>
     <acronym>MFA</acronym>
-    <title>My First Application</title>
+    <title>My First Tool</title>
     <desc>
-      <short>A simple EI application</short>
-      <long>A simple application that I've done using the EasyInterface Framework</long>
+      <short>A simple EI tool</short>
+      <long>A simple tool using the EasyInterface Toolkit</long>
     </desc>
   </appinfo>
   <apphelp>
     <content format='html'>
-      This is my first <b>EasyInterface</b> application!
+      This is my first <b>EasyInterface</b> tool!
     </content>
   </apphelp>
   <execinfo>
@@ -150,33 +166,33 @@ in \texttt{default}):
 Let us explain the meaning of the different elements of this
 configuration file.
 %
-The \lst{app} tag is used to declare an \ei application, and its
-\lst{visible} attribute tells the server to list this application when
-someone asks for the list of installed applications. Changing this
-value to \lst{"false"} will make the application ``hidden'' so only
-those who know its identifier can use it.
+The \lst{app} tag is used to declare an \ei tool, and its
+\lst{visible} attribute tells the server to list this tool when
+someone asks for the list of available tools. Changing this value to
+\xmlstructvalue{false} will make the tool ``hidden'' so only those who
+know its identifier can use it.
 %
 The \lst{appinfo} tag provides general information about the
-application, this will be used by the clients to show the application
+tool, this will be used by the clients to show the tool
 name, etc.
 %
 The \lst{apphelp} tag provides some usage information about the
-application, or simply provide a link to another page where such
+tool, or simply provides a link to another page where such
 information can be found. The actual content goes inside the
 \lst{content} tag, which is HTML as indicated by the \lst{format}
 attribute (use 'text' for plain text).
 %
 The most important part is the \lst{execinfo} tag, which provides
-information on how to execute the application. 
+information on how to execute the tool. 
 %
 The text inside \lst{cmdlineapp} is interpreted as a command-line
 \emph{template}, such that when the server is requested to execute the
-corresponding application it will simply execute this command-line and
-redirect its output back to the client. Later you will understand why
-we call it \emph{template}. 
+corresponding tool it will simply execute this command-line and
+redirect its output back to the client. These templates are the same
+as those suggested in Section~\ref{sec:architecture:server}.
 %
 Note that before executing the script, the server changes the current
-directory to \texttt{server/bin} and thus the command-line should be
+directory to \texttt{server/bin} and thus the command-line can be
 relative to \texttt{server/bin}.
 
 Next we add the above configuration file to the server. This is done
@@ -190,38 +206,37 @@ by adding the following line to \texttt{server/config/default/apps.cfg}
 
 \medskip
 \noindent
-Here we tell the server that we want to install an application as
-defined in \texttt{myapp.cfg}, and we want to assign it the
-\emph{unique} identifier \lst{"myapp"}. This identifier will be mainly
-used by the server and the clients when they communicate, we are not
-going to use it anywhere else. 
+Here we tell the server that we want to install a tool as defined in
+\xmlstructvalue{default/myapp.cfg}, and we want to assign it the
+\emph{unique} identifier \xmlstructvalue{myapp}. This identifier will
+be mainly used by the server and the clients when they communicate, we
+are not going to use it anywhere else.
 %
-Note that in \texttt{default/apps.cfg} we used
-\lst{"default/myapp.cfg"} and not \lst{"myapp.cfg"}. This is because
-the server looks for configuration files starting in
-\texttt{server/config}.
-%
-Note also that the main configuration file of the \ei server is
+%% Note that in \texttt{default/apps.cfg} we used
+%% \lst{"default/myapp.cfg"} and not \lst{"myapp.cfg"}. This is because
+%% the server looks for configuration files starting in
+%% \texttt{server/config}.
+%% %
+Note that the main configuration file of the \ei server is
 \texttt{server/config/eiserver.default.cfg}, and that
-\texttt{default/apps.cfg} is imported into that file (open
-\texttt{server/config/eiserver.default.cfg} to see this).
+\texttt{default/apps.cfg} is imported into that file.
 
-Let us test our application. Go back to the web-client and reload the
-page, you should see a new application named \texttt{MFA} in the
-applications menu. If you click on the \helpbutton button you will see
-the text provided inside the \lst{apphelp} tag above.
+Let us test our tool. Go back to the web-client and reload the page,
+you should see a new tool named \texttt{MFA} in the tools menu. If you
+click on the \helpbutton button you will see the text provided inside
+the \lst{apphelp} tag above.
 %
-Select this application and click on the \applybutton button, the
-message "Hello World!" will printed in the console area.
+Select this tool and click on the \applybutton button, the message
+"Hello World!" will be printed in the console area.
 
 
-\section{Passing Input Files to Your Application}
+\section{Passing Input Files to a Tool}
 
-Applications typically receive input files (e.g., programs) to
-process. You must have noticed that the web-client provides the
-possibility of creating and editing such files.  In this section we
-explain how to pass these files, via the server, to our application
-when the \applybutton button is clicked.
+Tools typically receive input files (e.g., programs) to process. This
+is why we required the web-client to provide the possibility of
+creating and editing such files.  In this section we explain how to
+pass these files, via the server, to our tool when the \applybutton
+button is clicked.
 
 When you click on the \applybutton button the web-client passes the
 currently opened file (i.e., the content of the active tab) to the
@@ -231,7 +246,7 @@ left, and use the mouse right-click to open the context menu) it
 passes all files in the corresponding sub-tree.
 %
 What is left is to tell the server how to pass these files to our
-application. Let us assume that \texttt{myapp.sh} is prepared to
+tool. Let us assume that \texttt{myapp.sh} is prepared to
 receive input files as follows:
 
 \medskip
@@ -243,26 +258,26 @@ receive input files as follows:
 \noindent
 In order to tell the server to pass the input files (that were
 received from the client) to \texttt{myapp.sh}, open
-\texttt{myapp.cfg} and change the command-line template to the
-following:
+\texttt{myapp.cfg} and change the command-line template, i.e, the
+content of \lst{cmdlineapp}, to the following:
 
 \medskip
 \begin{lstlisting}
-<cmdlineapp>(*./bin/default/myapp.sh*) -f _ei_files</cmdlineapp>
+(*./bin/default/myapp.sh*) -f _ei_files
 \end{lstlisting}
 
 \medskip
 \noindent
 When the server receives the files from the client, it stores them in
 a temporary directory, e.g., in \texttt{/tmp}, replaces \lst{_ei_files}
-by the list of their names, and then execute the resulting
-command-line (this is why we call it \emph{command-line template}!).
+by the list of their names, and then executes the resulting
+command-line.
 %
 It is important to note that only \lst{_ei_files} changes in the above
-template, the rest remain the same. Thus, the parameter
+template, the rest remains the same. Thus, the parameter
 ``\texttt{-f}'' means nothing to the server, we could replace it by
 anything else or even completely remove it --- that depends only on
-how our application is programmed to receive input files.
+how our tool is programmed to receive input files.
 
 Let us now change \texttt{myapp.sh} to process the received files in
 some way, e.g., to print the number of lines in each file. For this,
@@ -272,7 +287,8 @@ replace the content of \texttt{myapp.sh} by the following:
 \begin{lstlisting}[style=script]
 #!/bin/bash
 
-. default/parse_params.sh
+. misc/parse_params.sh
+files=$(getparam "f")
 
 echo "I've received the following command-line parameters:"
 echo ""
@@ -294,41 +310,43 @@ Let us explain the above code.
 %
 At line 3 we executes an external bash-script to parse the
 command-line parameters, the details are not important and all you
-should know is that it leaves the list of files (that appear after
+should know is that line 4 stores the list of files (that appear after
 \lst{-f}) in the variable \lst{files}.
 %
-Lines 5-7 print the command-line parameters, just to give you an idea
-how the server called \texttt{myapp.sh}, and the loop at lines 12-15
+Lines 6-8 print the command-line parameters, just to give you an idea
+how the server called \texttt{myapp.sh}, and the loop at lines 13-16
 traverses the list of files and prints the number of lines in each
 one.
 
-Let us test our application. First run \texttt{myapp.sh} from a shell
+Let us test our tool. First run \texttt{myapp.sh} from a shell
 passing it some existing text files, just to check that it works
 correctly.
 %
 Then go back to the web-client, reload the page, select \texttt{MFA}
-from the applications menu, open a file from the file-manager, and
-finally click the \applybutton button. Alternatively, you can also
-select an entry from the file-manager and choose \applybutton from its
-context menu. You should see the output of the application in the
+from the tools menu, open a file from the file-manager, and finally
+click the \applybutton button. Alternatively, you can also select an
+entry from the file-manager and choose \applybutton from its context
+menu, in this case all files in the sub-tree will be passed to
+\texttt{myapp.sh}. You should see the output of the tool in the
 console area.
 
-\section{Passing Outline Entities to Your Application}
-\label{ch:quickguide:outline}
+\section{Passing Outline Entities to a Tool}
+\label{sec:quickguide:outline}
 
 In the web-client, the area on the right is called the outline area
-(see Figure~\ref{fig:webclient} on Page~\pageref{fig:webclient}).
+(see Figure~\ref{fig:arch:client} on
+Page~\pageref{fig:arch:client}).
 %
-Since \ei was designed mainly for applications that process programs,
-e.g., program analysis tools, this area is typically dedicated for a
-tree-view of program entities, e.g., method names, class names, etc.
+Since \ei was designed mainly for tools that process programs, e.g.,
+program analysis tools, this area is typically dedicated for a
+tree-view of program entities, e.g., method and class names.
 %
 The idea is that, in addition to the input files, the user will select
 some of these entities to indicate, for example, where the analysis
 should start from or which parts of the program to analyze, etc.
 %
-Next we explain how we can pass these selected entities to an
-application.
+Next we explain how we can pass these selected entities to a
+tool.
 
 By default the web-client is configured to work with C programs, and
 thus if you open such a program (from the file-manager) and then click
@@ -338,28 +356,27 @@ the context menu in the file-manager you will get a tree-view of
 program entities for all files in the sub-tree).
 %
 Note that to generate this tree-view the web-client actually executes
-a ``hidden'' application that is installed on the server, namely
+a ``hidden'' tool that is installed on the server, namely
 \texttt{server/bin/default/coutline.sh}, but this is not relevant to
-our discussion now (see Section~\ref{ch:clients:web:outline} for more
+our discussion now (see Section~\ref{sec:clients:web:outline} for more
 details).
 %
-Note also
-that \texttt{coutline.sh} is limited and will not works perfectly for
-any C program: it simply looks for lines that start with \texttt{int}
-or \texttt{void} followed by something of the form
-\texttt{name(...)}. 
+Note also that \texttt{coutline.sh} is limited and will not work
+perfectly for any C program: it simply looks for lines that start with
+\texttt{int} or \texttt{void} followed by something of the form
+\texttt{name(...)}.
 %
-This script is provided just explain how an application
-that generates an outline is connected to the web-client (see
-Section~\ref{ch:clients:web:outline} for more details).
+This script is provided just to explain how a tool that generates an
+outline is connected to the web-client (see
+Section~\ref{sec:clients:web:outline} for more details).
 
 As in the case of input files, the web-client always passes the
 selected entities to the server when the \applybutton button is
 clicked, and it is our responsibility to indicate how these entities
-should be passed to our application. 
+should be passed to our tool. 
 %
 Let us assume that \texttt{myapp.sh} is prepared to receive entities
-using a ``\texttt{-e}'' parameter as follows:
+using the parameter ``\texttt{-e}'' as follows:
 
 \medskip
 \begin{lstlisting}
@@ -369,12 +386,13 @@ using a ``\texttt{-e}'' parameter as follows:
 \medskip 
 \noindent
 In order to tell the server to pass the entities (that were received
-from the client) to our application, open \texttt{myapp.cfg} and
-change the command-line template to the following:
+from the client) to our tool, open \texttt{myapp.cfg} and change the
+command-line template, i.e., the content of \lst{cmdlineapp}, to the
+following:
 
 \medskip
 \begin{lstlisting}
-<cmdlineapp>./bin/myapp.sh -f _ei_files -e _ei_outline</cmdlineapp>
+./bin/myapp.sh -f _ei_files -e _ei_outline
 \end{lstlisting}
 
 \medskip
@@ -387,6 +405,8 @@ entities in some way, e.g., printing them on the standard output. Open
 
 \medskip
 \begin{lstlisting}[style=script]
+entities=$(getparam "e")
+
 echo ""
 echo "Selected entities:"
 echo ""
@@ -399,23 +419,26 @@ done
 
 \medskip
 \noindent
-This code simply print the entities in separated lines. Again, the
-external script \texttt{parse\_params.sh} parses the command-line and
-stores the list of entities in the variable \texttt{entities}.
+This code simply prints the entities in separated lines. Again, the
+first line stores the list of entities in the variable
+\lst{entities}.
 
-Go back to the web-client, reload the page, select some files and
-entities and execute the \texttt{MFA} application to see the result of
-the last changes. It is always recommended to check that the
-application works correctly from a shell first.
+First run \texttt{myapp.sh} from a shell passing it some existing text
+files and entities, just to check that it works correctly. Then go
+back to the web-client, reload the page, select some files, refresh
+the outline, select some entities, and finally execute the
+\texttt{MFA} tool to see the result of the last changes. 
 
-\section{Passing Parameters to Your Application}
+\section{Passing Parameters to a Tool}
 
-In addition to input files and outline entities, real applications
+In addition to input files and outline entities, real tools
 receive other parameters to control different aspects. In this section
-we explain how to declare parameters in the \ei framework such that
-(1) they automatically appear in the web-client (or any other client)
-so the user can set their values; and (2) the selected values are
-passed to the application when executed.
+we explain how to declare parameters in the \ei toolkit such that
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+\item they automatically appear in the web-client (or any other
+  client) so the user can set their values; and
+\item the selected values are passed to the tool when executed.
+\end{inparaenum}
 
 Let us start by modifying \texttt{myapp.sh} to accept some
 command-line parameters: we add a parameter ``\texttt{-s}'' to
@@ -441,7 +464,11 @@ to the following:
 \begin{lstlisting}[style=script]
 #!/bin/bash
 
-. default/parse_params.sh
+. misc/parse_params.sh
+files=$(getparam "f")
+entities=$(getparam "e")
+whattocount=$(getparam "w")
+showoutline=$(getparam "s")
 
 echo "I've received the following command-line parameters:"
 echo ""
@@ -465,7 +492,7 @@ do
     echo " - $f has " `wc $wcparam $f | awk '{print $1}'` $whattocount
 done
 
-if [ $showoutline == 1 ]; then
+if [ $showoutline == "" ]; then
     echo ""
     echo "Selected entities:"
     echo ""
@@ -480,31 +507,27 @@ fi
 \medskip
 \noindent
 Compared to the previous script, you can notice that: we added lines
-13-20 to take the value of ``\texttt{-c}'' into account when calling
-\texttt{wc} at line 24; and in lines 27-35 we wrapped the loop that
-prints the outline entities with a condition.
-%
-Note that \texttt{parse\_params.sh} sets the variable
-\texttt{whattocount} to the value of ``\texttt{-c}'', and sets
-\texttt{showoutline} to 1 if ``\texttt{-s}'' is provided in the
-command-line and to 0 otherwise. Before proceeding to the next step,
-execute the script from a shell to make sure that it works correctly.
+17-24 to take the value of ``\texttt{-c}'' into account when calling
+\texttt{wc} at Line 28; and in lines 31-39 we wrapped the loop that
+prints the outline entities with a condition to account for the
+``\texttt{-s}'' parameter.
+
 
 Our goal is to show these parameters in the web-client (or any other
 client), so the user can select the appropriate values before
-executing the application. The \ei framework provides an easy way to
-do this, all we have to do is to modify \texttt{myapp.cfg} to include
-a description of the supported parameters. Open \texttt{myapp.cfg} and
+executing the tool. The \ei toolkit provides an easy way to do this,
+all we have to do is to modify \texttt{myapp.cfg} to include a
+description of the supported parameters. Open \texttt{myapp.cfg} and
 add the following inside the \lst{app} tag (e.g., immediately after
-\lst{execinfo}):
+closing the \lst{execinfo} tag):
 
 \medskip
 \begin{lstlisting}
   <parameters prefix = "-" check="false">
     <selectone name="c">
       <desc>
-        <short>What to count</short>
-        <long>Select the elements you want to count in each input file</long>
+        <short>(*What to count*)</short>
+        <long>(*What you want to count in each input file*)</long>
       </desc>
       <option value="lines">
         <desc>
@@ -542,33 +565,34 @@ Let us explain the different elements of the above XML snippet.
 %
 The tag \lst{parameters} includes the definition of all
 parameters. The attribute \lst{prefix} is used to specify the symbol
-to be attached to the parameter name when passed to the application,
-for example, if we declare a parameter with name ``c'' the server will
-pass it to the application as ``-c''. Note that this attribute can be
-overridden by each parameter.
+to be attached to the parameter name when passed to the tool, for
+example, if we declare a parameter with name ``\lst{c}'' the server
+will pass it to the tool as ``\lst{-c}''. Note that this attribute can
+be overridden by each parameter.
 %
 The attribute \lst{check} tells the server to check the correctness of
-the parameters before passing them to the application, i.e., that they
+the parameters before passing them to the tool, i.e., that they
 have valid values, etc.
 %
-The tag \lst{selectone} defines a parameter with \lst{name} ``c'' that
-can take one value from a set of possible ones. For example, the
-web-client will view it as a ComboBox.
+The tag \lst{selectone} defines a parameter with \lst{name}
+``\lst{c}'' that can take one value from a set of possible ones. For
+example, the web-client will view it as a combo-box.
 %
-The \lst{desc} environment contains a text describing this parameter
-and is used by the client when viewing this parameter graphically.
+The \lst{desc} tag contains a text describing this parameter and is
+used by the client when viewing this parameter graphically.
 %
 The \lst{option} tags define the valid values for this parameter, from
 which one can be selected, and the \lst{default} tag defines the
-default value.  The \lst{desc} environment of each \lst{option}
-contains a text describing this option, e.g., the \lst{short}
-description is used for the text in the corresponding ComboBox.
+default value.  The \lst{desc} tag of each \lst{option} contains a
+text describing this option, e.g., the \lst{short} description is used
+for the text in the corresponding combo-box.
 %
-The tag \lst{flag} defines a parameter with name ``s''. This parameter
-has no value, it is either provided in the command-line or not, and
-its \lst{default} value is \lst{"false"}, i.e., not provided. For the
-complete set of parameters supported in \ei see
-\xmlstructref{server}{parameters} in Chapter~\ref{ch:server}.
+The tag \lst{flag} defines a parameter with name ``\lst{s}''. This
+parameter has no value, it is either provided in the command-line or
+not, and its \lst{default} value is \xmlstructvalue{false}, i.e., not
+provided. For the complete set of parameters supported in \ei see the
+specifications of \xmlstructref{server}{parameters} in
+Chapter~\ref{ch:server}.
 
 Go to the web-client, reload the page, and click on the \settingbutton
 button and look for the tab with the title \texttt{MFA}.  You will now
@@ -576,36 +600,37 @@ see the parameters declared above in a graphical way where you can set
 their values as well.  When you click on the \applybutton button, the
 web-client will pass these parameters to the server, however, we still
 have to tell the server how to pass these parameters to
-\texttt{myapp.sh}. Open \texttt{myapp.cfg} and change the
-\lst{cmdlineapp} template to the following:
+\texttt{myapp.sh}. Open \texttt{myapp.cfg} and change the command-line
+template, i.e., content of \lst{cmdlineapp}, to the following:
 
 \medskip
 \begin{lstlisting}
-<cmdlineapp>./bin/myapp.sh -f _ei_files -e _ei_outline _ei_parameters</cmdlineapp>
+./bin/myapp.sh -f _ei_files -e _ei_outline _ei_parameters
 \end{lstlisting}
 
 \medskip
 \noindent
 As in the case of \lst{_ei_files} and \lst{_ei_outline}, the server
 will replace \lst{_ei_parameters} by the list of received parameters before
-executing the command-line. Execute the \texttt{MFA} application from
+executing the command-line. Execute the \texttt{MFA} tool from
 the web-client with different values for the parameters to see how the
 output changes.
 
-\section{Using the \ei Output Language in Your Application}
+\section{Using the \ei Output Language}
 
 In the example that we have developed so far, the web-client simply
 printed the output of \texttt{myapp.sh} in the console area. This is
 the default behavior of the web-client if the output does not follow
-the \ei Output Language (\eiol), which is a text-based is language
-that allows generating more sophisticated output such as highlighting
-lines, adding markers, etc.
+the \ei Output Language, which is a text-based language that allows
+generating more sophisticated output such as highlighting lines,
+adding markers, etc.
 %
 In this section we will explain the basics of this language by
-extending \texttt{myapp.sh} to use it, for more details see
+extending \texttt{myapp.sh} to use it -- for more details see
 Chapter~\ref{ch:eiol}.
 
-An output in \eiol is an XML structure of the following form:
+An output in the \ei output language is an XML structure that has the
+following form:
 
 \medskip
 \noindent
@@ -622,10 +647,15 @@ An output in \eiol is an XML structure of the following form:
 
 \medskip
 \noindent
-where (1) \lst{eiout} is the outermost tag that includes all the
-output elements; (2) \xmlstructref{eiout}{eicommand}* is a list of commands
-to be executed; and (3) \xmlstructref{eiout}{eiaction}* is a list of actions
-to be declared.
+where
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+\item \lst{eiout} is the outermost tag that includes all the output
+  elements;
+\item \xmlstructref{eiout}{eicommand}* is a list of commands to be
+  executed; and
+\item \xmlstructref{eiout}{eiaction}* is a list of actions to be
+  declared.
+\end{inparaenum}
 %
 An \xmlstructref{eiout}{eicommand} is an instruction like: \emph{print a text
   on the console}, \emph{highlight lines 5-10}, \emph{add marker at
@@ -635,14 +665,14 @@ An \xmlstructref{eiout}{eiaction} is an instructions like: \emph{when the
   user clicks on line 13, highlight lines 20-25}, etc.
 %
 In the rest of this section we discuss some commands and actions that
-are supported in \eiol, for the complete list see
-Chapter~\ref{ch:eiol}.
+are supported in the \ei output language, for the complete
+specifications see Chapter~\ref{ch:eiol}.
 
 \subsection{Printing in the Console Area}
 
-Recall that when the \eiol is used, the web-client does not redirect
-the output to the console area and thus we need a command to
-print in the console area.
+Recall that when the \ei output language is used, the web-client does
+not redirect the output to the console area, and thus we need a command
+to print in the console area.
 %
 The following is an example of a command that prints ``Hello World''
 in the console area:
@@ -670,7 +700,7 @@ Inside \lst{printonconsole} we can have several \lst{content} tags
 which include the content to be printed (in the above example we have
 only one). The attribute \lst{format} indicates the format of the
 content. In the above example it is plain 'text', other formats are
-supported as well, e.g., 'html'.
+supported as well, e.g., 'html' and 'svg'.
 %
 
 Let us change \texttt{myapp.sh} to print the different parts of its
@@ -682,7 +712,11 @@ content to the following:
 \begin{lstlisting}[style=script]
 #!/bin/bash
 
-. default/parse_params.sh
+. misc/parse_params.sh
+files=$(getparam "f")
+entities=$(getparam "e")
+whattocount=$(getparam "w")
+showoutline=$(getparam "s")
 
 echo "<eiout>"
 echo "<eicommands>"
@@ -740,24 +774,25 @@ echo "</eiout>"
 
 \medskip
 \noindent
-The output of \texttt{myapp.sh} is given in \eiol, because at Line 5 we
-start the output with the tag \lst{eiout} which we close at line 55.
+The output of \texttt{myapp.sh} is given in the \ei output language,
+because at Line 9 we start the output with the tag \lst{eiout} which
+we close at Line 59.
 %
-At Line 6 we start an \lst{eicommands} tag, inside \lst{eiout}, which
-we close at Line 54.
+At Line 10 we start an \lst{eicommands} tag, inside \lst{eiout}, which
+we close at Line 58.
 %
 Inside \lst{eicommands} we have 3 \lst{printonconsole} commands:
 %
-the first one is generated by lines 7-13; the second by lines 15-37;
-and the last one by lines 40-52.
+the first one is generated by lines 11-17; the second by lines 19-41;
+and the last one by lines 44-56.
 %
-Note that the first command uses the default console, while the last
-two use different consoles. Note also that the content in the last two
-is given in HTML. 
+Note that the first one uses the default console, while the last two
+use different consoles. Note also that the content in the last two is
+given in HTML.
 %
 Execute \texttt{myapp.sh} in a shell first to check that it works
-correctly, and then execute the \texttt{MFA} application from the
-web-client to see the effect of these changes.
+correctly, and then execute the \texttt{MFA} tool from the web-client
+to see the effect of these changes.
 
 \subsection{Adding Markers}
 
@@ -770,7 +805,7 @@ the editor area. The following is an example of such command:
   <lines>
     <line from="4" />
   </lines>
-  <content format='text'>
+  <content format="text">
     (*text to associated to the marker*)
   </content>
 </addmarker>
@@ -778,8 +813,8 @@ the editor area. The following is an example of such command:
 
 \medskip
 \noindent
-The attribute \lst{dest} indicates the \emph{full path} of the file in
-which the marker should be added (as received from the server).
+The attribute \lst{dest} indicates the \emph{full path} to the file
+(as received from the server) in which the marker should be added.
 %
 The attribute \lst{outclass} indicates the nature of the marker, which
 can be 'info', 'error', or 'warning'. This value typically affects the
@@ -796,7 +831,7 @@ a tooltip, a dialog box, etc., depending on the client).
 
 Let us modify \texttt{myapp.sh} to add a marker at Line 1 of each file
 that it receives. Open \texttt{myapp.sh} and add the following code
-snippet immediately before 54 of the previous script (i.e.,
+snippet immediately before Line 58 of the previous script (i.e.,
 immediately before closing the \lst{eicommands} tag):
 
 \medskip
@@ -805,7 +840,7 @@ for f in $files
 do
   echo "<addmarker dest='$f' outclass='info'>"
   echo "<lines><line from='1'/></lines>"
-  echo "<content format='text'> text for info marker of $f</content>"
+  echo "<content format='text'> text for info marker of $f </content>"
   echo "</addmarker>"
 done
 \end{lstlisting}
@@ -817,7 +852,7 @@ Lines 3-6 generate the actual command to add a marker for each file
 passed to \texttt{myapp.sh}.
 %
 Execute \texttt{myapp.sh} in a shell first to check that it works
-correctly, and then execute the \texttt{MFA} application from the
+correctly, and then execute the \texttt{MFA} tool from the
 web-client to see the effect of these changes.
 
 \subsection{Highlighting Code Lines}
@@ -860,7 +895,7 @@ done
 \medskip
 \noindent
 Execute \texttt{myapp.sh} in a shell first to check that it works
-correctly, and then execute the \texttt{MFA} application from the
+correctly, and then execute the \texttt{MFA} tool from the
 web-client to see the effect of these changes.
 
 \subsection{Adding Inline Markers}
@@ -872,10 +907,12 @@ marker:
 \medskip
 \begin{lstlisting}
 <addinlinemarker  dest="path" outclass="info"> 
-    <lines><line from="15" /></lines>
-    <content format="text">
-       (* Text to be viewed in the inline marker *)
-    </content>
+  <lines>
+    <line from="15" />
+  </lines>
+  <content format="text">
+    (* Text to be viewed in the inline marker *)
+  </content>
 </addinlinemarker>
 \end{lstlisting}
 
@@ -886,17 +923,18 @@ command. Each \lst{line} tag defines a line in which a widget, showing
 the text inside the \lst{content}, is added. Note that some clients,
 e.g., the web-client, allow only plain 'text' content.
 
-Let us modify \texttt{myapp.sh} to add an inline marker at line 15 of
+Let us modify \texttt{myapp.sh} to add an inline marker at Line 15 of
 each file that it receives. Open \texttt{myapp.sh} and add the
 following code snippet immediately before the instruction that closes
 the \lst{eicommands} tag:
 
 \medskip
-\begin{lstlisting}[style=script]for f in $files 
+\begin{lstlisting}[style=script]
+for f in $files 
 do
   echo "<addinlinemarker dest='$f' outclass='info'>"
   echo "  <lines><line from='15' /></lines>"
-  echo "  <content format='text'> Awesome line of code!!</content>"
+  echo "  <content format='text'> Awesome line of code!! </content>"
   echo "</addinlinemarker>"
 done
 \end{lstlisting}
@@ -905,7 +943,7 @@ done
 \medskip
 \noindent
 Execute \texttt{myapp.sh} in a shell first to check that it works
-correctly, and then execute the \texttt{MFA} application from the
+correctly, and then execute the \texttt{MFA} tool from the
 web-client to see the effect of these changes.
 
 
@@ -918,7 +956,7 @@ content:
 \begin{lstlisting}
 <dialogbox outclass="info" boxtitle="Done!" boxwidth="100" boxheight="100"> 
   <content format="html">
-    (* text to be shown in the dialog box *)
+    (* Text to be shown in the dialog box *)
   </content>
 </dialogbox>
 \end{lstlisting}
@@ -926,9 +964,9 @@ content:
 \medskip 
 \noindent 
 The dialog box will be titled as specified in \lst{boxtitle}, and it
-will include the content as specified in the \lst{content}
-environments. The attributes \lst{boxwidth} and \lst{boxheight} are
-optional, they determine the initial size of the window.
+will include the content as specified in the \lst{content} tag. The
+attributes \lst{boxwidth} and \lst{boxheight} are optional, they
+determine the initial size of the window.
 
 Let us modify \texttt{myapp.sh} to open a dialog box with some
 message. Open \texttt{myapp.sh} and add the following code snippet
@@ -937,11 +975,10 @@ tag:
 
 \medskip
 \begin{lstlisting}[style=script]
-echo "<dialogbox outclass='info' boxtitle='Done!'  boxwidth='300' boxheight='100'>"
+echo "<dialogbox  boxtitle='Done!' boxwidth='300' boxheight='100'>"
 echo "  <content format='html'>"
-echo "    The <span style='color: red'>MFA</span> analysis has been applied."
-echo "    You can see the output in the result in the text area and the corresponding"
-echo "    program files."
+echo "   Hurray!."
+echo "   The <span style='color: red'>MFA</span> tool has been applied."
 echo "  </content>"
 echo "</dialogbox>"
 \end{lstlisting}
@@ -949,7 +986,7 @@ echo "</dialogbox>"
 \medskip
 \noindent
 Execute \texttt{myapp.sh} in a shell first to check that it works
-correctly, and then execute the \texttt{MFA} application from the
+correctly, and then execute the \texttt{MFA} tool from the
 web-client to see the effect of these changes.
 
 
@@ -985,8 +1022,8 @@ First note that the above XML should be placed inside the
 \lst{eiactions} tag (that we have ignored so far).
 %
 When the above action is executed, by the web-client for example, a
-marker (typically an arrow) will be shown next to line 17 of the file
-\texttt{/Examples\_1/iterative/sum.c}.
+marker (typically an arrow) will be shown next to Line 17 of the file
+\xmlstructvalue{/Examples\_1/iterative/sum.c}.
 %
 Then, if the user clicks on this marker the commands inside the
 \lst{eicommands} tag will be executed, and if the user clicks again
@@ -1000,8 +1037,8 @@ Note that the commands inside \lst{eicommands} inherit the \lst{dest}
 and \lst{outclass} attributes of \lst{oncodelineclick}, but one can
 override them, e.g., if we add
 \lst{dest="/Examples_1/iterative/fact.c"} to the \lst{highlightlines}
-command then a click highlights lines 17-19 of \texttt{fact.c} instead
-of \texttt{sum.c}.
+command then a click highlights lines 17-19 of \lst{fact.c} instead of
+\lst{sum.c}.
 %
 
 Let us modify \texttt{myapp.sh} to add a code line action, as the one
@@ -1036,12 +1073,12 @@ echo "</eiactions>"
 
 \medskip
 \noindent
-Note that at line 1 we open the tag \lst{eiactions} and at line 20 we
+Note that at Line 1 we open the tag \lst{eiactions} and at Line 20 we
 close it. The rest of the code simply prints a code line action as the
 one above for each file.
 %
 Execute \texttt{myapp.sh} in a shell first to check that it works
-correctly, and then execute the \texttt{MFA} application from the
+correctly, and then execute the \texttt{MFA} tool from the
 web-client to see the effect of these changes.
 
 \subsection{Adding OnClick Actions}
@@ -1050,20 +1087,21 @@ OnClick actions are similar to code line actions. The difference is
 that instead of assigning the action to a line of code, we can assign
 it to any HTML tag that we have generated.
 %
-For example, suppose that at some point the application has generated
+For example, suppose that at some point the tool has generated
 the following content in the console area:
 
 \medskip
 \begin{lstlisting}
 <content format="html"/>
-   <span style="color: red;" id="err1">10 errors</span> were found in the file sum.c
+   <span style="color: red;" id="err1">10 errors</span> were found 
+   in the (*file*) sum.c
 </content>
 \end{lstlisting}
 
 \medskip
 \noindent
-Note that the text ``10 errors'' is wrap by a span tag with an
-identifier \texttt{err1}. The OnClick action can assign a list of
+Note that the text ``10 errors'' is wrap by a \lst{span} tag with an
+identifier \lst{err1}. The OnClick action can assign a list of
 commands to be executed when this text is clicked as follows:
 
 \begin{lstlisting}
@@ -1074,7 +1112,7 @@ commands to be executed when this text is clicked as follows:
   <eicommands>
     <dialogbox boxtitle="Errors"> 
       <content format="html">
-       (* There are some variables used but not declated *)
+       (* There are some variables used but not declared *)
       </content>
     </dialogbox>
   </eicommands>
@@ -1099,7 +1137,7 @@ echo "<ul>"
 
 \medskip
 \noindent
-which should be at line 19, and replace it by
+which should be at Line 23, and replace it by
 
 \medskip
 \begin{lstlisting}[style=script]
@@ -1109,7 +1147,7 @@ echo "<ul style='background: yellow;' id='files'>"
 \medskip
 \noindent
 This change will give the list of files that we print in the console
-(i.e., the corresponding HTML) the identifier \texttt{files}, and will
+(i.e., the corresponding HTML) the identifier \lst{files}, and will
 change its background color to yellow. Next add the following code
 immediately before the instruction that closes \lst{eiactions}:
 
@@ -1132,8 +1170,91 @@ echo "</onclick>"
 \medskip
 \noindent
 This defines an OnClick actions such that when clicking on the list of
-files in the console area (anywhere in the yellow region) should open
-a dialog box. Execute \texttt{myapp.sh} in a shell first to check that
-it works correctly, and then execute the \texttt{MFA} application from
-the web-client to see the effect of these changes.
+files in the console area (anywhere in the yellow region) a dialog box
+is opened. Execute \texttt{myapp.sh} in a shell first to check that it
+works correctly, and then execute the \texttt{MFA} tool from the
+web-client to see the effect of these changes.
 
+\section{Adding Examples to the File-Manager}
+
+Consider again the web-client as depicted in
+Figure~\ref{fig:arch:client} (see Page~\pageref{fig:arch:client}). The
+file-manager on left-hand side includes a predefined set of
+examples. In this section we explain how to modify this set of
+examples.
+%
+Adding a set of examples consists of two steps:
+%
+\begin{inparaenum}[\upshape(\itshape i\upshape)]
+\item make it available on an \ei server; and
+\item configure the client to include it in the file-manager.
+\end{inparaenum}
+%
+By default the web-client is configured to include all examples that
+are available on the default server (see
+Section~\ref{sec:clients:web:filemanager} for details), so what is
+left is to define such sets on the server side. Later, in
+Chapter~\ref{ch:clients}, we will see how to configure the examples on
+the client side.
+
+A set of examples is an XML structure that represents a folder, for
+example, the following one is what we have in
+\texttt{server/config/default/examples.1.cfg}, which is actually the
+first set that appears in the web-client (see
+Figure~\ref{fig:arch:client} on Page~\pageref{fig:arch:client}):
+
+\medskip
+\begin{lstlisting}
+<exset id="set1">
+ <folder name="Examples_1">
+    <folder name="iterative">
+      <file name="sum.c" url="https://.../sum.c" />
+      <file name="fact.c" url="https://.../iterative/sum.c" />
+      ...
+    </folder>
+    <folder name="recursive">
+      <file name="sum.c" url="https://.../recursive/sum.c" />
+      <file name="fact.c" url="https://.../recursive/sum.c" />
+      ...
+    </folder>
+ </folder>
+</exset>
+\end{lstlisting}
+
+\medskip
+\noindent
+It is easy to see that it defines a folder structure, where each
+\lst{file} is associated with a URL to its actual content.
+%
+\ei provides also the possibility to associate a set of examples to a
+specific directory in a GitHub repository as follows (see
+\texttt{server/config/default/examples.2.cfg}):
+
+\medskip
+\begin{lstlisting}
+<exset id="set2">
+ <folder name="Examples_2">
+     <github repo="easyinterface" owner="abstools" branch="master" 
+             path="examples/c/arrays" />
+ </folder>
+</exset>
+\end{lstlisting}
+
+\medskip
+\noindent
+To make the above two sets available on the \ei server we should also
+include them in the configuration file
+\texttt{server/config/default/examples.cfg} as follows: \medskip
+
+\begin{lstlisting}
+<examples>
+  <exset id="set1" src="default/examples.1.cfg" />
+  <exset id="set2" src="default/examples.2.cfg" />
+</examples>
+\end{lstlisting}
+
+\medskip
+\noindent
+Note that \texttt{examples.cfg} is also included in the main
+configuration file of the server \texttt{eiserver.default.cfg} by
+default.

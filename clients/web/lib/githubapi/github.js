@@ -46,14 +46,13 @@
     function _request(method, path, data, cb, raw, sync) {
       function getURL() {
         var url = path.indexOf('//') >= 0 ? path : API_URL + path;
-        url += ((/\?/).test(url) ? '&' : '?');
         // Fix #195 about XMLHttpRequest.send method and GET/HEAD request
         if (data && typeof data === "object" && ['GET', 'HEAD'].indexOf(method) > -1) {
-          url += '&' + Object.keys(data).map(function (k) {
+          url += ((/\?/).test(url) ? '&' : '?') + Object.keys(data).map(function (k) {
             return k + '=' + data[k];
           }).join('&');
         }
-        return url + '&' + (new Date()).getTime();
+        return url + ((/\?/).test(url) ? '&' : '?') + (new Date()).getTime();
       }
 
       var xhr = new XMLHttpRequest();
@@ -233,17 +232,20 @@
     // =======
 
     Github.Repository = function(options) {
-      var repo = options.name;
-      var user = options.user;
+      this.repo = options.name;
+      this.user = options.user;
 
       var that = this;
-      var repoPath = '/repos/' + user + '/' + repo;
+      var repoPath = '/repos/' + this.user + '/' + this.repo;
 
       var currentTree = {
         'branch': null,
         'sha': null
       };
 
+      this.getCurrentTree = function(){
+	return currentTree;
+      };
 
       // Delete a repo
       // --------
@@ -406,7 +408,7 @@
       this.getTree = function(tree,sync, cb) {
         _request("GET", repoPath + "/git/trees/"+tree, null, function(err, res) {
           if (err) return cb(err);
-          cb(null, res.tree);
+          cb(null, res.tree,res);
         },'',sync);
       };
 
@@ -457,8 +459,16 @@
       // with a new blob SHA getting a tree SHA back
       // -------
 
-      this.postTree = function(tree, cb) {
-        _request("POST", repoPath + "/git/trees", { "tree": tree }, function(err, res) {
+      this.postTree = function(tree,base, cb) {
+	var opt = {};
+	if(arguments.length === 2 && typeof arguments[1] === "function") {
+          cb = base;
+        }else{
+	  opt["base_tree"] = base;
+	}
+	opt["tree"] = tree;
+	console.log("ooo",opt);
+        _request("POST", repoPath + "/git/trees", opt, function(err, res) {
           if (err) return cb(err);
           cb(null, res.sha);
         });
@@ -475,8 +485,8 @@
           var data = {
             "message": message,
             "author": {
-              "name": options.user,
-              "email": userData.email
+              "name": "easyinterface",
+              "email": "noreply@easyinterface.null"
             },
             "parents": [
               parent

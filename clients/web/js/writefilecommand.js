@@ -10,6 +10,8 @@ window.WriteFileCommand = (function() {
 	    throw "The 'filename' is missing in the "+_ei.outlang.syntax.writefile+ " command";
 
 	var overwrite = c.attr(_ei.outlang.syntax.overwrite);
+      console.log(c.text());
+        var url = c.attr(_ei.outlang.syntax.url) || "";
 	if ( overwrite == "true" )
 	    overwrite = true;
 	else
@@ -20,6 +22,7 @@ window.WriteFileCommand = (function() {
 	return new WriteFileCommand({
 	    filename: filename,
 	    content: content,
+	    url: url,
 	    overwrite: overwrite,
 	    filemanager: ei_info.filemanager
 	});
@@ -29,6 +32,7 @@ window.WriteFileCommand = (function() {
 	this.filename = options.filename;
 	this.content = options.content;
 	this.overwrite = options.overwrite;
+        this.url = options.url;
 	this.filemanager = options.filemanager;
     };
 
@@ -38,7 +42,7 @@ window.WriteFileCommand = (function() {
 	//
 	"do":
 	function() {
-	    this.filemanager.createFile(this.filename, this.content, this.overwrite);	    
+	    this.filemanager.createFile(this.filename, this.content, this.url, this.overwrite);	    
 	},
 
 	//

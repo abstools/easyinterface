@@ -60,6 +60,11 @@ window.TextAreaWidget = ( function() {
 	function() {
 	    var self = this;
 	    this.textfield.val(self.widgetInfo.default_value);
+	},
+	setValue:
+	function(newvalue){
+	  var self = this;
+	  self.textfield.val(newvalue);
 	}
     }
 

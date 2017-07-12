@@ -35,12 +35,15 @@ window.CmdEngine = (function() {
 		jsonParams["parameters"]["_ei_files"] =  cmdInfo.files;
 
 	    // add the outline entries
-	    if ( cmdInfo.entries ) {
+	    if (_ei.outline.active && cmdInfo.entries ) {
 		jsonParams["parameters"]["_ei_outline"] =  cmdInfo.entries;
 	    }
 
 	    // add the client id
 	    jsonParams["parameters"]["_ei_clientid"] = _ei.clientId;
+
+	    // add ei output support
+	    jsonParams["parameters"]["_ei_outformat"] = _ei.outformat;
 
 	    //var eirequest = JSON.stringify(jsonParams);
 	    var eirequest = jsonParams;
@@ -49,13 +52,25 @@ window.CmdEngine = (function() {
 		   {
 		       eirequest: eirequest
 		   }).done(function(data) {
-		     try{
-		       data = jQuery.parseXML(data);
-		       if ( _ei.debug ) console.log(data);
-	    	       callback(data);
-		     }catch(e){
-		       errorcb(e);
-		     }
+		       try {
+			   data = jQuery.parseXML(data);
+			   if ( _ei.debug ) console.log(data);
+		       } catch(e) {
+			   var n = data.indexOf("<"+_ei.outlang.syntax.eiappout+">");
+			   var m = data.indexOf("</"+_ei.outlang.syntax.eiappout+">");
+			   if ( n != -1 && m != -1 ) {
+			       data = data.replace("<"+_ei.outlang.syntax.eiappout+">","<"+_ei.outlang.syntax.eiappout+"><![CDATA[");
+			       data = data.replace("</"+_ei.outlang.syntax.eiappout+">","]]></"+_ei.outlang.syntax.eiappout+">");
+			   }
+			   try {
+			       data = jQuery.parseXML(data);
+			   } catch(e1) {
+  			     errorcb(e1);
+			     return;
+			   }
+		       }
+		     callback(data);
+
 	    	   }).error(function(data) {
 		       if ( _ei.debug ) {
 			   console.log("HTTP Request error occurred: ");

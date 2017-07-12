@@ -6,11 +6,10 @@ window.EasyInterface = (function() {
     // independent EasyInterface(s) on the same page
     //
     var countEasyInterface = 0;
-    var serverPath = [{server:"/ei/server/eiserver.php",apps:"_all"}];
-    var examplesPath = [{server:"/ei/server/eiserver.php",examples:"_all"}];
+    var serverPath = [{server:"/ei/server/eiserver.php",apps:"_ei_all"}];
+    var examplesPath = [{server:"/ei/server/eiserver.php",examples:"_ei_all"}];
 
-    //
-    var defaultSettingFile = "./settings.cfg";
+
 
     function EasyInterface(options) {
 
@@ -18,7 +17,7 @@ window.EasyInterface = (function() {
 
 	this.holder = null;
 	this.theme = null;
-	this.cfgFile = null;
+
 	this.userProjectsCatId = -1;
 	this.userDefaultProjectId = -1;
 	this.settingsFileContent = null;
@@ -51,23 +50,44 @@ window.EasyInterface = (function() {
         this.helpButtonHolder = this.holder.find("#help");
 	this.optionsButtonHolder = this.holder.find("#options");
 	this.applyButtonHolder = this.holder.find("#apply");
-	this.toolSelectHolder = this.holder.find("#toolselector");
+        this.toolSelectHolder = this.holder.find("#toolselector");
+      	this.settingHolder = this.holder.find("#setting");
 	this.outlineHolder = this.holder.find("#outline");
 	this.outlineButtonHolder = this.holder.find("#refreshoutline");
-
+	this.clearButtonHolder = this.holder.find("#clearanno");
+        this.upSectionHolder = this.holder.find("#up");
+        this.rightSectionHolder = this.holder.find("#up-right");
 	// create/installl the different widgets
 	this.initCmdEngine();
 	this.initCodeAreaWidget();
 	this.initFileManagerWidget();
 	this.initParametersWidget();
-        this.initHelpWidget();
-	//this.initGeneralSetting();
+        this.initHelpWidget(options.generalHelp);
+//	this.initGeneralSetting();
 	this.initConsoleWidget();
 	this.initToolSelectorWidget();
 	this.initOutputManager();
-	this.initOutlineWidget();
-	this.initTools();
-	this.filemanager.setProperties(this.outline,this.tools);
+        if(_ei.outline.active)
+	  this.initOutlineWidget();
+        this.initTools();
+        this.filemanager.setProperties(this.outline,this.tools);
+        // check Right
+        if(_ei.outline.active && _ei.inlineSetting.active){
+	  //set heights
+	  this.outlineHolder.css("height","49%");
+	  this.settingHolder.css("height","49%");
+        }else if(_ei.outline.active){
+  	  //remove inlineSetting
+	  this.settingHolder.remove();
+	}else if(_ei.inlineSetting.active){
+	  //remove outline
+	  this.outlineHolder.remove();
+	}else{
+	  // codearea expand
+	  this.rightSectionHolder.remove();
+	  this.codeareaHolder = this.codeareaHolder.css("width","78%");
+	}
+      
 	// connect the buttons to the corresponding operations
 	this.applyButtonHolder.button(
 	    {
@@ -78,13 +98,19 @@ window.EasyInterface = (function() {
 		var ids = [self.codearea.getCurrentTabId()];
 		self.tools.apply(ids); 
 	    } );
-
+      if( !_ei.inlineSetting.active ) {
 	this.optionsButtonHolder.button( 
 	    {
 		icons: {
 		    primary: "ui-icon-gear"
 		}
-	    } ).click(function() { self.parametersHolder.dialog( "open" ); } );
+	    } ).click(function() {
+	      self.parametersHolder.dialog( "open" );
+	    } );
+        }else{
+	  this.optionsButtonHolder.remove();
+	}
+
         this.helpButtonHolder.button( 
 	    {
 		icons: {
@@ -92,13 +118,13 @@ window.EasyInterface = (function() {
 		}
 	    } ).click(function() { self.helpsHolder.dialog( "open" ); } );
 
-	$( "#clearanno" ).button( 
+	this.clearButtonHolder.button( 
 	    {
 		icons: {
 		    primary: "ui-icon-tag"
 		}
 	    } ).click(function() { self.outputmanager.clearAllAnnotations(); });
-
+      if(_ei.outline.active){
 	this.outlineButtonHolder.button( 
 	    {
 		icons: {
@@ -108,8 +134,13 @@ window.EasyInterface = (function() {
 		var ids = [self.codearea.getCurrentTabId()];
 		self.outline.refresh( ids ); 
 	    } );
+      }else{
+	this.removeOutline();
+      }
       this.initResizeEffect(); 
-	   
+	setTimeout(function(){ self.parseURI() }, 2000);
+			
+
 
     }
 
@@ -128,12 +159,17 @@ window.EasyInterface = (function() {
 
 	    this.holder  = $( options.holder );
 	    this.theme   = options.theme   || "default";
-	    this.cfgFile = options.cfgFile || defaultSettingFile;
-	    _ei.serverPath = options.apps || serverPath;
-	  _ei.exampleServerPath = options.examples || examplesPath;
-	  _ei.outline.app = options.outlineapp || "outline";
-	  _ei.outline.server = options.outlineserver || _ei.serverPath[0].server;
 
+	    _ei.language = options.language || "text/x-csrc";
+	    _ei.serverPath = options.apps || serverPath;
+	    _ei.exampleServerPath = options.examples || examplesPath;
+
+	    _ei.outline.active = (options.outline=="on")? true : false;
+	    _ei.inlineSetting.active = (options.inlineSetting=="on")? true : false;
+	    if(_ei.outline.active){
+	      _ei.outline.app = options.outlineapp || "outline";
+	      _ei.outline.server = options.outlineserver || _ei.serverPath[0].server;
+	    }
 	},
 
 	//
@@ -213,7 +249,8 @@ window.EasyInterface = (function() {
 
 	     //
 	initHelpWidget:
-	function() {
+	function(generalHelp) {
+	  
 	    var self = this;
 	    this.helps = new Helps(this.helpsHolder, {});
 
@@ -238,7 +275,10 @@ window.EasyInterface = (function() {
 		    }
 		}
 	    });
-
+	  if(generalHelp){
+	    var general = $.parseXML(generalHelp);
+	    this.helps.addSection("General Help", "generalhelp",$(general).find("apphelp"));
+	  }
 	},
 
 	//
@@ -340,7 +380,8 @@ window.EasyInterface = (function() {
 	function() {
 	    var self = this;
 	    this.tools = new Tools({
-		"parameters": this.parameters,
+	        "parameters": this.parameters,
+		"inlineParameters": this.settingHolder,
 		"selector": this.toolSelector,
 		"filemanager": this.filemanager,
 		"outline": this.outline,
@@ -353,13 +394,13 @@ window.EasyInterface = (function() {
 	  var currentServer;
 	  for (serverNum in _ei.serverPath){
 	    //_ei.serverPath[serverNum] = 
-	    // = {server: "", apps: "_all"|["",""]}
+	    // = {server: "", apps: "_ei_all"|["",""]}
 	    currentServer =  _ei.serverPath[serverNum];
 	    var bucle_apps = true;
 	      
 	    for( var index = 0; (bucle_apps && index < currentServer.apps.length);index+=1){
 	      var jsonParam;
-	      if(currentServer.apps == "_all"){
+	      if(currentServer.apps == "_ei_all"){
 		bucle_apps = false;
 		jsonParam = {
 		  "command" : _ei.serverCommand.app.details,
@@ -388,7 +429,8 @@ window.EasyInterface = (function() {
 		      self.initTool( $(this),currentServer.server );
 		    });// */
 	      });
-	  }}
+	    }}
+	  this.tools.ready();
 	},
 
 	initTool:
@@ -402,13 +444,13 @@ window.EasyInterface = (function() {
 	  var serverNum;
 	  var currentServer;
 	  for (serverNum in _ei.serverPath){
-	    // = {server: "", examples: "_all"|["",""]}
+	    // = {server: "", examples: "_ei_all"|["",""]}
 	    currentServer =  _ei.exampleServerPath[serverNum];
-	    var bucle_examples = true;
-	    for( var index = 0; (bucle_examples && index < currentServer.examples.length);index+=1){
+	    var loop_examples = true;
+	    for( var index = 0; (loop_examples && index < currentServer.examples.length);index+=1){
 	      var jsonParam;
-	      if(currentServer.examples == "_all"){
-		bucle_examples = false;
+	      if(currentServer.examples == "_ei_all"){
+		loop_examples = false;
 		jsonParam = {
 		  "command" : _ei.serverCommand.example.details,
 		  "exset_id" : _ei.serverCommand.all
@@ -433,6 +475,7 @@ window.EasyInterface = (function() {
 			alert(ex.find("ei_error").text());
 		    else
 			self.initExamples_aux(ex.find("examples"), serverNum,null);	
+		    
 		});
 	  }
 }
@@ -471,11 +514,69 @@ window.EasyInterface = (function() {
 	initResizeEffect:
 	function() {
 	  var self = this;
-	  var RE = new ResizeEffect();
-	  RE.addHorizontalEffect("filemanager","codearea");
-	  RE.addHorizontalEffect("codearea","outline");
-	  RE.addVerticalEffect("up","console");
-	}
+	  var RE = new ResizeEffect({holder:self.holder});
+	  RE.addHorizontalEffect(self.filemanagerHolder,self.codeareaHolder);
+	  if(_ei.outline.active || _ei.inlineSetting.active)
+	    RE.addHorizontalEffect(self.codeareaHolder,self.rightSectionHolder);
+	  if(_ei.outline.active && _ei.inlineSetting.active){
+	    RE.addVerticalEffect(self.settingHolder,self.outlineHolder);
+	  }
+	  RE.addVerticalEffect(self.upSectionHolder,self.consoleHolder);
+	},
+	removeOutline:
+	function(){
+	  this.outlineButtonHolder.remove();
+	  var sizeO = parseInt(this.outlineHolder.css("width").slice(0, -2));
+	  var sizeC = parseInt(this.codeareaHolder.css("width").slice(0, -2));
+	  this.outlineHolder.remove();
+	  this.codeareaHolder.css("width",sizeC+sizeO);
+	},
+	parseURI:
+	function(){
+	  var self = this;
+	  var data = self.parseQuery(window.location.search.substr(1));
+	  $.each(data,function(v,arr){
+	    switch(v){
+	      case "file":
+		$.each(arr,function(k,n){
+		    self.filemanager.openPath(n);
+		    var fmid = self.filemanager.getIdByPath(n);
+		    if(fmid!=-1)
+			self.filemanager.openFile(fmid);
+		});
+		break;
+	      case "app":
+		$.each(arr, function(k,n){
+		  self.toolSelector.selectTool(n);
+		});
+		break;
+	      case "profile": 
+		$.each(arr, function(k,n){
+		  self.parameters.selectProfile(-1,n);
+		});
+	    }
+
+	  });
+
+	},
+	parseQuery:
+	function(str){
+          if(typeof str != "string" || str.length == 0) return {};
+          var s = str.split("&");
+          var s_length = s.length;
+          var bit, query = {}, first, second;
+          for(var i = 0; i < s_length; i++)
+          {
+            bit = s[i].split("=");
+            first = decodeURIComponent(bit[0]);
+            if(first.length == 0) continue;
+            second = decodeURIComponent(bit[1]);
+            if(typeof query[first] == "undefined") query[first] = [second];
+            else if(query[first] instanceof Array) query[first].push(second);
+            else query[first] = [query[first], second]; 
+          }
+          return query;
+        }
 
     }
 

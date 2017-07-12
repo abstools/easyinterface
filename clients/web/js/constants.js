@@ -1,5 +1,7 @@
 var _ei = {
   clientId: "web_client",
+  outformat: "eiol",
+  language: "text/x-csrc",
   serverPath:"",
   exampleServerPath:"",
   serverCommand: {
@@ -30,7 +32,7 @@ var _ei = {
 	  color            : "color",              // attr
 	  elements         : "elements",           // tag
 	  selector         : "selector",           // tag
-	  selectorvalue    : "value",
+	  selectorvalue    : "value",              // attr
 
 	  //
 	  outclass       : "outclass",     // attr
@@ -44,11 +46,16 @@ var _ei = {
 
 	  // CONTENT environemnt
 	  content        : "content",      // tag
+	  streamid       : "execid",     // attr
+	  streamext      : "ext",    // attr
+	  streamaction   : "action", // attr
+	  streamtime     : "refreshrate",// attr
 	  format         : "format",       // attr
-	  htmlcontent    : "html",         // attr
-	  svgcontent     : "svg",          // attr
-	  textcontent    : "text",         // attr
-	  
+	  htmlcontent    : "html",         // attr value
+	  svgcontent     : "svg",          // attr value
+	  textcontent    : "text",         // attr value
+	  dygraphcontent : "graph",      // attr value
+
 	  // PRINTONCONSOLE command
 	  printonconsole : "printonconsole", // tag
 	  consoleid      : "consoleid",      // attr
@@ -75,7 +82,13 @@ var _ei = {
 	  writefile      : "writefile",  // tag
 	  filename       : "filename",  // attr
 	  overwrite      : "overwrite", // attr
+	  url            : "url",       // attr
 	  
+	  //DOWNLOAD command
+	  downloadfile   : "download",  //tag
+	  //filename       : "filename",  // attr
+	  //execid         : "execid",    // attr
+
 	  // SETCSS command
 	  setcss         : "setcss",
 	  cssproperties  : "cssproperties",
@@ -89,6 +102,24 @@ var _ei = {
 	  boxwidth       : "boxwidth", // attr
 	  boxheight      : "boxheigh", // attr
 
+	  // TIMELINE command
+	  timeline       : "timeline", // tag
+	  tlwidget       : "widget", //  attr
+	  tltitle        : "title",  //  attr
+	  tlauto         : "auto",   //  attr
+
+	  tlstep         : "step",  // tag
+	  tlclean        : "autoclean", // attr
+
+	  // ASKURL command
+	  askurl         : "askUrl", //  tag
+	  audelay        : "delay",  // attr
+	  autries        : "tries",  // attr
+
+	  // CHANGECONTENT command
+	  changecontent  : "changecontent", // tag
+	  ccaction       : "action", //attr
+
 	  // ONCODELINECLICK action
 	  oncodelineclick: "oncodelineclick",
 	  actionautoclean: "autoclean",
@@ -98,11 +129,15 @@ var _ei = {
       }
   },
   debug: true,
+  outline: false,
   file_ext: ".c",
   pprefix: "-",
   outline: {
     server: "",
     app: "absoutline"
+  },
+  inlineSetting:{
+    active: !false
   },
   general_settings : {
     show_svg_in_new_window: "no",

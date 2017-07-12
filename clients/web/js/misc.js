@@ -44,7 +44,7 @@ function getLines(linesXML) {
 	    if ( isNaN(end.line) )
 		throw "getLines Error: invalid value (" + to + ") for the attribute 'to'";
 	} else
-	    end.line = init.from;
+	    end.line = init.line;
 
 	if( toch ) {
 	    end.ch = parseInt(toch);
