@@ -48,21 +48,12 @@ window.Parameters = (function() {
 	//
 	addSection: 
 	function(label, sectionId, params, profiles) {
-	    var self = this;
-            var tagId = this.sectionId_to_sectionTag( sectionId );
-	    this.accord.append("<h3 id='label-"+tagId+"'>"+
-			       label+"</h3><div id='"+tagId+"'></div>");
-	    this.accord.accordion( "refresh" );
-
-	    this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button>");
-
-	  $("#btn-profile-"+tagId).button({
-		label: "Load Profile"
-	    });
-	    $("#btn-profile-"+tagId).click(function(){
-	      self.setProfileValues(sectionId,$("#profile-"+tagId).find("option:selected").val());
-	    });
-	    var sectionInfo = { id: sectionId, 
+	  var self = this;
+          var tagId = this.sectionId_to_sectionTag( sectionId );
+	  this.accord.append("<h3 id='label-"+tagId+"'>"+
+			     label+"</h3><div id='"+tagId+"'></div>");
+	  this.accord.accordion( "refresh" );
+	   var sectionInfo = { id: sectionId, 
 				tag: tagId, 
 				secId: this.secId, 
 				profileChange: false,
@@ -72,11 +63,35 @@ window.Parameters = (function() {
 
 	    this.sectionInfoById[sectionId] = sectionInfo;
 	    this.secId++;
+	  if(params){
+	    console.log(sectionId,params,profiles);
+	    if(profiles){
+	      this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button>");
 
-	    if ( params ) this.addParamsFromXML(sectionId,params);	    
+	      $("#btn-profile-"+tagId).button({
+		label: "Load Profile"
+	      });
+	      $("#btn-profile-"+tagId).click(function(){
+		self.setProfileValues(sectionId,$("#profile-"+tagId).find("option:selected").val());
+	      });
+	    }else{
+	      this.accord.find("#"+tagId).append("<button id='btn-default-"+tagId+"'>b2</button>");
+
+	      $("#btn-default-"+tagId).button({
+		label: "Reset Default Value"
+	      });
+	      $("#btn-default-"+tagId).click(function(){
+		self.setProfileValues(sectionId,"default");
+	      });
+	    }
+
+	    this.addParamsFromXML(sectionId,params);	    
 	    if ( profiles ) this.addProfilesFromXML(sectionId,profiles);	    
 
-
+	  }else{
+	    this.accord.find("#"+tagId).append("<b>No parameters</b>");
+	  }
+	 
 	},
 
 	//

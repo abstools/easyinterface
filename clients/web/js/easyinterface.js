@@ -516,18 +516,14 @@ window.EasyInterface = (function() {
 	  RE.addHorizontalEffect(self.filemanagerHolder,self.codeareaHolder);
 	  if(_ei.outline.active || _ei.inlineSetting.active)
 	    RE.addHorizontalEffect(self.codeareaHolder,self.rightSectionHolder);
-	  if(_ei.outline.active && _ei.inlineSetting.active){
+	  if(_ei.outline.active && _ei.inlineSetting.active)
 	    RE.addVerticalEffect(self.settingHolder,self.outlineHolder);
-	  }
 	  RE.addVerticalEffect(self.upSectionHolder,self.consoleHolder);
 	},
 	removeOutline:
 	function(){
 	  this.outlineButtonHolder.remove();
-	  var sizeO = parseInt(this.outlineHolder.css("width").slice(0, -2));
-	  var sizeC = parseInt(this.codeareaHolder.css("width").slice(0, -2));
 	  this.outlineHolder.remove();
-	  this.codeareaHolder.css("width",sizeC+sizeO);
 	},
 	parseURI:
 	function(){

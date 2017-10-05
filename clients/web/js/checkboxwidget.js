@@ -54,7 +54,15 @@ window.CheckBoxWidget = ( function() {
       if(longdesc!= ""){
 	var y = $("<div class='params-right-col'><span class='ui-icon ui-icon-info'></span></div>");
 	this.env.append(y); 
-	y.tooltip({ items: y.find("span"), content: longdesc });
+	y.tooltip({ items: y.find("span"), content: longdesc , close: function( event, ui ) {
+                ui.tooltip.hover(
+                    function () {
+                     $(this).stop(true).fadeTo(400, 1);
+                        //.fadeIn("slow"); // doesn't work because of stop()
+                    },
+                    function () {
+                        $(this).fadeOut("400", function(){ $(this).remove(); })
+                    });}});
       }
 
 

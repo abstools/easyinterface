@@ -25,7 +25,15 @@ window.TextAreaWidget = ( function() {
 	if ( widgetInfo.desc.long ) { 
 	    var x = $("<div class='params-right-col'><span class='ui-icon ui-icon-info'></span></div>");
 	    this.env.append(x); 
-	    x.tooltip({ items: x.find("span"), content: widgetInfo.desc.long });
+	    x.tooltip({ items: x.find("span"), content: widgetInfo.desc.long, close: function( event, ui ) {
+                ui.tooltip.hover(
+                    function () {
+                     $(this).stop(true).fadeTo(400, 1);
+                        //.fadeIn("slow"); // doesn't work because of stop()
+                    },
+                    function () {
+                        $(this).fadeOut("400", function(){ $(this).remove(); })
+                    });} });
 	}
 
     };
