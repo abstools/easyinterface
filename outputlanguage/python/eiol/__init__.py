@@ -18,14 +18,14 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
                             "() got an unexpected keyword argument " +
                             "'" + k + "'")
     for k in _attr_keys:
-        if _attr_keys[k]["required"] and not(k in attrs):
+        if _attr_keys[k]["minimun"] > 0 and not(k in attrs):
             raise TypeError(__name__ +
                             "() argument " +
                             "'" + k + "' not found")
-        elif k in attrs and not check.types(_attr_keys[k]["value"], attrs[k]):
+        elif k in attrs and not check.types(_attr_keys[k]["type"], attrs[k]):
             raise TypeError(__name__ +
                             "() argument " + "'" + k + "'" +
-                            " expecting: " + _attr_keys[k]["value"] + " type.")
+                            " expecting: " + _attr_keys[k]["type"] + " type.")
 
     el = ET.Element(_tag, attrib=attrs)
     for c in childs:
