@@ -14,10 +14,10 @@ class TestEIOL(unittest.TestCase):
                          solution.replace('\n', ''))
 
     def test_root_version(self):
-        root = eiol.create_output(version='0.2')
+        root = eiol.create_output(version='1.0')
         rootstr = ET.tostring(root, encoding='utf8', method='xml')
         solution = "<?xml version='1.0' encoding='utf8'?>"\
-                   '<eiout version="0.2" />'
+                   '<eiout version="1.0" />'
 
         self.assertEqual(rootstr.replace('\n', ''),
                          solution.replace('\n', ''))
