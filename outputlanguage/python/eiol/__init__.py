@@ -48,7 +48,7 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
             else:
                 el.append(c)
     if not(text is None):
-        el.text = "![CDATA[" + text + "]]"
+        el.text = "<![CDATA[" + text + "]]>"
     return el
 
 
