@@ -38,14 +38,17 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
             raise TypeError("argument '" + k + "' found too many times")
 
     el = ET.Element(_tag, attrib=attrs)
+    text = None
     for tc in childs:
         for c in childs[tc]:
             if tc == "text":
-                if el.text is None:
-                    el.text = ""
-                el.text += c
+                if text is None:
+                    text = ""
+                text += c
             else:
                 el.append(c)
+    if not(text is None):
+        el.text = "![CDATA[" + text + "]]"
     return el
 
 
