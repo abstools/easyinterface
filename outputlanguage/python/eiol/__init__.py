@@ -40,7 +40,10 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
     el = ET.Element(_tag, attrib=attrs)
     for tc in childs:
         for c in childs[tc]:
-            el.append(c)
+            if tc == "text":
+                el.text += c
+            else:
+                el.append(c)
     return el
 
 
