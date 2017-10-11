@@ -65,7 +65,7 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
             else:
                 el.append(c)
     if not(text is None):
-        el.text = CDATA(text)
+        el.append(CDATA(text))
     return el
 
 
