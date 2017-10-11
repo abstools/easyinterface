@@ -1,3 +1,4 @@
+from lxml import etree
 import xml.etree.ElementTree as ET
 from . import info
 from . import check
@@ -48,7 +49,7 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
             else:
                 el.append(c)
     if not(text is None):
-        el.text = "<![CDATA[" + text + "]]>"
+        el.text = etree.CDATA(text)
     return el
 
 
