@@ -35,7 +35,10 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
         elif k in _child_keys:
             if not(k in childs):
                 childs[k] = []
-            childs[k].append(kwargs[k])
+            if isinstance(kwargs[k], list):
+                childs[k] += kwargs[k]
+            else:
+                childs[k].append(kwargs[k])
         else:
             raise TypeError("got an unexpected keyword argument '" + k + "'")
     for k in _attr_keys:
