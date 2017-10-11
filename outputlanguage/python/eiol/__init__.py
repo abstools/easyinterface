@@ -41,6 +41,8 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
     for tc in childs:
         for c in childs[tc]:
             if tc == "text":
+                if el.text is None:
+                    el.text = ""
                 el.text += c
             else:
                 el.append(c)
