@@ -14,11 +14,13 @@ var loadConfig = function(){
 
     if(!data.outline)
       _ei_data.outline = "on";
-    
+
     if(!data.inlineSetting)
       _ei_data.inlineSetting = "off";
 
-    
+    if(!data.fileextension)
+      _ei_data.fileextension = ".abs";
+
     if(!data.language)
       _ei_data.language = "text/x-csrc";
   }
