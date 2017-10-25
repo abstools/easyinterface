@@ -21,3 +21,12 @@ class TestEIOL(unittest.TestCase):
 
         self.assertEqual(rootstr.replace('\n', ''),
                          solution.replace('\n', ''))
+
+    def test_eicommands_dest(self):
+        root = eiol.eicommands(dest="/path/to/file")
+        rootstr = ET.tostring(root, encoding='utf8', method='xml')
+        solution = "<?xml version='1.0' encoding='utf8'?>"\
+                   '<eicommands dest="/path/to/file" />'
+
+        self.assertEqual(rootstr.replace('\n', ''),
+                         solution.replace('\n', ''))
