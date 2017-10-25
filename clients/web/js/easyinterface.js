@@ -159,6 +159,7 @@ window.EasyInterface = (function() {
 	    this.theme   = options.theme   || "default";
 
 	    _ei.language = options.language || "text/x-csrc";
+	    _ei.file_ext = options.fileextension || ".abs";
 	    _ei.serverPath = options.apps || serverPath;
 	    _ei.exampleServerPath = options.examples || examplesPath;
 
