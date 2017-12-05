@@ -7,7 +7,7 @@ VERSION = open('version.txt').read()[:-1]
 
 
 setup(
-    name='pyeiol',
+    name='eiol',
     version=VERSION,
     description='Python EasyInterface Output Language lib',
     long_description=open("README.md").read(),

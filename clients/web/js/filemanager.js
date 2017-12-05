@@ -571,7 +571,7 @@ window.FileManager = (function() {
     },
 		    //
     addFolder:
-    function( label, parentId , tipo) {
+    function( label, parentId , tipo, overwrite) {
 
       var parent = undefined;
       if ( parentId ) parent = this.fmObj[ parentId ].node;
