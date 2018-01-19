@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
-from . import info
+
 from . import check
+from . import info
 
 
 def CDATA(text=None):
@@ -9,16 +10,15 @@ def CDATA(text=None):
     return element
 
 ET._original_serialize_xml = ET._serialize_xml
-
-
-def _serialize_xml(write, elem, encoding, qnames, namespaces):
+def _serialize_xml(write, elem, qnames, namespaces, 
+                   short_empty_elements, **kwargs):
     if elem.tag == '![CDATA[':
-        if elem.tail is None:
-            elem.tail = ""
-        write("<%s%s]]>%s" % (elem.tag, elem.text, elem.tail))
+        write("\n<{}{}]]>\n".format(elem.tag, elem.text))
+        if elem.tail:
+            write(_escape_cdata(elem.tail))
         return
     return ET._original_serialize_xml(
-        write, elem, encoding, qnames, namespaces)
+        write, elem, qnames, namespaces, short_empty_elements, **kwargs)
 ET._serialize_xml = ET._serialize['xml'] = _serialize_xml
 
 
