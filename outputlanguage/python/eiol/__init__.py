@@ -13,9 +13,9 @@ ET._original_serialize_xml = ET._serialize_xml
 def _serialize_xml(write, elem, qnames, namespaces, 
                    short_empty_elements, **kwargs):
     if elem.tag == '![CDATA[':
-        write("\n<{}{}]]>\n".format(elem.tag, elem.text))
-        if elem.tail:
-            write(_escape_cdata(elem.tail))
+        if not elem.tail:
+            elem.tail = ""
+        write("<{}{}]]>{}".format(elem.tag, elem.text, elem.tail))
         return
     return ET._original_serialize_xml(
         write, elem, qnames, namespaces, short_empty_elements, **kwargs)
