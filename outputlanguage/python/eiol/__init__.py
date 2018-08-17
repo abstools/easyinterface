@@ -22,7 +22,7 @@ def _serialize_xml(write, elem, qnames, namespaces,
 ET._serialize_xml = ET._serialize['xml'] = _serialize_xml
 
 
-def _object(_tag, _attr_keys, _child_keys, **kwargs):
+def _object(_tag, _attr_keys, _child_keys, wrap_text=True, **kwargs):
     """Returns global XML object
     """
     childs = {}
@@ -70,7 +70,10 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
             else:
                 el.append(c)
     if not(text is None):
-        el.append(CDATA(text))
+        if wrap_text:
+            el.append(CDATA(text))
+        else:
+            el.append(text)
     return el
 
 
@@ -176,4 +179,7 @@ def cssproperty(**kwargs):
 
 def content(**kwargs):
     tag, attrs, childs, _ = info.content()
-    return _object(tag, attrs, childs, **kwargs)
+    wrap = False
+    if "format" in kwargs and kwargs["format"] == "text":
+        wrap = True
+    return _object(tag, attrs, childs, wrap_text=wrap, **kwargs)
