@@ -49,7 +49,7 @@ def _object(_tag, _attr_keys, _child_keys, wrap_text=True, **kwargs):
             raise TypeError("argument '" + k + "' not found")
         if count > 0 and not check.types(_attr_keys[k]["type"], attrs[k]):
             raise TypeError("argument " + "'" + k + "' expecting: " +
-                            _attr_keys[k]["type"] + " type.")
+                            str(_attr_keys[k]["type"]) + " type.")
     for k in _child_keys:
         count = 0
         if k in childs:
