@@ -173,7 +173,7 @@ window.Parameters = (function() {
 	      var gdesc = group;
 	      if(group in sectionInfo.groups_desc)
 		gdesc = sectionInfo.groups_desc[group];
-	      this.accord.find("#"+sectionInfo.tag).append("<span id='"+sectionInfo.tag+"-"+group+"'><b>"+gdesc+"</b></span>");
+	      this.accord.find("#"+sectionInfo.tag).append("<br/><span id='"+sectionInfo.tag+"-"+group+"'><b>"+gdesc+"</b></span>");
 	      sectionInfo.groups.push(group);
 	    }
 	    var name = param.attr("name");
