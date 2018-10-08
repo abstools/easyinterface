@@ -96,7 +96,7 @@ window.Parameters = (function() {
 
 	//
 	addGroupsFromXML:
-	function(sectionId,profiles) {
+	function(sectionId,groups) {
 	  var self = this;
 	  var selectionInfo = self.sectionInfoById[sectionId]
 	  $(groups).find("> group").each(function(){
