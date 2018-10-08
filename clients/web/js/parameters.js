@@ -58,36 +58,35 @@ window.Parameters = (function() {
 				secId: this.secId, 
 				profileChange: false,
 				params: {},
-				profiles: {}
+			        profiles: {},
+			        groups: ["common"]
 	                      };
 
 	    this.sectionInfoById[sectionId] = sectionInfo;
 	    this.secId++;
-	  if(params){
-	    console.log(sectionId,params,profiles);
-	    if(profiles){
-	      this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button>");
+	    if(params){
+	      console.log(sectionId,params,profiles);
+	      if(profiles){
+	        this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button><span id='"+tagId+"-default'></span>");
 
-	      $("#btn-profile-"+tagId).button({
-		label: "Load Profile"
-	      });
-	      $("#btn-profile-"+tagId).click(function(){
-		self.setProfileValues(sectionId,$("#profile-"+tagId).find("option:selected").val());
-	      });
-	    }else{
-	      this.accord.find("#"+tagId).append("<button id='btn-default-"+tagId+"'>b2</button>");
+	        $("#btn-profile-"+tagId).button({
+		  label: "Load Profile"
+	        });
+	        $("#btn-profile-"+tagId).click(function(){
+	  	  self.setProfileValues(sectionId,$("#profile-"+tagId).find("option:selected").val());
+  	        });
+	      }else{
+	        this.accord.find("#"+tagId).append("<button id='btn-default-"+tagId+"'>b2</button>");
+		$("#btn-default-"+tagId).button({
+		  label: "Reset Default Value"
+	        });
+	        $("#btn-default-"+tagId).click(function(){
+		  self.setProfileValues(sectionId,"default");
+	        });
+	      }
 
-	      $("#btn-default-"+tagId).button({
-		label: "Reset Default Value"
-	      });
-	      $("#btn-default-"+tagId).click(function(){
-		self.setProfileValues(sectionId,"default");
-	      });
-	    }
-
-	    this.addParamsFromXML(sectionId,params);	    
-	    if ( profiles ) this.addProfilesFromXML(sectionId,profiles);	    
-
+	      this.addParamsFromXML(sectionId,params);	    
+	      if ( profiles ) this.addProfilesFromXML(sectionId,profiles);
 	  }else{
 	    this.accord.find("#"+tagId).append("<b>No parameters</b>");
 	  }
@@ -155,14 +154,22 @@ window.Parameters = (function() {
 	    else{
 		widget = defaultWidget[type];
 	    }
-
+	    group = "common"
+	    if(param.attr("group"))
+	      group = param.attr("group")
+	    sectionInfo = this.sectionInfoById[sectionId];
+	    if(sectionInfo.group.indexOf(group) < 0 ){
+	      this.accord.find("#"+sectionInfo.tag).append("<span id="+sectionInfo.tag+"-"+paramInfo.group+"'> </span>");
+	      sectionInfo.group.append(group);
+	    }
 	    var name = param.attr("name");
 	    var desc = {
 		short: param.find("> desc").find("short").text(),
 		long: param.find("> desc").find("long").text()
 	    };
-
+	    
 	    var defaultValue = this.defaultValueFromXML(type,param);
+	    var widgetObj;
 	    switch ( widget ) {
 	    case "checkbox":
 		var trueval = "true";
@@ -174,15 +181,13 @@ window.Parameters = (function() {
 		  falseval= (param.attr("falseval"))?param.attr("falseval"):"false";
 		}
 		var options = new Array(trueval,falseval);
-		this.addCheckWidget(sectionId,
-				     {
-					 id: name, 
-					 desc: desc,
-					 options: options,
-					 multiple: false,
-					 boolean: boolean,
-					 default_value: defaultValue
-				     });
+		widgetObj = this.addCheckWidget({id: name, 
+						 desc: desc,
+						 options: options,
+						 multiple: false,
+						 boolean: boolean,
+						 default_value: defaultValue
+		});
 		break;
 	    //
 	    case "checkboxMultiple":
@@ -196,15 +201,13 @@ window.Parameters = (function() {
 		}
 		var options = new Array(trueval,falseval);
 	
-		this.addCheckWidget(sectionId,
-				     {
-					 id: name, 
-					 desc: desc,
-					 options: options,
-					 multiple: true,
-					 boolean: boolean,
-					 default_value: defaultValue
-				     });
+		widgetObj = this.addCheckWidget({id: name, 
+						 desc: desc,
+						 options: options,
+						 multiple: true,
+						 boolean: boolean,
+						 default_value: defaultValue
+		});
 		break;
 	    //
 	    case "combo":
@@ -229,14 +232,12 @@ window.Parameters = (function() {
 		if(type=="selectmany"){
 		    multiple = true;
 		}
-		this.addComboWidget(sectionId,
-				       {
-					   id: name, 
-					   desc: desc,
-					   multiple: false,
-					   options: options,
-					   default_value: defaultValue
-				       });
+		widgetObj = this.addComboWidget({id: name, 
+						 desc: desc,
+						 multiple: false,
+						 options: options,
+						 default_value: defaultValue
+		});
 		break;
 		//
 	    case "comboMultiple":
@@ -258,37 +259,34 @@ window.Parameters = (function() {
 					 }
 		    });
 
-		this.addComboWidget(sectionId,
-				       {
-					   id: name, 
-					   desc: desc,
-					   multiple: true,
-					   options: options,
-					   default_value: defaultValue
-				       });
+		widgetObj = this.addComboWidget({id:name,
+						 desc: desc,
+						 multiple: true,
+						 options: options,
+						 default_value: defaultValue
+		});
 		break;
 		//
 	    case "textfield":
-		this.addTextfieldWidget(sectionId,
-					{
-					    multiple: (param.attr("multiline") =="true")?true:false,
-					    id:name,
-					    desc: desc,
-					    default_value: defaultValue
-					});
+		widgetObj = this.addTextfieldWidget({id: name,
+						     multiple: (param.attr("multiline") =="true")?true:false,
+						     desc: desc,
+						     default_value: defaultValue
+		});
 		break;
 		//
 	    case "textarea":
-		this.addTextfieldWidget(sectionId,
-				       {
-					   multiple: true,
-					   id: name, 
-					   desc: desc,
-					   default_value: defaultValue
-				       });
+		widgetObj = this.addTextfieldWidget({id:name,
+						     multiple: true,
+						     desc: desc,
+						     default_value: defaultValue
+		});
 		break;
 
 	    }
+	  this.accord.find("#"+tagId+"-"+group).append( widgetObj.domRoot() );
+          this.accord.accordion( "refresh" );
+	  sectionInfo.params[name] = widgetObj;
 
 	},
 
@@ -338,14 +336,12 @@ window.Parameters = (function() {
 	// paramInfo: id, options,multiple,default_value, desc
 	//
 	addCheckWidget:
-	function(sectionId, paramInfo) {
-	    var sectionInfo = this.sectionInfoById[sectionId];
+	function(paramInfo) {
 	    var callBackWrapper = undefined;
 	    if ( paramInfo.callback ) 
 		callBackWrapper = function(name,value) { 
 		    paramInfo.callback( {value: value? paramInfo.options[0]:paramInfo.options[1]} ); }
-
-	    var widget = new CheckBoxWidget( 
+	    return new CheckBoxWidget( 
 		{ id: paramInfo.id,
 		  options: [
 	              { 
@@ -357,49 +353,28 @@ window.Parameters = (function() {
 		  ],
 		  callback: callBackWrapper
 		});
-
-	    this.accord.find("#"+sectionInfo.tag).append( widget.domRoot() );
-            this.accord.accordion( "refresh" );
-	    this.sectionInfoById[sectionId].params[paramInfo.id] = widget;
 	},
 
 	//
 	addComboWidget:
-	function(sectionId,paramInfo) {
-	    var sectionInfo = this.sectionInfoById[sectionId];
-
-	    var widget = new ComboWidget({ id: paramInfo.id,
+	function(paramInfo) {
+	    return new ComboWidget({ id: paramInfo.id,
 		 			   desc: paramInfo.desc,
 	                                   default_value: paramInfo.default_value,
 					   multiple: paramInfo.multiple,
 					   options: paramInfo.options,
 					   callback: paramInfo.callback
 					 });
-	    
-	    
-	    this.accord.find("#"+sectionInfo.tag).append( widget.domRoot() );
-            this.accord.accordion( "refresh" );
-
-	    this.sectionInfoById[sectionId].params[paramInfo.id] = widget;
 	},
 
 	//
 	addTextfieldWidget:
-	function(sectionId,paramInfo) {
-	    var sectionInfo = this.sectionInfoById[sectionId];
-
-	    var widget = new TextAreaWidget({ id: paramInfo.id,
-		 			      desc: paramInfo.desc,
-					      multiple: paramInfo.multiple,
-	                                      default_value: paramInfo.default_value
-					    });
-	    
-	    
-	    this.accord.find("#"+sectionInfo.tag).append( widget.domRoot() );
-            this.accord.accordion( "refresh" );
-
-	    this.sectionInfoById[sectionId].params[paramInfo.id] = widget;
-
+	function(paramInfo) {
+	    return new TextAreaWidget({ id: paramInfo.id,
+		 			desc: paramInfo.desc,
+					multiple: paramInfo.multiple,
+	                                default_value: paramInfo.default_value
+	    });
 	},
 
 	//
