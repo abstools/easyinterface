@@ -170,7 +170,7 @@ window.Parameters = (function() {
 	      group = param.attr("group");
 	    var sectionInfo = this.sectionInfoById[sectionId];
   	    if(sectionInfo.groups.indexOf(group) < 0 ){
-	      gdesc = group;
+	      var gdesc = group;
 	      if(group in sectionInfo.groups_desc)
 		gdesc = sectionInfo.groups_desc[group];
 	      this.accord.find("#"+sectionInfo.tag).append("<span id='"+sectionInfo.tag+"-"+group+"'><b>"+gdesc+"</b></span>");
