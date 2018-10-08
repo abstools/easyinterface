@@ -159,7 +159,7 @@ window.Parameters = (function() {
 	      group = param.attr("group");
 	    var sectionInfo = this.sectionInfoById[sectionId];
   	    if(sectionInfo.groups.indexOf(group) < 0 ){
-	      this.accord.find("#"+sectionInfo.tag).append("<span id="+sectionInfo.tag+"-"+group+"'> </span>");
+	      this.accord.find("#"+sectionInfo.tag).append("<span id='"+sectionInfo.tag+"-"+group+"'> </span>");
 	      sectionInfo.groups.push(group);
 	    }
 	    var name = param.attr("name");
