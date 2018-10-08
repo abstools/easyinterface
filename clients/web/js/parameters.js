@@ -157,7 +157,7 @@ window.Parameters = (function() {
 	    var group = "common";
 	    if(param.attr("group"))
 	      group = param.attr("group");
-	    sectionInfo = this.sectionInfoById[sectionId];
+	    var sectionInfo = this.sectionInfoById[sectionId];
 	    if(sectionInfo.group.indexOf(group) < 0 ){
 	      this.accord.find("#"+sectionInfo.tag).append("<span id="+sectionInfo.tag+"-"+paramInfo.group+"'> </span>");
 	      sectionInfo.group.append(group);
