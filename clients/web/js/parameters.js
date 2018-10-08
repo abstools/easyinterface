@@ -154,9 +154,9 @@ window.Parameters = (function() {
 	    else{
 		widget = defaultWidget[type];
 	    }
-	    group = "common"
+	    var group = "common";
 	    if(param.attr("group"))
-	      group = param.attr("group")
+	      group = param.attr("group");
 	    sectionInfo = this.sectionInfoById[sectionId];
 	    if(sectionInfo.group.indexOf(group) < 0 ){
 	      this.accord.find("#"+sectionInfo.tag).append("<span id="+sectionInfo.tag+"-"+paramInfo.group+"'> </span>");
