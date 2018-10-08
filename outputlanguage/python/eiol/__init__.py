@@ -3,6 +3,10 @@ import xml.etree.ElementTree as ET
 from . import check
 from . import info
 
+def INNER(text=None):
+    element = ET.Element('!INNER')
+    element.text = text
+    return element
 
 def CDATA(text=None):
     element = ET.Element('![CDATA[')
@@ -17,12 +21,17 @@ def _serialize_xml(write, elem, qnames, namespaces,
             elem.tail = ""
         write("<{}{}]]>{}".format(elem.tag, elem.text, elem.tail))
         return
+    if elem.tag == '!INNER':
+        if not elem.tail:
+            elem.tail = ""
+        write("{}{}".format(elem.text, elem.tail))
+        return
     return ET._original_serialize_xml(
         write, elem, qnames, namespaces, short_empty_elements, **kwargs)
 ET._serialize_xml = ET._serialize['xml'] = _serialize_xml
 
 
-def _object(_tag, _attr_keys, _child_keys, **kwargs):
+def _object(_tag, _attr_keys, _child_keys, wrap_text=True, **kwargs):
     """Returns global XML object
     """
     childs = {}
@@ -49,7 +58,7 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
             raise TypeError("argument '" + k + "' not found")
         if count > 0 and not check.types(_attr_keys[k]["type"], attrs[k]):
             raise TypeError("argument " + "'" + k + "' expecting: " +
-                            _attr_keys[k]["type"] + " type.")
+                            str(_attr_keys[k]["type"]) + " got: "+str(attrs[k]))
     for k in _child_keys:
         count = 0
         if k in childs:
@@ -70,7 +79,10 @@ def _object(_tag, _attr_keys, _child_keys, **kwargs):
             else:
                 el.append(c)
     if not(text is None):
-        el.append(CDATA(text))
+        if wrap_text:
+            el.append(CDATA(text))
+        else:
+            el.append(INNER(text))
     return el
 
 
@@ -176,4 +188,7 @@ def cssproperty(**kwargs):
 
 def content(**kwargs):
     tag, attrs, childs, _ = info.content()
-    return _object(tag, attrs, childs, **kwargs)
+    wrap = False
+    if "format" in kwargs and kwargs["format"] == "text":
+        wrap = True
+    return _object(tag, attrs, childs, wrap_text=wrap, **kwargs)
