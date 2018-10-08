@@ -73,7 +73,7 @@ def _object(_tag, _attr_keys, _child_keys, wrap_text=True, **kwargs):
         if wrap_text:
             el.append(CDATA(text))
         else:
-            el.append(text)
+            el.text = text
     return el
 
 
