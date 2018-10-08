@@ -3,6 +3,10 @@ import xml.etree.ElementTree as ET
 from . import check
 from . import info
 
+def INNER(text=None):
+    element = ET.Element('!INNER')
+    element.text = text
+    return element
 
 def CDATA(text=None):
     element = ET.Element('![CDATA[')
@@ -16,6 +20,11 @@ def _serialize_xml(write, elem, qnames, namespaces,
         if not elem.tail:
             elem.tail = ""
         write("<{}{}]]>{}".format(elem.tag, elem.text, elem.tail))
+        return
+    if elem.tag == '!INNER':
+        if not elem.tail:
+            elem.tail = ""
+        write("{}{}".format(elem.text, elem.tail))
         return
     return ET._original_serialize_xml(
         write, elem, qnames, namespaces, short_empty_elements, **kwargs)
@@ -73,7 +82,7 @@ def _object(_tag, _attr_keys, _child_keys, wrap_text=True, **kwargs):
         if wrap_text:
             el.append(CDATA(text))
         else:
-            el.text = text
+            el.append(INNER(text))
     return el
 
 
