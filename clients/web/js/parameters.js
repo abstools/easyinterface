@@ -67,7 +67,7 @@ window.Parameters = (function() {
 	    if(params){
 	      console.log(sectionId,params,profiles);
 	      if(profiles){
-	        this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button><span id='"+tagId+"-default'></span>");
+	        this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button><span id='"+tagId+"-common'></span>");
 
 	        $("#btn-profile-"+tagId).button({
 		  label: "Load Profile"
@@ -158,7 +158,7 @@ window.Parameters = (function() {
 	    if(param.attr("group"))
 	      group = param.attr("group");
 	    var sectionInfo = this.sectionInfoById[sectionId];
-	    if(sectionInfo.groups.indexOf(group) < 0 ){
+  	    if(sectionInfo.groups.indexOf(group) < 0 ){
 	      this.accord.find("#"+sectionInfo.tag).append("<span id="+sectionInfo.tag+"-"+group+"'> </span>");
 	      sectionInfo.groups.append(group);
 	    }
