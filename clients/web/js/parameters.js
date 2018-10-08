@@ -158,9 +158,9 @@ window.Parameters = (function() {
 	    if(param.attr("group"))
 	      group = param.attr("group");
 	    var sectionInfo = this.sectionInfoById[sectionId];
-	    if(sectionInfo.group.indexOf(group) < 0 ){
-	      this.accord.find("#"+sectionInfo.tag).append("<span id="+sectionInfo.tag+"-"+paramInfo.group+"'> </span>");
-	      sectionInfo.group.append(group);
+	    if(sectionInfo.groups.indexOf(group) < 0 ){
+	      this.accord.find("#"+sectionInfo.tag).append("<span id="+sectionInfo.tag+"-"+group+"'> </span>");
+	      sectionInfo.groups.append(group);
 	    }
 	    var name = param.attr("name");
 	    var desc = {
@@ -284,7 +284,7 @@ window.Parameters = (function() {
 		break;
 
 	    }
-	  this.accord.find("#"+tagId+"-"+group).append( widgetObj.domRoot() );
+	  this.accord.find("#"+sectionInfo.tag+"-"+group).append( widgetObj.domRoot() );
           this.accord.accordion( "refresh" );
 	  sectionInfo.params[name] = widgetObj;
 
