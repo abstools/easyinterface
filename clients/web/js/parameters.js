@@ -98,10 +98,10 @@ window.Parameters = (function() {
 	addGroupsFromXML:
 	function(sectionId,groups) {
 	  var self = this;
-	  var selectionInfo = self.sectionInfoById[sectionId]
+	  var sectionInfo = self.sectionInfoById[sectionId];
 	  $(groups).find("> group").each(function(){
 	    var id = $(this).attr("id");
-	    sectionInfo.group_desc[id] = $(this).text();
+	    sectionInfo.groups_desc[id] = $(this).text();
 	  });
 	},
 	//
