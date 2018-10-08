@@ -47,7 +47,7 @@ window.Parameters = (function() {
 
 	//
 	addSection: 
-	function(label, sectionId, params, profiles) {
+	function(label, sectionId, params, profiles, groups) {
 	  var self = this;
           var tagId = this.sectionId_to_sectionTag( sectionId );
 	  this.accord.append("<h3 id='label-"+tagId+"'>"+
@@ -59,13 +59,13 @@ window.Parameters = (function() {
 				profileChange: false,
 				params: {},
 			        profiles: {},
-			        groups: ["common"]
+			        groups: ["common"],
+			        groups_desc: {"common":""}
 	                      };
 
 	    this.sectionInfoById[sectionId] = sectionInfo;
 	    this.secId++;
 	    if(params){
-	      console.log(sectionId,params,profiles);
 	      if(profiles){
 	        this.accord.find("#"+tagId).append("<b>Profile: </b><select class='profile-combobox ui-widget ui-widget-content ui-state-default ui-corner-all' id='profile-"+tagId+"'></select> <button id='btn-profile-"+tagId+"'>b2</button><span id='"+tagId+"-common'></span>");
 
@@ -84,7 +84,7 @@ window.Parameters = (function() {
 		  self.setProfileValues(sectionId,"default");
 	        });
 	      }
-
+	      if ( groups ) this.addGroupsFromXML(sectionId, groups);
 	      this.addParamsFromXML(sectionId,params);	    
 	      if ( profiles ) this.addProfilesFromXML(sectionId,profiles);
 	  }else{
@@ -93,6 +93,17 @@ window.Parameters = (function() {
 	 
 	},
 
+
+	//
+	addGroupsFromXML:
+	function(sectionId,profiles) {
+	  var self = this;
+	  var selectionInfo = self.sectionInfoById[sectionId]
+	  $(groups).find("> group").each(function(){
+	    var id = $(this).attr("id");
+	    sectionInfo.group_desc[id] = $(this).text();
+	  });
+	},
 	//
 	addProfilesFromXML:
 	function(sectionId,profiles) {
@@ -159,7 +170,10 @@ window.Parameters = (function() {
 	      group = param.attr("group");
 	    var sectionInfo = this.sectionInfoById[sectionId];
   	    if(sectionInfo.groups.indexOf(group) < 0 ){
-	      this.accord.find("#"+sectionInfo.tag).append("<span id='"+sectionInfo.tag+"-"+group+"'> </span>");
+	      gdesc = group;
+	      if(group in sectionInfo.groups_desc)
+		gdesc = sectionInfo.groups_desc[group];
+	      this.accord.find("#"+sectionInfo.tag).append("<span id='"+sectionInfo.tag+"-"+group+"'><b>"+gdesc+"</b></span>");
 	      sectionInfo.groups.push(group);
 	    }
 	    var name = param.attr("name");

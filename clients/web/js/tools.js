@@ -59,7 +59,7 @@ window.Tools = (function() {
 	    };
 
 	    // add parameters section of the current analysis
-	    this.parameters.addSection(acronym,toolId,tool.find("parameters"),tool.find("profiles"));
+	    this.parameters.addSection(acronym,toolId,tool.find("parameters"),tool.find("profiles"), tool.find("groups"));
 	    this.helps.addSection(acronym,toolId,tool.find("apphelp"));
 	    // add an entry in the tool selector
 	    this.selector.addTool(toolId,acronym);
