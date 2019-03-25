@@ -34,11 +34,19 @@ window.SVGContent = (function() {
 	   throw "an svg content environment must include exactly one svg environment inside";
        }
 	   
-       self.svgEnv = self.svgEnv.prop('outerHTML');
-       self.svgEnv = $(self.svgEnv);
-       self.svgEnv.css("overflow","auto");
-       self.content.append( self.svgEnv );
-       self.svgEnv.svg();
+     self.svgEnv = self.svgEnv.prop('outerHTML');
+     self.svgEnv = $(self.svgEnv);
+     self.svgEnv.addClass("svgzoomable");
+     self.svgEnv.css("overflow","auto");
+     self.content.append( self.svgEnv );
+     self.svgEnv.svg();
+
+     self.zoomitem = svgPanZoom('.svgzoomable', {
+       zoomEnabled: true,
+       controlIconsEnabled: true,
+       fit: true,
+       center: true
+     });
 
      self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
      $(self.streamBttn).button({ 
