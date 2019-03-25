@@ -56,6 +56,7 @@ class EIApps {
 	$out .= '<app id=\'' . $id . '\'>';
 	$out .= EIConfig::get_appParametersXML( $id )->asXML();
 	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
+	$out .= EIConfig::get_appGroupsXML( $id )->asXML();
 	$out .= '</app>';
       }
     }
@@ -89,6 +90,7 @@ class EIApps {
 	$out .= EIConfig::get_appHelpXML( $id )->asXML();
 	$out .= EIConfig::get_appParametersXML( $id )->asXML();
 	$out .= EIConfig::get_appProfilesXML( $id )->asXML();
+	$out .= EIConfig::get_appGroupsXML( $id )->asXML();
 	$out .= '</app>';
       }
     }
