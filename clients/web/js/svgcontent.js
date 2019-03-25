@@ -36,17 +36,17 @@ window.SVGContent = (function() {
 	   
      self.svgEnv = self.svgEnv.prop('outerHTML');
      self.svgEnv = $(self.svgEnv);
-     self.svgEnv.addClass("svgzoomable");
+     var token =  self.getTag() + "-svg";
+     self.svgEnv.attr('id',token);
+
+     self.script_zoom = $('<script>svgPanZoom(\"#'+token+'\", {zoomEnabled: true,controlIconsEnabled: true,fit: true,minZoom: 0.2 });</' + 'script>');
+
+
      self.svgEnv.css("overflow","auto");
      self.content.append( self.svgEnv );
+     self.content.append( self.script_zoom );
      self.svgEnv.svg();
 
-     self.zoomitem = svgPanZoom('.svgzoomable', {
-       zoomEnabled: true,
-       controlIconsEnabled: true,
-       fit: true,
-       center: true
-     });
 
      self.streamBttn = $("<button class='ei-console-stream-button'>Streaming...</button>");
      $(self.streamBttn).button({ 
