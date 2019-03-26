@@ -21,7 +21,7 @@ outzip=$downloadroot/erlang.zip
 echo "<eiout>"
 echo "<eicommands>"
 
-env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v -erlang -d $outdir $files &> $streamroot/erlangbackend.stderr
+env HOME=$outdir $ABSTOOLSHOME/frontend/bin/bash/absc -v --erlang -d $outdir $files &> $streamroot/erlangbackend.stderr
 
 if [ $? == 0 ]; then
 

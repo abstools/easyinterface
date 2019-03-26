@@ -2,7 +2,7 @@
 
 . envisage/envisage_settings.sh
 
-java -jar $ABSFRONTEND -outline $@ 2> /tmp/absoutline.stderr
+java -jar $ABSFRONTEND --outline $@ 2> /tmp/absoutline.stderr
 
 if [ $? == 1 ]; then
     echo "<eiout>"
