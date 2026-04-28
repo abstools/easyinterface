@@ -16,7 +16,7 @@ echo $2
 echo "</content>"
 echo "</printonconsole>"
 echo "<printonconsole>"
-echo "<content format='html'><![CDATA["
+echo '<content format="html"><![CDATA['
 echo '<a id="linkpepe" href="#"> CLICK HERE </a>'
 echo "]]></content>"
 echo "</printonconsole>"
